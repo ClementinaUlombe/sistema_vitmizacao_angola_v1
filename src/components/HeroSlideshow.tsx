@@ -32,7 +32,7 @@ const HeroSlideshow = ({ images, intervalMs = 5000 }: HeroSlideshowProps) => {
             alt={`Slide ${index + 1}`}
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-overlay opacity-40" />
+          <div className="absolute inset-0 bg-gradient-overlay" />
         </div>
       ))}
     </div>

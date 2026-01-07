@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; // Import usePathname
 import { ThemeToggle } from "@/components/ThemeToggle";
+import NotificationBell from "@/components/NotificationBell";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -96,6 +97,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-foreground">Bem-vindo ao sistema de {systemName} {userName}</h1>
           <ThemeToggle />
+          <NotificationBell />
         </header>
         {children}
       </main>

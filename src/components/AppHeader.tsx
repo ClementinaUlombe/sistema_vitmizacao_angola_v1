@@ -26,7 +26,6 @@ export function AppHeader() {
             </Button>
           </Link>
           <ThemeToggle />
-          <NotificationBell />
         </nav>
       </div>
     </header>

@@ -5,6 +5,8 @@ import "@/App.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Providers } from "@/components/Providers";
+import { ThemeProvider } from "next-themes";
+import { ThemeToggle } from "@/components/ThemeToggle"; // Import ThemeToggle
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,11 +36,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>
-          {children}
-          <Toaster />
-          <Sonner />
-        </Providers>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Providers>
+            {children}
+            <Toaster />
+            <Sonner />
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

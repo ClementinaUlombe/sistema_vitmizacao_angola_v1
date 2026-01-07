@@ -1,0 +1,51 @@
+"use client";
+
+import Link from "next/link";
+
+export function AppFooter() {
+  return (
+    <footer className="bg-gradient-hero text-white">
+      <div className="mx-auto max-w-7xl px-6 py-14 grid gap-10 md:grid-cols-4">
+        <div className="space-y-3">
+                  <Link href="/" className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center">
+                      <span className="text-white font-bold text-xl">VC</span>
+                    </div>
+                    <span className="font-semibold">Vitimização Criminal</span>
+                  </Link>          <p className="text-sm text-white/80">
+            Análise de vitimização e perceção de segurança no Gamek à Direita.
+          </p>
+        </div>
+        <div>
+          <h4 className="font-semibold mb-3">Projeto</h4>
+          <ul className="text-sm text-white/80 space-y-2">
+            <li><a href="#sobre-estudo" className="hover:text-white transition-colors">Sobre o Estudo</a></li>
+            <li><a href="#quem-somos" className="hover:text-white transition-colors">Quem Somos</a></li>
+            <li><a href="#" className="hover:text-white transition-colors">Metodologia</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-semibold mb-3">Funcionalidades</h4>
+          <ul className="text-sm text-white/80 space-y-2">
+            <li><Link href="/auth/login" className="hover:text-white transition-colors">Importação Excel</Link></li>
+            <li><Link href="/auth/login" className="hover:text-white transition-colors">Dashboard de Gráficos</Link></li>
+            <li><Link href="/auth/login" className="hover:text-white transition-colors">Chatbot Inteligente</Link></li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-semibold mb-3">Contacto</h4>
+          <ul className="text-sm text-white/80 space-y-2">
+            <li>Luanda, Angola</li>
+            <li><a href="#" className="hover:text-white transition-colors">Política de Privacidade</a></li>
+            <li><a href="#" className="hover:text-white transition-colors">Termos de Uso</a></li>
+          </ul>
+        </div>
+      </div>
+      <div className="border-t border-white/10">
+        <div className="mx-auto max-w-7xl px-6 py-6 text-center text-sm text-white/80">
+          <p>© 2025 | Sistema de Análise de Vitimização Criminal – Desenvolvido por Clementina Ulombe</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
