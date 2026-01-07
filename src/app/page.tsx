@@ -1,6 +1,17 @@
+"use client";
+
+import { AppHeader } from "@/components/AppHeader";
+import { AppFooter } from "@/components/AppFooter";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import HeroSlideshow from "@/components/HeroSlideshow";
+import NumberCounter from "@/components/NumberCounter";
+import ExcelUpload from "@/components/ExcelUpload";
+import ChatbotInterface from "@/components/ChatbotInterface";
+import GraphDisplay from "@/components/GraphDisplay";
+import ReportModal from "@/components/ReportModal";
+import { useState, useEffect } from "react";
 
 const heroHands = "/hero-hands.jpg";
 const heroBooks = "/hero-books.jpg";
@@ -8,6 +19,15 @@ const heroTech = "/hero-tech.jpg";
 const parallaxBg = "/parallax-bg.jpg";
 
 const Page = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   const heroImages = [
     "/apontar.gif",
     "/imagesmaos.jpeg",
@@ -20,26 +40,7 @@ const Page = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Cabeçalho */}
-      <header className="sticky top-0 z-50 bg-gradient-primary backdrop-blur-sm border-b border-white/10 shadow-lg">
-        <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center shadow-md">
-              <span className="text-white font-bold text-xl">VC</span>
-            </div>
-            <span className="font-semibold text-white">Vitimização Criminal</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm text-white">
-            <a href="#inicio" className="hover:opacity-80 transition-opacity">Início</a>
-            <a href="#sobre-estudo" className="hover:opacity-80 transition-opacity">Sobre o Estudo</a>
-            <a href="#dados" className="hover:opacity-80 transition-opacity">Dados</a>
-            <a href="#quem-somos" className="hover:opacity-80 transition-opacity">Quem Somos</a>
-            <Button variant="secondary" size="sm" className="ml-4 shadow-md">
-              Entrar no Sistema
-            </Button>
-          </nav>
-        </div>
-      </header>
+      <AppHeader />
 
       {/* Hero Section */}
       <section id="inicio" className="relative isolate overflow-hidden min-h-[600px] flex items-center">
@@ -59,9 +60,24 @@ const Page = () => {
               <Button size="lg" variant="secondary" className="text-base shadow-lg hover-scale">
                 Sobre o Estudo
               </Button>
-              <Button size="lg" variant="outline" className="text-base border-2 border-white text-white hover:bg-white/20 shadow-lg hover-scale">
-                Entrar no Sistema
-              </Button>
+              <ReportModal>
+                <Button size="lg" className="text-base bg-blue-500 text-white hover:bg-blue-600 shadow-lg hover-scale">
+                  Enviar Denúncia
+                </Button>
+              </ReportModal>
+              {isLoggedIn ? (
+                <Link href="/dashboard" passHref>
+                  <Button size="lg" className="text-base bg-purple-light text-purple-deep hover:bg-purple-deep hover:text-white shadow-lg hover-scale">
+                    Ir para o Painel
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/auth/login" passHref>
+                  <Button size="lg" className="text-base bg-purple-light text-purple-deep hover:bg-purple-deep hover:text-white shadow-lg hover-scale">
+                    Entrar no Sistema
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -73,25 +89,25 @@ const Page = () => {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
-                <CardTitle className="text-primary text-4xl font-bold">522</CardTitle>
+                <CardTitle className="text-primary text-4xl font-bold"><NumberCounter targetValue={522} /></CardTitle>
                 <CardDescription>Residentes Inquiridos</CardDescription>
               </CardHeader>
             </Card>
             <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
-                <CardTitle className="text-primary text-4xl font-bold">55.9%</CardTitle>
+                <CardTitle className="text-primary text-4xl font-bold"><NumberCounter targetValue={55.9} decimals={1} suffix="%" /></CardTitle>
                 <CardDescription>Taxa de Vitimização (12 meses)</CardDescription>
               </CardHeader>
             </Card>
             <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
-                <CardTitle className="text-destructive text-4xl font-bold">68.8%</CardTitle>
+                <CardTitle className="text-destructive text-4xl font-bold"><NumberCounter targetValue={68.8} decimals={1} suffix="%" /></CardTitle>
                 <CardDescription>Crimes Não Denunciados</CardDescription>
               </CardHeader>
             </Card>
             <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
-                <CardTitle className="text-accent text-4xl font-bold">4</CardTitle>
+                <CardTitle className="text-accent text-4xl font-bold"><NumberCounter targetValue={4} /></CardTitle>
                 <CardDescription>Bairros Analisados</CardDescription>
               </CardHeader>
             </Card>
@@ -100,7 +116,7 @@ const Page = () => {
       </section>
 
       {/* Seção Institucional */}
-      <section id="sobre-estudo" className="bg-white py-16 sm:py-24">
+      <section id="sobre-estudo" className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4 text-center">
             Conhecimento e Tecnologia pela Segurança de Angola
@@ -219,7 +235,7 @@ const Page = () => {
                 description: "Desenvolver recomendações para políticas de segurança pública baseadas em evidências."
               }
             ].map((objetivo, idx) => (
-              <Card key={idx} className="bg-white/95 backdrop-blur-sm border-white/20 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover-scale">
+              <Card key={idx} className="bg-card/95 backdrop-blur-sm border-border/20 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover-scale">
                 <CardHeader>
                   <div className="text-4xl mb-2">{objetivo.icon}</div>
                   <CardTitle className="text-xl text-primary">{objetivo.title}</CardTitle>
@@ -234,7 +250,7 @@ const Page = () => {
       </section>
 
       {/* Dados da Investigação */}
-      <section id="dados" className="bg-white py-16 sm:py-24">
+      <section id="dados" className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4 text-center">
             Resultados da Investigação
@@ -249,7 +265,7 @@ const Page = () => {
             <div className="grid gap-6 md:grid-cols-3">
               <Card className="bg-gradient-card border-destructive/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader>
-                  <CardTitle className="text-destructive text-5xl font-bold">55.9%</CardTitle>
+                  <CardTitle className="text-destructive text-5xl font-bold"><NumberCounter targetValue={55.9} decimals={1} suffix="%" /></CardTitle>
                   <CardDescription className="text-base">Foram vítimas de crime nos últimos 12 meses</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -259,7 +275,7 @@ const Page = () => {
 
               <Card className="bg-gradient-card border-accent/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader>
-                  <CardTitle className="text-accent text-5xl font-bold">56.8%</CardTitle>
+                  <CardTitle className="text-accent text-5xl font-bold"><NumberCounter targetValue={56.8} decimals={1} suffix="%" /></CardTitle>
                   <CardDescription className="text-base">Sofreram vitimização múltipla</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -269,7 +285,7 @@ const Page = () => {
 
               <Card className="bg-gradient-card border-primary/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader>
-                  <CardTitle className="text-primary text-5xl font-bold">62.3%</CardTitle>
+                  <CardTitle className="text-primary text-5xl font-bold"><NumberCounter targetValue={62.3} decimals={1} suffix="%" /></CardTitle>
                   <CardDescription className="text-base">Crimes ocorreram à noite</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -295,7 +311,7 @@ const Page = () => {
                   <CardContent className="pt-6 flex items-center justify-between">
                     <div>
                       <p className="font-bold text-foreground text-lg">{crime.tipo}</p>
-                      <p className="text-2xl font-bold text-destructive">{crime.percentagem}</p>
+                      <p className="text-2xl font-bold text-destructive"><NumberCounter targetValue={parseFloat(crime.percentagem)} decimals={1} suffix="%" /></p>
                     </div>
                     <span className="text-4xl">{crime.icon}</span>
                   </CardContent>
@@ -310,28 +326,28 @@ const Page = () => {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               <Card className="bg-gradient-card border-destructive/30 hover:shadow-xl transition-all duration-300">
                 <CardHeader>
-                  <CardTitle className="text-destructive text-4xl font-bold">68.8%</CardTitle>
+                  <CardTitle className="text-destructive text-4xl font-bold"><NumberCounter targetValue={68.8} decimals={1} suffix="%" /></CardTitle>
                   <CardDescription>Não denunciaram os crimes</CardDescription>
                 </CardHeader>
               </Card>
 
               <Card className="bg-gradient-card border-accent/30 hover:shadow-xl transition-all duration-300">
                 <CardHeader>
-                  <CardTitle className="text-accent text-4xl font-bold">62.2%</CardTitle>
+                  <CardTitle className="text-accent text-4xl font-bold"><NumberCounter targetValue={62.2} decimals={1} suffix="%" /></CardTitle>
                   <CardDescription>Falta de confiança na polícia</CardDescription>
                 </CardHeader>
               </Card>
 
               <Card className="bg-gradient-card border-muted-foreground/30 hover:shadow-xl transition-all duration-300">
                 <CardHeader>
-                  <CardTitle className="text-muted-foreground text-4xl font-bold">46.8%</CardTitle>
+                  <CardTitle className="text-muted-foreground text-4xl font-bold"><NumberCounter targetValue={46.8} decimals={1} suffix="%" /></CardTitle>
                   <CardDescription>Sensação de inutilidade</CardDescription>
                 </CardHeader>
               </Card>
 
               <Card className="bg-gradient-card border-primary/30 hover:shadow-xl transition-all duration-300">
                 <CardHeader>
-                  <CardTitle className="text-primary text-4xl font-bold">34.8%</CardTitle>
+                  <CardTitle className="text-primary text-4xl font-bold"><NumberCounter targetValue={34.8} decimals={1} suffix="%" /></CardTitle>
                   <CardDescription>Medo de represálias</CardDescription>
                 </CardHeader>
               </Card>
@@ -351,15 +367,15 @@ const Page = () => {
                 <CardContent className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-foreground/80">Sentem-se seguros</span>
-                    <span className="font-bold text-primary text-xl">42.5%</span>
+                    <span className="font-bold text-primary text-xl"><NumberCounter targetValue={42.5} decimals={1} suffix="%" /></span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-foreground/80">Sentem-se inseguros</span>
-                    <span className="font-bold text-destructive text-xl">24.9%</span>
+                    <span className="font-bold text-destructive text-xl"><NumberCounter targetValue={24.9} decimals={1} suffix="%" /></span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-foreground/80">Posição neutra</span>
-                    <span className="font-bold text-muted-foreground text-xl">19.7%</span>
+                    <span className="font-bold text-muted-foreground text-xl"><NumberCounter targetValue={19.7} decimals={1} suffix="%" /></span>
                   </div>
                 </CardContent>
               </Card>
@@ -373,15 +389,15 @@ const Page = () => {
                 <CardContent className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-white/90">Sentem-se seguros</span>
-                    <span className="font-bold text-white text-xl">23.8%</span>
+                    <span className="font-bold text-white text-xl"><NumberCounter targetValue={23.8} decimals={1} suffix="%" /></span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-white/90">Sentem-se inseguros</span>
-                    <span className="font-bold text-destructive-foreground text-xl">45.0%</span>
+                    <span className="font-bold text-destructive-foreground text-xl"><NumberCounter targetValue={45.0} decimals={1} suffix="%" /></span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-white/90">Posição neutra</span>
-                    <span className="font-bold text-white/70 text-xl">22.6%</span>
+                    <span className="font-bold text-white/70 text-xl"><NumberCounter targetValue={22.6} decimals={1} suffix="%" /></span>
                   </div>
                 </CardContent>
               </Card>
@@ -397,7 +413,7 @@ const Page = () => {
             Quem Somos
           </h2>
           <div className="grid gap-8 md:grid-cols-3 text-foreground/85 mb-12">
-            <Card className="bg-white border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
                 <CardTitle className="text-primary">Nossa Missão</CardTitle>
               </CardHeader>
@@ -408,7 +424,7 @@ const Page = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
                 <CardTitle className="text-primary">Nossa Abordagem</CardTitle>
               </CardHeader>
@@ -419,7 +435,7 @@ const Page = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
                 <CardTitle className="text-primary">Nossa Equipa</CardTitle>
               </CardHeader>
@@ -432,7 +448,7 @@ const Page = () => {
           </div>
 
           {/* Metodologia */}
-          <div className="bg-white rounded-xl p-8 shadow-lg">
+          <div className="bg-card rounded-xl p-8 shadow-lg">
             <h3 className="text-2xl font-bold text-primary mb-6">Metodologia da Investigação</h3>
             <div className="grid gap-6 md:grid-cols-2">
               <div>
@@ -464,7 +480,7 @@ const Page = () => {
       </section>
 
       {/* Seção O Que Fazemos */}
-      <section className="bg-white py-16 sm:py-24">
+      <section className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4 text-center">
             O Que Fazemos
@@ -521,7 +537,7 @@ const Page = () => {
           <div className="mt-16">
             <h3 className="text-2xl font-bold text-primary mb-8 text-center">Funcionalidades do Sistema</h3>
             <div className="grid gap-6 md:grid-cols-3">
-              <Card className="bg-white border-accent/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <Card className="bg-card border-accent/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader>
                   <div className="text-4xl mb-2">📥</div>
                   <CardTitle className="text-accent">Importação de Dados</CardTitle>
@@ -533,7 +549,7 @@ const Page = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border-accent/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <Card className="bg-card border-accent/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader>
                   <div className="text-4xl mb-2">📈</div>
                   <CardTitle className="text-accent">Dashboard Interativo</CardTitle>
@@ -545,7 +561,7 @@ const Page = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border-accent/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <Card className="bg-card border-accent/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader>
                   <div className="text-4xl mb-2">🤖</div>
                   <CardTitle className="text-accent">Chatbot Inteligente</CardTitle>
@@ -558,6 +574,13 @@ const Page = () => {
               </Card>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Seção de Ferramentas */}
+      <section className="bg-gradient-light py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Components moved to dashboard */}
         </div>
       </section>
 
@@ -585,57 +608,15 @@ const Page = () => {
           <p className="text-lg text-foreground/85 max-w-3xl mb-8">
             Seja forte. Você não está sozinho. Através do sistema INSUTEC, você pode encontrar serviços de apoio à vítima, instituições comunitárias e centros de orientação jurídica mais próximos de si.
           </p>
-          <Button className="bg-gradient-primary" size="lg">
-            Encontrar Serviço de Apoio
-          </Button>
+          <Link href="/apoio" passHref>
+            <Button className="bg-gradient-primary" size="lg">
+              Encontrar Serviço de Apoio
+            </Button>
+          </Link>
         </div>
       </section>
 
-      {/* Rodapé */}
-      <footer className="bg-gradient-hero text-white">
-        <div className="mx-auto max-w-7xl px-6 py-14 grid gap-10 md:grid-cols-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center">
-                <span className="text-white font-bold text-xl">VC</span>
-              </div>
-              <span className="font-semibold">Vitimização Criminal</span>
-            </div>
-            <p className="text-sm text-white/80">
-              Análise de vitimização e perceção de segurança no Gamek à Direita.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-3">Projeto</h4>
-            <ul className="text-sm text-white/80 space-y-2">
-              <li><a href="#sobre-estudo" className="hover:text-white transition-colors">Sobre o Estudo</a></li>
-              <li><a href="#quem-somos" className="hover:text-white transition-colors">Quem Somos</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Metodologia</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-3">Funcionalidades</h4>
-            <ul className="text-sm text-white/80 space-y-2">
-              <li>Importação Excel</li>
-              <li>Dashboard de Gráficos</li>
-              <li>Chatbot Inteligente</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-3">Contacto</h4>
-            <ul className="text-sm text-white/80 space-y-2">
-              <li>Luanda, Angola</li>
-              <li><a href="#" className="hover:text-white transition-colors">Política de Privacidade</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Termos de Uso</a></li>
-            </ul>
-          </div>
-        </div>
-        <div className="border-t border-white/10">
-          <div className="mx-auto max-w-7xl px-6 py-6 text-center text-sm text-white/80">
-            <p>© 2025 | Sistema de Análise de Vitimização Criminal – Desenvolvido por Clementina Ulombe</p>
-          </div>
-        </div>
-      </footer>
+      <AppFooter />
     </div>
   );
 };
