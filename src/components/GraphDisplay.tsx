@@ -257,18 +257,18 @@ const GraphDisplay: React.FC = () => {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Bairro</TableHead>
+                                <TableHead className="min-w-[180px]">Bairro</TableHead>
                                 {translatedCrimeTypes.map((crime, index) => (
-                                    <TableHead key={index}>{crime}</TableHead>
+                                    <TableHead key={index} className="min-w-[150px]">{crime}</TableHead>
                                 ))}
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {translatedData.map((item, index) => (
                                 <TableRow key={index}>
-                                    <TableCell className="font-medium">{item.neighborhood}</TableCell>
+                                    <TableCell className="font-medium min-w-[180px]">{item.neighborhood}</TableCell>
                                     {translatedCrimeTypes.map((crime, crimeIndex) => (
-                                        <TableCell key={crimeIndex}>{item[crime]}</TableCell>
+                                        <TableCell key={crimeIndex} className="min-w-[150px]">{item[crime]}</TableCell>
                                     ))}
                                 </TableRow>
                             ))}
