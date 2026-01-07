@@ -88,7 +88,7 @@ pnpm install
 O projeto utiliza Prisma para interação com o banco de dados. Após instalar as dependências, você precisa aplicar as migrações do banco de dados para criar as tabelas necessárias.
 
 ```bash
-npx prisma migrate dev --name initial_setup
+npx prisma migrate dev --name add_report_model
 ```
 Se você já executou migrações anteriormente, pode usar o nome da migração mais recente ou um nome descritivo.
 
@@ -143,6 +143,7 @@ O menu lateral exibe itens diferentes dependendo do perfil do utilizador (Admini
 *   Gerir Utilizadores (`/dashboard/users`)
 *   Registar Dados (`/dashboard/data-entry`)
 *   Gerir Base de Dados (`/dashboard/database-management`)
+*   Ocorrências (`/dashboard/occurrences`)
 *   Ver Gráficos e Relatórios (`/dashboard/reports`)
 *   Exportar Dados (`/dashboard/export`)
 *   Backup (`/dashboard/backup`)
@@ -151,9 +152,11 @@ O menu lateral exibe itens diferentes dependendo do perfil do utilizador (Admini
 *   Gráficos (`/dashboard/graphs`)
 
 **Itens de Menu para Investigador / Pesquisador:**
+*   Página Inicial (`/`)
 *   Consultar Dados (`/dashboard/data-query`)
 *   Gerar Gráficos e Estatísticas (`/dashboard/analytics`)
 *   Filtrar Dados (`/dashboard/data-filter`)
+*   Ocorrências (`/dashboard/occurrences`)
 *   Comparar Percepções (`/dashboard/perception-comparison`)
 *   Criar Relatórios (`/dashboard/report-creation`)
 *   Upload Excel (`/dashboard/excel-upload`)
@@ -326,12 +329,31 @@ O sistema realiza uma validação básica para garantir a integridade dos dados:
 ### 4. Enviar Denúncia de Vitimização
 
 *   **Página:** `http://localhost:3000/` (Página Inicial)
-*   **Propósito:** Permite que vítimas ou cidadãos enviem denúncias ou informações sobre incidentes criminais de forma anónima ou identificada.
+*   **Propósito:** Permite que vítimas ou cidadãos enviem denúncias ou informações sobre incidentes criminais de forma anónima ou identificada. As denúncias são armazenadas no banco de dados e enviadas por e-mail.
 *   **Como Funciona:**
     1.  Na página inicial, clique no botão "Enviar Denúncia".
     2.  Um modal será aberto com um formulário.
     3.  Preencha os campos (Nome e Email são opcionais para anonimato, Assunto e Mensagem são obrigatórios).
-    4.  A denúncia é enviada para um email pré-configurado através do serviço Formspree.
+    4.  A denúncia é enviada para um email pré-configurado através do serviço Formspree e armazenada no banco de dados do sistema.
+
+### 5. Gerenciamento de Ocorrências
+
+*   **Página:** `http://localhost:3000/dashboard/occurrences`
+*   **Propósito:** Permite visualizar e gerenciar todas as denúncias e ocorrências recebidas.
+*   **Como Funciona:**
+    1.  Acesse o Painel Principal e clique em "Ocorrências" no menu lateral.
+    2.  As denúncias são exibidas em uma tabela, ordenadas pelas mais recentes.
+    3.  Cada denúncia pode ser marcada como "lida" ou "não lida" usando um checkbox, facilitando o acompanhamento.
+
+### 6. Notificações de Ocorrências
+
+*   **Localização:** Cabeçalho do sistema (tanto na página inicial quanto no dashboard).
+*   **Propósito:** Fornecer um indicador visual de novas denúncias/ocorrências não lidas.
+*   **Como Funciona:**
+    1.  Um ícone de sino é exibido no cabeçalho.
+    2.  Um número vermelho sobre o sino indica a quantidade de denúncias não lidas.
+    3.  A contagem é atualizada automaticamente a cada 30 segundos.
+    4.  Ao clicar no sino, o utilizador é redirecionado para a página de "Ocorrências".
 
 ---
 
@@ -366,26 +388,42 @@ Siga os passos abaixo para verificar todas as funcionalidades implementadas:
 
 4.  **Teste a Navegação do Dashboard:**
     *   No `http://localhost:3000/dashboard`, verifique o menu lateral.
-    *   Clique em todos os itens do menu (ex: "Gerir Utilizadores", "Upload Excel", "Chatbot", "Gráficos") e confirme que as páginas correspondentes são carregadas e o item do menu ativo é destacado.
+    *   Clique em todos os itens do menu (ex: "Gerir Utilizadores", "Ocorrências", "Upload Excel", "Chatbot", "Gráficos") e confirme que as páginas correspondentes são carregadas e o item do menu ativo é destacado.
     *   Clique em "Sair" e confirme o redirecionamento para `http://localhost:3000/auth/login`.
 
-5.  **Teste o Upload do Excel:**
+5.  **Teste a Envio de Denúncia:**
+    *   Na página inicial (`http://localhost:3000/`), clique em "Enviar Denúncia".
+    *   Preencha o formulário e envie.
+    *   Verifique se a mensagem de sucesso "Mensagem enviada com sucesso! Responderemos dentro em breve." aparece e se o modal fecha após 3 segundos.
+    *   **Verifique no banco de dados:** Use `npx prisma studio` e confira a tabela `Report` para ver se a denúncia foi armazenada.
+
+6.  **Teste o Gerenciamento de Ocorrências:**
+    *   Acesse `http://localhost:3000/dashboard/occurrences`.
+    *   Confirme que as denúncias enviadas (incluindo as de teste) são exibidas na tabela.
+    *   Teste marcar/desmarcar denúncias como lidas usando os checkboxes.
+    *   Verifique se o status `read` é atualizado no banco de dados (via `npx prisma studio`).
+
+7.  **Teste as Notificações de Ocorrências:**
+    *   Envie algumas denúncias de teste e observe o ícone de sino no cabeçalho.
+    *   Confirme que o número de denúncias não lidas é atualizado sobre o sino (pode levar até 30 segundos para o polling).
+    *   Clique no sino e confirme o redirecionamento para a página de "Ocorrências".
+    *   Marque uma denúncia como lida na página de "Ocorrências" e observe se o contador de notificações diminui.
+
+8.  **Teste o Upload do Excel:**
     *   Navegue para `http://localhost:3000/dashboard/excel-upload`.
     *   Use um ficheiro Excel com os cabeçalhos de coluna exatos fornecidos e dados válidos para `Número`, `Idade` e `Género`.
     *   Faça o upload e verifique a mensagem de sucesso.
     *   **Para verificar os dados no banco:** Execute `npx prisma studio` no terminal e verifique as tabelas `Resident`, `Victimization` e `SecurityPerception`.
     *   Teste com um ficheiro Excel sem dados em `Número`, `Idade` ou `Género` para ver as mensagens de erro de validação.
 
-6.  **Teste a Interface do Chatbot:**
+9.  **Teste a Interface do Chatbot:**
     *   Navegue para `http://localhost:3000/dashboard/chatbot`.
     *   Verifique se o componente `ChatbotInterface` é exibido.
 
-7.  **Teste a Visualização de Gráficos:**
+10. **Teste a Visualização de Gráficos:**
     *   Navegue para `http://localhost:3000/dashboard/graphs`.
     *   Selecione diferentes tipos de gráficos no menu suspenso.
     *   Confirme se os gráficos são renderizados corretamente com base nos dados que você importou via Excel.
 
-8.  **Teste o Alternador de Tema:**
+11. **Teste o Alternador de Tema:**
     *   Em qualquer página, clique no botão de alternar tema e observe se o modo claro/escuro muda corretamente.
-
----

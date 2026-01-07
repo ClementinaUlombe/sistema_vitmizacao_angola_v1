@@ -40,28 +40,45 @@ const ReportModal: React.FC<ReportModalProps> = ({ children }) => {
     e.preventDefault();
     setStatus("loading");
 
-    try {
-      const response = await fetch("https://formspree.io/f/xdakqako", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setStatus("success");
-        setFormData({ name: "", email: "", subject: "", message: "" }); // Clear form
-        setIsOpen(false); // Close modal on success
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to send report.");
-      }
-    } catch (error) {
-      console.error("Error sending report:", error);
-      setStatus("error");
-    }
-  };
+          try {
+            // Send to Formspree for email notification
+            const formspreeResponse = await fetch("https://formspree.io/f/xdakqako", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData),
+            });
+    
+            if (!formspreeResponse.ok) {
+              const errorData = await formspreeResponse.json();
+              throw new Error(errorData.message || "Failed to send report via Formspree.");
+            }
+    
+            // Send to local API for database storage
+            const apiResponse = await fetch("/api/reports", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData),
+            });
+    
+            if (!apiResponse.ok) {
+                const errorData = await apiResponse.json();
+                throw new Error(errorData.message || "Failed to save report to database.");
+            }
+    
+            setStatus("success");
+            setFormData({ name: "", email: "", subject: "", message: "" }); // Clear form
+            setTimeout(() => {
+                setIsOpen(false);
+                setStatus("idle"); // Reset status after closing
+            }, 3000); // Close after 3 seconds
+          } catch (error) {
+            console.error("Error sending report:", error);
+            setStatus("error");
+          }  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -128,7 +145,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ children }) => {
           </Button>
           {status === "success" && (
             <p className="text-green-500 text-sm mt-2">
-              Denúncia enviada com sucesso!
+              Mensagem enviada com sucesso! Responderemos dentro em breve.
             </p>
           )}
           {status === "error" && (

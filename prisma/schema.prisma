@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Resident {
+  id                             Int      @id @default(autoincrement())
+  residentNumber                 String   @unique // Novo: Coluna 'Número' do Excel
+  surveyDate                     DateTime? // Novo: Coluna 'Data' do Excel
+  ageGroup                       String // Mapeia para 'Idade'
+  gender                         String // Mapeia para 'Género'
+  occupation                     String // Mapeia para 'Ocupação'
+  residenceTime                  String // Mapeia para 'Tempo_de_residência_no_bairro'
+  neighborhood                   String // Mapeia para 'Bairro'
+  educationLevel                 String // Mapeia para 'Escolaridade'
+  school                         String? // Novo: Coluna 'ESCOLA'
+  emailContact                   String? // Novo: Coluna 'Direccióndecorreoelectrónicofilter_$' (renomeado para clareza)
+  // protectionMeasures String[] // Alterado para campos Boolean? individuais
+  protectionMeasureP1            Boolean? // Novo: Coluna 'p1'
+  protectionMeasureP2            Boolean? // Novo: Coluna 'p2'
+  protectionMeasureP3            Boolean? // Novo: Coluna 'p3'
+  protectionMeasureP4            Boolean? // Novo: Coluna 'p4'
+  protectionMeasureP5            Boolean? // Novo: Coluna 'p5'
+  protectionMeasureP6            Boolean? // Novo: Coluna 'p6'
+  protectionMeasureP7            Boolean? // Novo: Coluna 'p7'
+  protectionMeasureP8            Boolean? // Novo: Coluna 'p8'
+  protectionMeasureP9            Boolean? // Novo: Coluna 'p9'
+  protectionMeasureP10           Boolean? // Novo: Coluna 'p10'
+  crimeImpactOnDailyLife         String? // Novo: Coluna '@35.AcriminalidadeafetousuarotinadiáriaoudesuafamíliaDequemaneira'
+  neighborCooperation            String? // Novo: Coluna '@36.Comodescrevearelaçãoentrevizinhosemtermosdecooperaçãopar'
+  communityInitiativeParticipation String? // Novo: Coluna '@37.VocêparticipadealgumainiciativacomunitáriavoltadaparaaseguSesimqual'
+  securityImprovementSuggestions String? // Novo: Coluna '@38.Quaismedidasvocêsugeririaparamelhorarasegurançanobairro'
+  victimSupportServicesKnowledge Boolean? // Novo: Coluna '@39.Vocêconheceserviçosdeapoioàsvítimasdecrimenobairro'
+  crimeImpactDetails             String? // Novo: Coluna 'Dequemaneira'
+  improvementSuggestionsDetails  String? // Novo: Coluna 'VIII.SUGESTÕESDEMELHORIA'
+  communityInitiativeDetails     String? // Novo: Coluna 'Sesimqual'
+  filterColumn                   String? // Novo: Coluna 'filter_$'
+
+  victimizations                 Victimization[]
+  securityPerceptions            SecurityPerception[]
+}
+
+model Victimization {
+  id                             Int      @id @default(autoincrement())
+  residentId                     Int
+  resident                       Resident @relation(fields: [residentId], references: [id])
+  wasVictim                      Boolean // Vitima
+  crimeGeneral                   String? // Crime
+  theft                          Boolean? // Furto
+  robbery                        Boolean? // Roubo
+  aggression                     Boolean? // Agressão
+  burglary                       Boolean? // Arrombamento
+  domesticViolence               Boolean? // VioDom
+  homicide                       Boolean? // Homicidio
+  rape                           Boolean? // Estupro
+  drugTrafficking                Boolean? // TraDroga
+  vandalism                      Boolean? // Vandalismo
+  extortion                      Boolean? // Extorsão
+  kidnapping                     Boolean? // Sequestro
+  fraud                          Boolean? // Fraude
+  cybercrime                     Boolean? // CrimeCibernetico
+  otherCrime                     String? // Outro
+  crimeFrequency                 String // Quantasvezes
+  reportedCrimeQuestion          String? // VAR00056 @10.Oscrimesfoiramdenunciadosàsautoridadespoliciais
+  reportedCrime                  Boolean // Denunciou
+  // notReportingReasons String[] // Alterado para campos Boolean? individuais
+  notReportingReasonA1           Boolean? // Novo: Coluna 'a1'
+  notReportingReasonA2           Boolean? // Novo: Coluna 'a2'
+  notReportingReasonA3           Boolean? // Novo: Coluna 'a3'
+  notReportingReasonA4           Boolean? // Novo: Coluna 'a4'
+  notReportingReasonA5           Boolean? // Novo: Coluna 'a5'
+  notReportingReasonA6           Boolean? // Novo: Coluna 'a6'
+  notReportingReasonA7           Boolean? // Novo: Coluna 'a7'
+  notReportingReasonA8           Boolean? // Novo: Coluna 'a8'
+  notReportingReasonA9           Boolean? // Novo: Coluna 'a9'
+  notReportingReasonA10          Boolean? // Novo: Coluna 'a10'
+  crimeYear                      Int? // Ano
+  crimeMonth                     String? // Mês
+  crimeHour                      String? // Horário (MêsHorário seems redundant)
+  crimeLocation                  String? // Localizaçãoexatadentrodobairro
+  perpetratorCount               String
+  damages                        String? // Danoseconsequênciassofridaspodesermaisdeumaopção (alterado para String?)
+  minorsInvolved                 Boolean // @15.Vocêpercebeenvolvimentodemenoresouadolescentesemactividades
+  crimesByWomen                  Boolean // @16.Jápresenciouousoubedecrimescometidospormulheres
+  crimesAgainstWomen             Boolean // @17.Jápresenciouousoubedecrimescometidoscontramulheres
+  gangPresence                   Boolean // @18.Identificaapresençadeganguesouassociaçõescriminosasnobair
+}
+
+model SecurityPerception {
+  id                             Int      @id @default(autoincrement())
+  residentId                     Int
+  resident                       Resident @relation(fields: [residentId], references: [id])
+  daySecurity                    String // Mapeia para '@19.Comoavaliaasuasensaçãodesegurançaaocircularnobairrodurant'
+  nightSecurity                  String // Mapeia para '@20.Comoavaliaasuasensaçãodesegurançaaocircularnobairrodurant'
+  securityComparison             String? // Novo: Coluna '@21.Comparadoaosanosanterioresasuasensaçãodesegurança'
+  mostDangerousAreas             String? // Novo: Coluna '@22.Quaisáreasespecíficasdobairrovocêconsideramaisperigosas'
+  mostInsecureHours              String? // Novo: Coluna '@23.Emquaishoráriosdodiavocêsesentemaisinseguroa'
+  insecurityFactors              String? // Novo: Coluna '@24.Nasuaopiniãoquaisfactoresmaiscontribuemparaainsegurançanob'
+  // insecurityFactorsList String[] // Alterado para campos Boolean? individuais
+  insecurityFactorF1             Boolean? // Novo: Coluna 'f1'
+  insecurityFactorF2             Boolean? // Novo: Coluna 'f2'
+  insecurityFactorF3             Boolean? // Novo: Coluna 'f3'
+  insecurityFactorF4             Boolean? // Novo: Coluna 'f4'
+  insecurityFactorF5             Boolean? // Novo: Coluna 'f5'
+  insecurityFactorF6             Boolean? // Novo: Coluna 'f6'
+  insecurityFactorF7             Boolean? // Novo: Coluna 'f7'
+  insecurityFactorF8             Boolean? // Novo: Coluna 'f8'
+  insecurityFactorF9             Boolean? // Novo: Coluna 'f9'
+  insecurityFactorF10            Boolean? // Novo: Coluna 'f10'
+  insecurityFactorF11            Boolean? // Novo: Coluna 'f11'
+  insecurityFactorF12            Boolean? // Novo: Coluna 'f12'
+  insecurityFactorF13            Boolean? // Novo: Coluna 'f13'
+  crimeFrequencyPerceptionGeneral String? // Novo: Coluna '@26.Comquefrequênciavocêachaqueocorremosseguintescrimesnobairr'
+  crimeFrequencyPerceptionA      String? // Novo: Coluna '@26.Comquefrequênciavocêachaqueocorremosseguintescrimesnobai_A'
+  crimeFrequencyPerceptionB      String? // Novo: Coluna '@26.Comquefrequênciavocêachaqueocorremosseguintescrimesnobai_B'
+  crimeFrequencyPerceptionC      String? // Novo: Coluna '@26.Comquefrequênciavocêachaqueocorremosseguintescrimesnobai_C'
+  crimeGravityPerception         String? // Novo: Coluna '@27.Comoavaliaagravidadedoscrimesqueocorremnobairro'
+  policePresenceEvaluation       String? // Novo: Coluna '@28.Comoavaliaapresençapolicialnobairro'
+  policeResponseSpeedEvaluation  String? // Novo: Coluna '@29.Comoavaliaarapidezderespostadapolícia'
+  policeEffectivenessEvaluation  String? // Novo: Coluna '@30.Comoavaliaaeficáciadapolícianocombateaocrimenasuaárea'
+  localPoliceTrustLevel          String? // Novo: Coluna '@31.Comodescreveoseuníveldeconfiançanapolícialocal'
+  personalPoliceInteraction      String? // Novo: Coluna '@32.JátevealgumainteraçãopessoalcomapolícialocalSesimcomofoiainteração'
+  personalPoliceInteractionDetails String? // Novo: Coluna 'Sesimcomofoiainteração'
+  trustInPoliceAndJusticeSystem  Boolean? // Novo: Coluna '@33.Vocêconfiaqueapolíciaeosistemajudiciallidamadequadamenteco'
+  victimSupportBelief            Boolean? // Novo: Coluna '@34.Vocêacreditaqueasvítimasrecebemoapoionecessáriodasautorid'
+}
+
+model Report {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String?
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+}
