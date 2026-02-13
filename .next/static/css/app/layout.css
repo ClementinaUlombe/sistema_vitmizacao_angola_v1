@@ -1581,6 +1581,9 @@ video {
 .border-primary\/30 {
   border-color: hsl(var(--primary) / 0.3);
 }
+.border-purple-deep {
+  border-color: hsl(var(--purple-deep));
+}
 .border-transparent {
   border-color: transparent;
 }
@@ -1589,9 +1592,6 @@ video {
 }
 .border-white\/20 {
   border-color: rgb(255 255 255 / 0.2);
-}
-.border-purple-deep {
-  border-color: hsl(var(--purple-deep));
 }
 .border-l-accent {
   border-left-color: hsl(var(--accent));

@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { AppFooter } from "@/components/AppFooter";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import DenunciaModal from "@/components/DenunciaModal";
 
 const services = [
   {
@@ -32,6 +35,8 @@ const services = [
 ];
 
 export default function ApoioPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
@@ -43,6 +48,9 @@ export default function ApoioPage() {
           <p className="text-center text-muted-foreground mb-12 text-lg">
             Você não está sozinho. Encontre ajuda perto de você.
           </p>
+          <div className="text-center mb-12">
+            <Button onClick={() => setIsModalOpen(true)}>Fazer uma denúncia</Button>
+          </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service, index) => (
               <Card key={index} className="bg-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
@@ -58,6 +66,7 @@ export default function ApoioPage() {
         </div>
       </main>
       <AppFooter />
+      <DenunciaModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-// File: C:\Users\DELL\safe-angola\src\app\auth\login\page.tsx
+// File: C:\Users\cleme\safe-angola\src\app\auth\login\page.tsx
 import * as entry from '../../../../../src/app/auth/login/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
