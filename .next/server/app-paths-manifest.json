@@ -1,5 +1,4 @@
 {
-  "/apoio/page": "app/apoio/page.js",
   "/page": "app/page.js",
   "/auth/login/page": "app/auth/login/page.js"
 }

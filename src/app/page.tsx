@@ -11,6 +11,7 @@ import ExcelUpload from "@/components/ExcelUpload";
 import ChatbotInterface from "@/components/ChatbotInterface";
 import GraphDisplay from "@/components/GraphDisplay";
 import ReportModal from "@/components/ReportModal";
+import DenunciaModal from "@/components/DenunciaModal";
 import { useState, useEffect } from "react";
 
 const heroHands = "/hero-hands.jpg";
@@ -20,6 +21,7 @@ const parallaxBg = "/parallax-bg.jpg";
 
 const Page = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -608,15 +610,14 @@ const Page = () => {
           <p className="text-lg text-foreground/85 max-w-3xl mb-8">
             Seja forte. Você não está sozinho. Através do sistema INSUTEC, você pode encontrar serviços de apoio à vítima, instituições comunitárias e centros de orientação jurídica mais próximos de si.
           </p>
-          <Link href="/apoio" passHref>
-            <Button className="bg-gradient-primary" size="lg">
-              Encontrar Serviço de Apoio
-            </Button>
-          </Link>
+          <Button className="bg-gradient-primary" size="lg" onClick={() => setIsModalOpen(true)}>
+            Encontrar Serviço de Apoio
+          </Button>
         </div>
       </section>
 
       <AppFooter />
+      <DenunciaModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };
