@@ -9,7 +9,9 @@ interface SuccessModalProps {
   onClose: () => void;
   title: string;
   message: string;
-  autoCloseDelay?: number; // New prop for auto-close delay
+  autoCloseDelay?: number;
+  onConfirm?: () => void; // New prop for confirm action
+  confirmText?: string; // New prop for confirm button text
 }
 
 export default function SuccessModal({
@@ -17,16 +19,19 @@ export default function SuccessModal({
   onClose,
   title,
   message,
-  autoCloseDelay = 3000, // Default to 3 seconds
+  autoCloseDelay = 3000,
+  onConfirm,
+  confirmText = "OK",
 }: SuccessModalProps) {
   useEffect(() => {
-    if (isOpen) {
+    // Auto-close only if there is no onConfirm action
+    if (isOpen && !onConfirm) {
       const timer = setTimeout(() => {
         onClose();
       }, autoCloseDelay);
       return () => clearTimeout(timer);
     }
-  }, [isOpen, onClose, autoCloseDelay]);
+  }, [isOpen, onClose, autoCloseDelay, onConfirm]);
 
   if (!isOpen) return null;
 
@@ -38,7 +43,11 @@ export default function SuccessModal({
         </CardHeader>
         <CardContent className="grid gap-4 text-center">
           <p className="text-lg">{message}</p>
-          {/* Removed explicit button, as it auto-closes */}
+          {onConfirm && (
+            <Button onClick={onConfirm} className="mt-4 w-full bg-white text-purple-deep hover:bg-gray-200">
+              {confirmText}
+            </Button>
+          )}
         </CardContent>
       </Card>
     </div>
