@@ -30,11 +30,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const adminMenuItems = [
     { name: "Página Inicial", href: "/dashboard" },
     { name: "Gerir Utilizadores", href: "/dashboard/users" },
-    { name: "Registar Dados", href: "/dashboard/data-entry" },
+    { name: "Lançamento de Inquéritos", href: "/dashboard/data-entry" },
     { name: "Gerir Base de Dados", href: "/dashboard/database-management" },
-    { name: "Ocorrências", href: "/dashboard/occurrences" },
-    { name: "Ver Gráficos e Relatórios", href: "/dashboard/reports" },
-    { name: "Exportar Dados", href: "/dashboard/export" },
+    { name: "Gestão de Denúncias", href: "/dashboard/occurrences" },
+    { name: "Painel Estatístico", href: "/dashboard/reports" },
+    // { name: "Exportar Dados", href: "/dashboard/export" },
     { name: "Backup", href: "/dashboard/backup" },
     { name: "Upload Excel", href: "/dashboard/excel-upload" }, // New
     { name: "Chatbot", href: "/dashboard/chatbot" }, // New
@@ -43,10 +43,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const researcherMenuItems = [
     { name: "Página Inicial", href: "/dashboard" },
+    { name: "Lançamento de Inquéritos", href: "/dashboard/data-entry" },
     { name: "Consultar Dados", href: "/dashboard/data-query" },
     { name: "Gerar Gráficos e Estatísticas", href: "/dashboard/analytics" },
     { name: "Filtrar Dados", href: "/dashboard/data-filter" },
-    { name: "Ocorrências", href: "/dashboard/occurrences" },
+    { name: "Denúncias Recebidas", href: "/dashboard/occurrences" },
     { name: "Comparar Percepções", href: "/dashboard/perception-comparison" },
     { name: "Criar Relatórios", href: "/dashboard/report-creation" },
     { name: "Upload Excel", href: "/dashboard/excel-upload" }, // New
