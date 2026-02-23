@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
 import { interpretAndQuery } from '@/lib/chatbot-queries';
 
 export async function POST(req: Request) {

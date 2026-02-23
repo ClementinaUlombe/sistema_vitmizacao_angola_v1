@@ -14,6 +14,13 @@ import ReportModal from "@/components/ReportModal";
 import DenunciaModal from "@/components/DenunciaModal";
 import { useState, useEffect } from "react";
 
+interface SummaryData {
+  totalResidents: number;
+  victimizationRate: number;
+  unreportedCrimesRate: number;
+  neighborhoods: number;
+}
+
 const heroHands = "/hero-hands.jpg";
 const heroBooks = "/hero-books.jpg";
 const heroTech = "/hero-tech.jpg";
@@ -22,12 +29,41 @@ const parallaxBg = "/parallax-bg.jpg";
 const Page = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {
       setIsLoggedIn(true);
     }
+
+    const fetchSummaryData = async () => {
+      try {
+        const response = await fetch("/api/data/summary");
+        if (response.ok) {
+          const data = await response.json();
+          setSummaryData(data);
+        } else {
+          console.error("Failed to fetch summary data:", response.statusText);
+          setSummaryData({ // Fallback to 0s if API fails
+            totalResidents: 0,
+            victimizationRate: 0,
+            unreportedCrimesRate: 0,
+            neighborhoods: 0,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching summary data:", error);
+        setSummaryData({ // Fallback to 0s if API fails
+          totalResidents: 0,
+          victimizationRate: 0,
+          unreportedCrimesRate: 0,
+          neighborhoods: 0,
+        });
+      }
+    };
+
+    fetchSummaryData();
   }, []);
 
   const heroImages = [
@@ -48,17 +84,17 @@ const Page = () => {
       <section id="inicio" className="relative isolate overflow-hidden min-h-[600px] flex items-center">
         <HeroSlideshow images={heroImages} intervalMs={5000} />
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
-          <div className="max-w-3xl animate-fade-in">
+          <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
               Sistema de Análise da Vitimização Criminal
             </h1>
             <p className="text-xl text-white/95 mb-4 drop-shadow-md">
               Bairro Gamek à Direita – Distrito Urbano da Samba, Luanda, 2025
             </p>
-            <p className="text-lg text-white/90 mb-8 max-w-2xl drop-shadow-md">
+            <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto drop-shadow-md">
               Uma plataforma inteligente que transforma dados de pesquisa social em informação científica acessível, apoiando políticas públicas e o conhecimento sobre segurança urbana em Angola.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" className="text-base shadow-lg hover-scale">
                 Sobre o Estudo
               </Button>
@@ -91,25 +127,33 @@ const Page = () => {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
-                <CardTitle className="text-primary text-4xl font-bold"><NumberCounter targetValue={522} /></CardTitle>
+                <CardTitle className="text-primary text-4xl font-bold">
+                  {summaryData ? <NumberCounter targetValue={summaryData.totalResidents} /> : "0"}
+                </CardTitle>
                 <CardDescription>Residentes Inquiridos</CardDescription>
               </CardHeader>
             </Card>
             <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
-                <CardTitle className="text-primary text-4xl font-bold"><NumberCounter targetValue={55.9} decimals={1} suffix="%" /></CardTitle>
+                <CardTitle className="text-primary text-4xl font-bold">
+                  {summaryData ? <NumberCounter targetValue={summaryData.victimizationRate} decimals={1} suffix="%" /> : "0.0%"}
+                </CardTitle>
                 <CardDescription>Taxa de Vitimização (12 meses)</CardDescription>
               </CardHeader>
             </Card>
             <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
-                <CardTitle className="text-destructive text-4xl font-bold"><NumberCounter targetValue={68.8} decimals={1} suffix="%" /></CardTitle>
+                <CardTitle className="text-destructive text-4xl font-bold">
+                  {summaryData ? <NumberCounter targetValue={summaryData.unreportedCrimesRate} decimals={1} suffix="%" /> : "0.0%"}
+                </CardTitle>
                 <CardDescription>Crimes Não Denunciados</CardDescription>
               </CardHeader>
             </Card>
             <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
-                <CardTitle className="text-accent text-4xl font-bold"><NumberCounter targetValue={4} /></CardTitle>
+                <CardTitle className="text-accent text-4xl font-bold">
+                  {summaryData ? <NumberCounter targetValue={summaryData.neighborhoods} /> : "0"}
+                </CardTitle>
                 <CardDescription>Bairros Analisados</CardDescription>
               </CardHeader>
             </Card>

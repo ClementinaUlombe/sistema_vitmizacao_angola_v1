@@ -28,7 +28,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   }, []);
 
   const adminMenuItems = [
-    { name: "Página Inicial", href: "/" },
+    { name: "Página Inicial", href: "/dashboard" },
     { name: "Gerir Utilizadores", href: "/dashboard/users" },
     { name: "Registar Dados", href: "/dashboard/data-entry" },
     { name: "Gerir Base de Dados", href: "/dashboard/database-management" },
@@ -42,7 +42,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   ];
 
   const researcherMenuItems = [
-    { name: "Página Inicial", href: "/" },
+    { name: "Página Inicial", href: "/dashboard" },
     { name: "Consultar Dados", href: "/dashboard/data-query" },
     { name: "Gerar Gráficos e Estatísticas", href: "/dashboard/analytics" },
     { name: "Filtrar Dados", href: "/dashboard/data-filter" },
@@ -60,12 +60,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
       <aside className="w-64 bg-gradient-primary text-primary-foreground p-6 shadow-lg flex flex-col">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center shadow-md">
+        <Link href="/" className="flex items-center gap-3 mb-8 group cursor-pointer">
+          <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center shadow-md group-hover:bg-white/30 transition-all">
             <span className="text-white font-bold text-xl">VC</span>
           </div>
           <span className="font-semibold text-white text-lg">Vitimização Criminal</span>
-        </div>
+        </Link>
 
         <nav className="flex-grow">
           <ul className="space-y-2">

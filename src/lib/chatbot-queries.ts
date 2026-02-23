@@ -1,63 +1,56 @@
 // src/lib/chatbot-queries.ts
 
-import prisma from "./prisma";
-
-interface ChatbotQuery {
-  type: string;
-  model: string;
-  where?: any;
-  select?: any;
-  aggregation?: string;
-}
+// Temporarily hardcoding the API token. In a production environment,
+// this should be loaded from an environment variable (e.g., process.env.CHATBOT_API_TOKEN)
+const API_TOKEN = '10wzj22QTt9DZkyvK7ByVNwOX_gbOS4aqZbDzoTzOik';
+const BASE_URL = 'https://indice.ed-consulting.ao/api/v1';
 
 export async function interpretAndQuery(message: string): Promise<string> {
   const lowerCaseMessage = message.toLowerCase();
   let response = "Desculpe, não consegui encontrar informações relevantes para a sua pergunta ou não entendi a questão.";
 
-  // --- Query: Quantas pessoas foram vitimizadas (geral) ---
-  if (lowerCaseMessage.includes("quantas") && lowerCaseMessage.includes("pessoas") && lowerCaseMessage.includes("vitimizadas")) {
-    const totalVictims = await prisma.victimization.count({
-      where: { wasVictim: true }
-    });
-    response = `De acordo com os dados, ${totalVictims} pessoas foram vitimizadas.`;
-    return response;
-  }
-
-  // --- Query: Quantas mulheres/homens foram vitimizadas ---
-  if (lowerCaseMessage.includes("quantas") && lowerCaseMessage.includes("vitimizadas") && (lowerCaseMessage.includes("mulheres") || lowerCaseMessage.includes("homens"))) {
-    const isFemale = lowerCaseMessage.includes("mulheres");
-    const isMale = lowerCaseMessage.includes("homens");
-
-    const genderFilter = isFemale ? "Feminino" : "Masculino";
-    
-    const count = await prisma.victimization.count({
-      where: {
-        wasVictim: true,
-        resident: {
-          gender: genderFilter,
+  try {
+    if (lowerCaseMessage.includes('estatísticas rápidas') || lowerCaseMessage.includes('stats')) {
+      // Fetch quick statistics
+      const statsResponse = await fetch(`${BASE_URL}/stats`, {
+        headers: {
+          'X-API-Token': API_TOKEN,
         },
-      },
-    });
-    response = `De acordo com os dados, ${count} ${isFemale ? "mulheres" : "homens"} foram vitimizadas.`;
-    return response;
-  }
+      });
 
-  // --- Existing basic keyword matching (can be expanded/improved) ---
-  if (lowerCaseMessage.includes('vitimização')) {
-    const totalVictims = await prisma.victimization.count({
-      where: { wasVictim: true }
-    });
-    response = `De acordo com os dados, ${totalVictims} residentes foram vítimas de crime.`;`;
-  } else if (lowerCaseMessage.includes('crimes mais reportados')) {
-    // This is still a placeholder, as proper aggregation needs more complex logic
-    response = "Os crimes mais reportados incluem Roubo, Furto e Agressão. Para uma análise detalhada, consulte a seção de gráficos.";
-  } else if (lowerCaseMessage.includes('segurança noturna')) {
-    const insecureNight = await prisma.securityPerception.count({
-      where: { nightSecurity: { contains: 'inseguro' } }
-    });
-    response = `Cerca de ${insecureNight} residentes sentem-se inseguros à noite.`;
-  } else if (lowerCaseMessage.includes("quem é você") || lowerCaseMessage.includes("o que você faz")) {
-    response = "Eu sou um chatbot do sistema de Análise da Vitimização Criminal, projetado para fornecer informações sobre os dados coletados.";
+      if (!statsResponse.ok) {
+        throw new Error(`API stats responded with status ${statsResponse.status}`);
+      }
+
+      const statsData = await statsResponse.json();
+      // Format statsData into a readable string
+      // This is a placeholder; actual formatting depends on statsData structure
+      response = `Estatísticas rápidas: ${JSON.stringify(statsData, null, 2)}`;
+      
+    } else {
+      // Default to general query
+      const queryResponse = await fetch(`${BASE_URL}/query`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Token': API_TOKEN,
+        },
+        body: JSON.stringify({
+          query: message, // Send the original message as the query
+        }),
+      });
+
+      if (!queryResponse.ok) {
+        throw new Error(`API query responded with status ${queryResponse.status}`);
+      }
+
+      const queryData = await queryResponse.json();
+      // Assume queryData directly contains the answer
+      response = queryData.answer || JSON.stringify(queryData, null, 2);
+    }
+  } catch (error: any) {
+    console.error("Chatbot API error:", error);
+    response = "Desculpe, ocorreu um erro ao comunicar com o serviço de chatbot. Tente novamente mais tarde.";
   }
 
   return response;

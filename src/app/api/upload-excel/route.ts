@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(buffer);
+    await workbook.xlsx.load(buffer as any);
 
     console.log('Workbook loaded successfully.');
     console.log('Total worksheets found:', workbook.worksheets.length);
@@ -70,23 +70,27 @@ export async function POST(req: NextRequest) {
       dataToInsert.push(rowData);
     });
 
-    // Helper function to convert "Sim"/"Não" to boolean
+    // Helper function to convert various values to boolean
     const toBoolean = (value: any) => {
+      if (value === null || value === undefined) return null;
+      if (typeof value === 'boolean') return value;
+      if (typeof value === 'number') {
+        if (value === 1) return true;
+        if (value === 2) return false;
+        return null;
+      }
       if (typeof value === 'string') {
         const lowerValue = value.toLowerCase().trim();
-        if (lowerValue === 'sim') return true;
-        if (lowerValue === 'não' || lowerValue === 'nao') return false;
+        if (lowerValue === 'sim' || lowerValue === '1' || lowerValue === '1.0' || lowerValue === '1.00') return true;
+        if (lowerValue === 'não' || lowerValue === 'nao' || lowerValue === '2' || lowerValue === '2.0' || lowerValue === '2.00') return false;
       }
       return null;
     };
 
-    // Helper function to convert "Sim"/"Não" to boolean for specific fields
+    // Helper function to convert various values to boolean for specific fields
     const toBooleanStrict = (value: any) => {
-      if (typeof value === 'string') {
-        const lowerValue = value.toLowerCase().trim();
-        return lowerValue === 'sim';
-      }
-      return false;
+      const boolValue = toBoolean(value);
+      return boolValue === true;
     };
 
     // Helper function to parse date

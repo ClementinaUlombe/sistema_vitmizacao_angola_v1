@@ -56,8 +56,9 @@ All colors MUST be HSL.
     --gradient-secondary: linear-gradient(135deg, hsl(280 85% 60%) 0%, hsl(265 85% 58%) 50%, hsl(220 90% 56%) 100%);
     --gradient-light: linear-gradient(180deg, hsl(265 70% 95%) 0%, hsl(220 75% 95%) 100%);
     --gradient-hero: linear-gradient(135deg, hsl(270 80% 40%) 0%, hsl(265 85% 58%) 50%, hsl(220 90% 56%) 100%);
-    --gradient-overlay: linear-gradient(135deg, hsla(265 85% 58% / 0.2) 0%, hsla(220 90% 56% / 0.15) 100%);
+    --gradient-overlay: linear-gradient(135deg, hsla(265 85% 58% / 0.05) 0%, hsla(220 90% 56% / 0.02) 100%);
     --gradient-card: linear-gradient(145deg, hsl(265 70% 96%) 0%, hsl(220 75% 96%) 100%);
+    --gradient-glow: radial-gradient(circle at 50% 0%, hsla(265, 85%, 58%, 0.2), hsla(265, 85%, 58%, 0) 70%);
     
     /* Sombras */
     --shadow-sm: 0 2px 8px hsla(265 85% 58% / 0.08);
@@ -109,14 +110,38 @@ All colors MUST be HSL.
     --gradient-secondary: linear-gradient(135deg, hsl(280 85% 35%) 0%, hsl(265 85% 30%) 50%, hsl(220 90% 25%) 100%); /* Darker secondary gradient */
     --gradient-light: linear-gradient(180deg, hsl(240 10% 10%) 0%, hsl(220 10% 10%) 100%); /* Darker light gradient */
     --gradient-hero: linear-gradient(135deg, hsl(270 80% 20%) 0%, hsl(265 85% 30%) 50%, hsl(220 90% 25%) 100%); /* Darker hero gradient */
-    --gradient-overlay: linear-gradient(135deg, hsla(265 85% 30% / 0.3) 0%, hsla(220 90% 25% / 0.2) 100%); /* Darker overlay */
+    --gradient-overlay: linear-gradient(135deg, hsla(265 85% 30% / 0.08) 0%, hsla(220 90% 25% / 0.04) 100%); /* Darker overlay */
     --gradient-card: linear-gradient(145deg, hsl(240 10% 10%) 0%, hsl(220 10% 10%) 100%); /* Darker card gradient */
+    --gradient-glow: radial-gradient(circle at 50% 0%, hsla(265, 85%, 58%, 0.25), hsla(265, 85%, 58%, 0) 70%);
 
     /* Sombras - adjust for dark mode if needed */
     --shadow-sm: 0 2px 8px hsla(265 85% 58% / 0.08);
     --shadow-md: 0 4px 16px hsla(265 85% 58% / 0.12);
     --shadow-lg: 0 8px 32px hsla(265 85% 58% / 0.16);
     --shadow-xl: 0 16px 48px hsla(265 85% 58% / 0.2);
+  }
+}
+
+@layer components {
+  .glow-card {
+    @apply relative overflow-hidden;
+  }
+
+  .glow-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: var(--gradient-glow);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 0;
+  }
+
+  .glow-card:hover::before {
+    opacity: 1;
   }
 }
 

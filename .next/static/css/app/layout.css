@@ -666,8 +666,9 @@ video {
     --gradient-secondary: linear-gradient(135deg, hsl(280 85% 60%) 0%, hsl(265 85% 58%) 50%, hsl(220 90% 56%) 100%);
     --gradient-light: linear-gradient(180deg, hsl(265 70% 95%) 0%, hsl(220 75% 95%) 100%);
     --gradient-hero: linear-gradient(135deg, hsl(270 80% 40%) 0%, hsl(265 85% 58%) 50%, hsl(220 90% 56%) 100%);
-    --gradient-overlay: linear-gradient(135deg, hsla(265 85% 58% / 0.2) 0%, hsla(220 90% 56% / 0.15) 100%);
+    --gradient-overlay: linear-gradient(135deg, hsla(265 85% 58% / 0.05) 0%, hsla(220 90% 56% / 0.02) 100%);
     --gradient-card: linear-gradient(145deg, hsl(265 70% 96%) 0%, hsl(220 75% 96%) 100%);
+    --gradient-glow: radial-gradient(circle at 50% 0%, hsla(265, 85%, 58%, 0.2), hsla(265, 85%, 58%, 0) 70%);
     
     /* Sombras */
     --shadow-sm: 0 2px 8px hsla(265 85% 58% / 0.08);
@@ -719,8 +720,9 @@ video {
     --gradient-secondary: linear-gradient(135deg, hsl(280 85% 35%) 0%, hsl(265 85% 30%) 50%, hsl(220 90% 25%) 100%); /* Darker secondary gradient */
     --gradient-light: linear-gradient(180deg, hsl(240 10% 10%) 0%, hsl(220 10% 10%) 100%); /* Darker light gradient */
     --gradient-hero: linear-gradient(135deg, hsl(270 80% 20%) 0%, hsl(265 85% 30%) 50%, hsl(220 90% 25%) 100%); /* Darker hero gradient */
-    --gradient-overlay: linear-gradient(135deg, hsla(265 85% 30% / 0.3) 0%, hsla(220 90% 25% / 0.2) 100%); /* Darker overlay */
+    --gradient-overlay: linear-gradient(135deg, hsla(265 85% 30% / 0.08) 0%, hsla(220 90% 25% / 0.04) 100%); /* Darker overlay */
     --gradient-card: linear-gradient(145deg, hsl(240 10% 10%) 0%, hsl(220 10% 10%) 100%); /* Darker card gradient */
+    --gradient-glow: radial-gradient(circle at 50% 0%, hsla(265, 85%, 58%, 0.25), hsla(265, 85%, 58%, 0) 70%);
 
     /* Sombras - adjust for dark mode if needed */
     --shadow-sm: 0 2px 8px hsla(265 85% 58% / 0.08);
@@ -749,6 +751,25 @@ video {
     max-width: 1400px;
   }
 }
+.glow-card {
+  position: relative;
+  overflow: hidden;
+}
+.glow-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: var(--gradient-glow);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 0;
+  }
+.glow-card:hover::before {
+    opacity: 1;
+  }
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1008,6 +1029,9 @@ video {
 .block {
   display: block;
 }
+.inline-block {
+  display: inline-block;
+}
 .flex {
   display: flex;
 }
@@ -1105,6 +1129,9 @@ video {
 .h-svh {
   height: 100svh;
 }
+.h-\[800px\] {
+  height: 800px;
+}
 .max-h-96 {
   max-height: 24rem;
 }
@@ -1113,6 +1140,9 @@ video {
 }
 .max-h-screen {
   max-height: 100vh;
+}
+.max-h-\[90vh\] {
+  max-height: 90vh;
 }
 .min-h-0 {
   min-height: 0px;
@@ -1134,6 +1164,9 @@ video {
 }
 .min-h-svh {
   min-height: 100svh;
+}
+.min-h-\[800px\] {
+  min-height: 800px;
 }
 .w-0 {
   width: 0px;
@@ -1395,6 +1428,9 @@ video {
 .grid-cols-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 .flex-row {
   flex-direction: row;
 }
@@ -1495,6 +1531,11 @@ video {
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
+.space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
 .overflow-auto {
   overflow: auto;
 }
@@ -1575,6 +1616,9 @@ video {
 .border-t {
   border-top-width: 1px;
 }
+.border-t-4 {
+  border-top-width: 4px;
+}
 .border-dashed {
   border-style: dashed;
 }
@@ -1648,6 +1692,15 @@ video {
 }
 .border-white\/20 {
   border-color: rgb(255 255 255 / 0.2);
+}
+.border-destructive\/20 {
+  border-color: hsl(var(--destructive) / 0.2);
+}
+.border-muted-foreground\/20 {
+  border-color: hsl(var(--muted-foreground) / 0.2);
+}
+.border-border {
+  border-color: hsl(var(--border));
 }
 .border-l-accent {
   border-left-color: hsl(var(--accent));
@@ -1762,6 +1815,9 @@ video {
 }
 .bg-white\/30 {
   background-color: rgb(255 255 255 / 0.3);
+}
+.bg-destructive\/10 {
+  background-color: hsl(var(--destructive) / 0.1);
 }
 .bg-gradient-card {
   background-image: var(--gradient-card);
@@ -1983,6 +2039,12 @@ video {
 .pt-6 {
   padding-top: 1.5rem;
 }
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+.pl-2 {
+  padding-left: 0.5rem;
+}
 .text-left {
   text-align: left;
 }
@@ -2048,6 +2110,9 @@ video {
 }
 .font-semibold {
   font-weight: 600;
+}
+.font-extrabold {
+  font-weight: 800;
 }
 .italic {
   font-style: italic;
@@ -2560,6 +2625,11 @@ All colors MUST be HSL.
   background-color: rgb(255 255 255 / 0.2);
 }
 
+.hover\:bg-white:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+
 .hover\:text-accent-foreground:hover {
   color: hsl(var(--accent-foreground));
 }
@@ -2628,6 +2698,10 @@ All colors MUST be HSL.
 .focus\:border-purple-500:focus {
   --tw-border-opacity: 1;
   border-color: rgb(168 85 247 / var(--tw-border-opacity, 1));
+}
+
+.focus\:border-primary:focus {
+  border-color: hsl(var(--primary));
 }
 
 .focus\:bg-accent:focus {
@@ -2707,6 +2781,12 @@ All colors MUST be HSL.
   --tw-ring-offset-color: hsl(var(--background));
 }
 
+.active\:scale-\[0\.98\]:active {
+  --tw-scale-x: 0.98;
+  --tw-scale-y: 0.98;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .disabled\:pointer-events-none:disabled {
   pointer-events: none;
 }
@@ -2727,6 +2807,10 @@ All colors MUST be HSL.
   --tw-scale-x: 1.1;
   --tw-scale-y: 1.1;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.group:hover .group-hover\:bg-white\/30 {
+  background-color: rgb(255 255 255 / 0.3);
 }
 
 .group\/menu-item:hover .group-hover\/menu-item\:opacity-100 {
@@ -3584,6 +3668,10 @@ All colors MUST be HSL.
 
   .md\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .md\:p-6 {
+    padding: 1.5rem;
   }
 
   .md\:text-sm {

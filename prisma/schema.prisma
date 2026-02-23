@@ -142,11 +142,27 @@ model SecurityPerception {
 }
 
 model Report {
-  id        Int      @id @default(autoincrement())
-  name      String?
-  email     String?
-  subject   String
-  message   String
-  createdAt DateTime @default(now())
-  read      Boolean  @default(false)
+  id                    Int      @id @default(autoincrement())
+  name                  String?
+  email                 String?
+  subject               String
+  message               String
+  age                   String?
+  gender                String?
+  occupation            String?
+  educationLevel        String?
+  residenceTime         String?
+  neighborhood          String?
+  wasVictim             Boolean?
+  crimeTypes            String?  // JSON array of selected crimes
+  theft                 Boolean? @default(false)
+  robbery               Boolean? @default(false)
+  aggression            Boolean? @default(false)
+  domesticViolence      Boolean? @default(false)
+  rape                  Boolean? @default(false)
+  fraud                 Boolean? @default(false)
+  cybercrime            Boolean? @default(false)
+  otherCrime            String?
+  createdAt             DateTime @default(now())
+  read                  Boolean  @default(false)
 }

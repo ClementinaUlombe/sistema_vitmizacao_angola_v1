@@ -24,7 +24,6 @@ export default function AuthLayout({
       <AppHeader />
       <main className="relative flex-grow flex items-center justify-center overflow-hidden">
         <HeroSlideshow images={heroImages} intervalMs={5000} />
-        <div className="absolute inset-0 bg-gradient-hero opacity-90" /> {/* Overlay */}
         <div className="relative z-10 p-4">
           {children}
         </div>

@@ -7,121 +7,99 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import SuccessModal from "@/components/SuccessModal"; // Import the new modal component
-import HeroSlideshow from "@/components/HeroSlideshow";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const router = useRouter();
-
-  const heroImages = [
-    "/apontar.gif",
-    "/imagesmaos.jpeg",
-    "/livro.jpeg",
-    "/maocabeca.jpg",
-    "/maos.jpg",
-    "/nochao.jpg",
-    "/telefone.webp",
-  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccessMessage("");
-
+    
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Store user info in localStorage
         localStorage.setItem("user", JSON.stringify(data.user));
-
-        setSuccessMessage(data.message || "Login successful!");
-        setShowSuccessModal(true);
+        router.push("/dashboard"); 
       } else {
-        setError(data.message || "Login failed");
+        setError(data.message || "Falha no login. Verifique suas credenciais.");
       }
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("An unexpected error occurred");
+    } catch (err: any) {
+      setError("Erro ao conectar com o servidor.");
     }
   };
 
-  const handleSuccessModalConfirm = () => {
-    setShowSuccessModal(false);
-    router.push("/dashboard"); // Redirect to dashboard after successful login
-  };
-
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-background">
-      <HeroSlideshow images={heroImages} intervalMs={5000} />
-      <div className="relative z-10">
-        <Card className="w-full max-w-lg">
-          <CardHeader>
-            <CardTitle className="text-2xl text-center">Entrar no Sistema</CardTitle>
-            <CardDescription className="text-center">
-              Digite seu e-mail e senha para acessar
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="grid gap-2">
-              <div className="grid gap-1">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="grid gap-1">
-                <Label htmlFor="password">Senha</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              {error && <p className="text-red-500 text-sm">{error}</p>}
-              <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline text-right block">
+    <Card className="w-full max-w-md shadow-2xl border-t-4 border-primary bg-card/95 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="text-3xl font-bold text-center text-primary">Acesso ao Sistema</CardTitle>
+        <CardDescription className="text-center text-base">
+          Introduza as suas credenciais para continuar
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-semibold">E-mail</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="h-12 border-muted-foreground/20 focus:border-primary transition-all"
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password" name="Senha" className="text-sm font-semibold">Senha</Label>
+              <Link href="/auth/forgot-password" size="sm" className="text-xs text-primary hover:underline font-medium">
                 Esqueceu a senha?
               </Link>
-              <Button type="submit" className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 transition-opacity">Entrar</Button>
-            </form>
-            <div className="text-center text-sm text-muted-foreground mt-2">
-              Não tem uma conta?{" "}
-              <Link href="/auth/register" className="text-primary hover:underline">
-                Cadastre-se
-              </Link>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="h-12 border-muted-foreground/20 focus:border-primary transition-all"
+            />
+          </div>
+          
+          {error && (
+            <div className="p-3 rounded-md bg-destructive/10 border border-destructive/20">
+              <p className="text-destructive text-sm text-center font-medium">{error}</p>
+            </div>
+          )}
 
-      <SuccessModal
-        isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        title="Sucesso!"
-        message={successMessage}
-        onConfirm={handleSuccessModalConfirm}
-        confirmText="Ir para o Painel Principal"
-      />
-    </div>
+          <Button 
+            type="submit" 
+            className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 text-lg font-bold shadow-lg transform transition-all active:scale-[0.98]"
+          >
+            Entrar no Sistema
+          </Button>
+        </form>
+        
+        <div className="mt-8 text-center border-t pt-6">
+          <p className="text-sm text-muted-foreground">
+            Ainda não tem uma conta?{" "}
+            <Link href="/auth/register" className="text-primary hover:underline font-bold">
+              Cadastre-se agora
+            </Link>
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
