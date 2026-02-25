@@ -40,7 +40,13 @@ export default function LoginPage() {
         
         // Validação extra opcional: Verificar se o role selecionado coincide com o da BD
         if (user.role.toUpperCase() !== role.toUpperCase()) {
-          setError(`Este utilizador não tem permissões de ${role === "ADMIN" ? "Administrador" : "Investigador"}.`);
+          const roleNames: Record<string, string> = {
+            ADMIN: "Administrador",
+            RESEARCHER: "Investigador",
+            POLICE: "Autoridade Policial",
+            CITIZEN: "Cidadão"
+          };
+          setError(`Este utilizador não tem permissões de ${roleNames[role] || role}.`);
           return;
         }
 
@@ -85,6 +91,8 @@ export default function LoginPage() {
               <SelectContent>
                 <SelectItem value="ADMIN">Administrador</SelectItem>
                 <SelectItem value="RESEARCHER">Investigador</SelectItem>
+                <SelectItem value="POLICE">Autoridade Policial</SelectItem>
+                <SelectItem value="CITIZEN">Cidadão</SelectItem>
               </SelectContent>
             </Select>
           </div>

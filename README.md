@@ -131,19 +131,24 @@ O sistema possui um fluxo de autenticação completo com registo, login e recupe
 
 ## **Gestão de Perfis (RBAC)**
 
-O sistema utiliza um controlo de acesso baseado em perfis (Role-Based Access Control) para garantir a integridade dos dados e a segurança das operações:
+O sistema utiliza um controlo de acesso baseado em perfis (Role-Based Access Control):
 
 ### 👤 Administrador (ADMIN)
-*   **Gestão de Utilizadores:** Controlo total sobre as contas de acesso.
-*   **Infraestrutura:** Acesso a ferramentas de Backup e gestão da Base de Dados.
-*   **Gestão de Denúncias:** Visualização completa das ocorrências reportadas.
-*   **Dashboard:** Acesso a todos os menus técnicos e administrativos.
+*   **Gestão de Utilizadores:** Controlo total sobre as contas.
+*   **Infraestrutura:** Backup, Gestão de BD e Configurações.
+*   **Dashboard:** Acesso a todos os menus técnicos.
 
 ### 🔬 Investigador (RESEARCHER)
-*   **Recolha e Análise:** Focado no lançamento de inquéritos e análise estatística.
-*   **Consultas:** Filtragem avançada e comparação de percepções de segurança.
-*   **Relatórios:** Criação de relatórios técnicos baseados nos dados importados.
-*   **Dashboard:** Menu otimizado para tarefas de pesquisa científica.
+*   **Análise Científica:** Lançamento de inquéritos, filtros avançados e comparação de percepções.
+*   **Relatórios:** Criação de relatórios técnicos e estatísticos.
+
+### 👮 Autoridade Policial (POLICE)
+*   **Operacional:** Gestão de ocorrências e monitorização de denúncias em tempo real.
+*   **Estratégia:** Acesso a mapas de criminalidade e painéis de relatórios de incidentes.
+
+### 🏠 Cidadão (CITIZEN)
+*   **Participação:** Envio de relatos/denúncias e consulta do estado das suas participações.
+*   **Apoio:** Acesso ao Chatbot de auxílio e estatísticas públicas de segurança.
 
 ---
 

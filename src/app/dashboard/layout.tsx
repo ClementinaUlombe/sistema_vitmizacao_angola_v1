@@ -13,7 +13,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
   const [userName, setUserName] = useState("");
-  const [userRole, setUserRole] = useState<"admin" | "researcher">("researcher");
+  const [userRole, setUserRole] = useState<"admin" | "researcher" | "police" | "citizen">("citizen");
   const systemName = "Vitimização Criminal";
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         setUserName(user.name);
       }
       if (user && user.role) {
-        setUserRole(user.role.toLowerCase() as "admin" | "researcher");
+        setUserRole(user.role.toLowerCase() as any);
       }
     }
   }, []);
@@ -36,28 +36,53 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Gerir Base de Dados", href: "/dashboard/database-management" },
     { name: "Gestão de Denúncias", href: "/dashboard/occurrences" },
     { name: "Painel Estatístico", href: "/dashboard/reports" },
-    // { name: "Exportar Dados", href: "/dashboard/export" },
     { name: "Backup", href: "/dashboard/backup" },
-    { name: "Upload Excel", href: "/dashboard/excel-upload" }, // New
-    { name: "Chatbot", href: "/dashboard/chatbot" }, // New
-    { name: "Gráficos", href: "/dashboard/graphs" }, // New
+    { name: "Upload Excel", href: "/dashboard/excel-upload" },
+    { name: "Chatbot", href: "/dashboard/chatbot" },
+    { name: "Gráficos", href: "/dashboard/graphs" },
   ];
 
   const researcherMenuItems = [
     { name: "Página Inicial", href: "/dashboard" },
     { name: "Lançamento de Inquéritos", href: "/dashboard/data-entry" },
     { name: "Consultar Dados", href: "/dashboard/data-query" },
-    { name: "Gerar Gráficos e Estatísticas", href: "/dashboard/analytics" },
+    { name: "Gerar Estatísticas", href: "/dashboard/analytics" },
     { name: "Filtrar Dados", href: "/dashboard/data-filter" },
     { name: "Denúncias Recebidas", href: "/dashboard/occurrences" },
     { name: "Comparar Percepções", href: "/dashboard/perception-comparison" },
     { name: "Criar Relatórios", href: "/dashboard/report-creation" },
-    { name: "Upload Excel", href: "/dashboard/excel-upload" }, // New
-    { name: "Chatbot", href: "/dashboard/chatbot" }, // New
-    { name: "Gráficos", href: "/dashboard/graphs" }, // New
+    { name: "Upload Excel", href: "/dashboard/excel-upload" },
+    { name: "Chatbot", href: "/dashboard/chatbot" },
+    { name: "Gráficos", href: "/dashboard/graphs" },
   ];
 
-  const menuItems = userRole === "admin" ? adminMenuItems : researcherMenuItems;
+  const policeMenuItems = [
+    { name: "Página Inicial", href: "/dashboard" },
+    { name: "Gestão de Ocorrências", href: "/dashboard/occurrences" },
+    { name: "Painel de Relatórios", href: "/dashboard/reports" },
+    { name: "Gráficos de Criminalidade", href: "/dashboard/graphs" },
+    { name: "Chatbot Auxiliar", href: "/dashboard/chatbot" },
+  ];
+
+  const citizenMenuItems = [
+    { name: "Página Inicial", href: "/dashboard" },
+    { name: "Minhas Denúncias", href: "/dashboard/occurrences" },
+    { name: "Enviar Relato", href: "/dashboard/report-creation" }, // Assume-se que o cidadão pode reportar aqui
+    { name: "Estatísticas Públicas", href: "/dashboard/graphs" },
+    { name: "Chatbot de Apoio", href: "/dashboard/chatbot" },
+  ];
+
+  const getMenuItems = () => {
+    switch (userRole) {
+      case "admin": return adminMenuItems;
+      case "researcher": return researcherMenuItems;
+      case "police": return policeMenuItems;
+      case "citizen": return citizenMenuItems;
+      default: return citizenMenuItems;
+    }
+  };
+
+  const menuItems = getMenuItems();
 
   return (
     <div className="flex min-h-screen bg-background">

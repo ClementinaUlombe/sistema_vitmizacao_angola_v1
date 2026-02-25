@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { sendEmail, getWelcomeEmailHTML } from "@/lib/email";
 
 export async function GET(request: Request) {
   try {
@@ -74,6 +75,17 @@ export async function POST(request: Request) {
         },
       });
 
+      // Enviar email de boas-vindas
+      try {
+        await sendEmail({
+          to: email,
+          subject: "Bem-vindo ao Safe Angola - Sua conta foi criada",
+          html: getWelcomeEmailHTML(name || "Utilizador", role || "RESEARCHER"),
+        });
+      } catch (emailError) {
+        console.error("Erro ao enviar email de boas-vindas:", emailError);
+      }
+
       return NextResponse.json(newUser, { status: 201 });
     }
 
@@ -94,6 +106,17 @@ export async function POST(request: Request) {
         role: role || "RESEARCHER",
       },
     });
+
+    // Enviar email de boas-vindas
+    try {
+      await sendEmail({
+        to: email,
+        subject: "Bem-vindo ao Safe Angola - Sua conta foi criada",
+        html: getWelcomeEmailHTML(name, role || "RESEARCHER"),
+      });
+    } catch (emailError) {
+      console.error("Erro ao enviar email de boas-vindas:", emailError);
+    }
 
     return NextResponse.json(
       {

@@ -104,6 +104,8 @@ export default function RegisterPage() {
               <SelectContent>
                 <SelectItem value="ADMIN">Administrador (Gestão Total)</SelectItem>
                 <SelectItem value="RESEARCHER">Investigador (Análise de Dados)</SelectItem>
+                <SelectItem value="POLICE">Autoridade Policial (Gestão de Ocorrências)</SelectItem>
+                <SelectItem value="CITIZEN">Cidadão (Denúncias e Apoio)</SelectItem>
               </SelectContent>
             </Select>
           </div>

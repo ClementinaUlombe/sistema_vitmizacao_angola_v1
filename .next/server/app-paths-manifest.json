@@ -1,1 +1,11 @@
-{}
+{
+  "/api/data/summary/route": "app/api/data/summary/route.js",
+  "/api/notifications/route": "app/api/notifications/route.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/data/residents-by-age-group/route": "app/api/data/residents-by-age-group/route.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/auth/register/page": "app/auth/register/page.js",
+  "/auth/login/page": "app/auth/login/page.js",
+  "/dashboard/report-creation/page": "app/dashboard/report-creation/page.js",
+  "/dashboard/graphs/page": "app/dashboard/graphs/page.js"
+}
