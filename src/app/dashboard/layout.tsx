@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation"; // Import usePathname
 import { ThemeToggle } from "@/components/ThemeToggle";
 import NotificationBell from "@/components/NotificationBell";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
   const [userName, setUserName] = useState("");
+  const [userImage, setUserImage] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<"admin" | "researcher" | "police" | "citizen">("citizen");
   const systemName = "Vitimização Criminal";
 
@@ -23,6 +25,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       if (user && user.name) {
         setUserName(user.name);
       }
+      if (user && user.image) {
+        setUserImage(user.image);
+      }
       if (user && user.role) {
         setUserRole(user.role.toLowerCase() as any);
       }
@@ -31,6 +36,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const adminMenuItems = [
     { name: "Página Inicial", href: "/dashboard" },
+    { name: "O Meu Perfil", href: "/dashboard/profile" },
     { name: "Gerir Utilizadores", href: "/dashboard/users" },
     { name: "Lançamento de Inquéritos", href: "/dashboard/data-entry" },
     { name: "Gerir Base de Dados", href: "/dashboard/database-management" },
@@ -44,6 +50,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const researcherMenuItems = [
     { name: "Página Inicial", href: "/dashboard" },
+    { name: "O Meu Perfil", href: "/dashboard/profile" },
     { name: "Lançamento de Inquéritos", href: "/dashboard/data-entry" },
     { name: "Consultar Dados", href: "/dashboard/data-query" },
     { name: "Gerar Estatísticas", href: "/dashboard/analytics" },
@@ -58,6 +65,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const policeMenuItems = [
     { name: "Página Inicial", href: "/dashboard" },
+    { name: "O Meu Perfil", href: "/dashboard/profile" },
     { name: "Gestão de Ocorrências", href: "/dashboard/occurrences" },
     { name: "Painel de Relatórios", href: "/dashboard/reports" },
     { name: "Gráficos de Criminalidade", href: "/dashboard/graphs" },
@@ -66,8 +74,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const citizenMenuItems = [
     { name: "Página Inicial", href: "/dashboard" },
+    { name: "O Meu Perfil", href: "/dashboard/profile" },
     { name: "Minhas Denúncias", href: "/dashboard/occurrences" },
-    { name: "Enviar Relato", href: "/dashboard/report-creation" }, // Assume-se que o cidadão pode reportar aqui
+    { name: "Enviar Relato", href: "/dashboard/report-creation" },
     { name: "Estatísticas Públicas", href: "/dashboard/graphs" },
     { name: "Chatbot de Apoio", href: "/dashboard/chatbot" },
   ];
@@ -122,10 +131,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main Content */}
       <main className="flex-1 p-8">
         {/* Header for main content area - could include user info, logout, etc. */}
-        <header className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Bem-vindo ao sistema de {systemName} {userName}</h1>
-          <ThemeToggle />
-          <NotificationBell />
+        <header className="flex justify-between items-center mb-8 bg-card p-4 rounded-xl shadow-sm border border-border">
+          <h1 className="text-2xl font-bold text-foreground">Olá, {userName}</h1>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <NotificationBell />
+            <Link href="/dashboard/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <Avatar className="h-10 w-10 border-2 border-primary/20">
+                <AvatarImage src={userImage || ""} alt={userName} />
+                <AvatarFallback className="bg-primary text-primary-foreground font-bold">
+                  {userName.substring(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+          </div>
         </header>
         {children}
       </main>
