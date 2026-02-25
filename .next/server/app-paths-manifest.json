@@ -1,11 +1,1 @@
-{
-  "/api/notifications/route": "app/api/notifications/route.js",
-  "/api/data/residents-by-age-group/route": "app/api/data/residents-by-age-group/route.js",
-  "/dashboard/export/page": "app/dashboard/export/page.js",
-  "/dashboard/database-management/page": "app/dashboard/database-management/page.js",
-  "/dashboard/occurrences/page": "app/dashboard/occurrences/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/dashboard/excel-upload/page": "app/dashboard/excel-upload/page.js",
-  "/dashboard/chatbot/page": "app/dashboard/chatbot/page.js",
-  "/dashboard/graphs/page": "app/dashboard/graphs/page.js"
-}
+{}

@@ -129,43 +129,52 @@ O sistema possui um fluxo de autenticação completo com registo, login e recupe
 *   **Recuperação de Senha:** `http://localhost:3000/auth/forgot-password`
     *   Página para iniciar o processo de recuperação de senha (a lógica de backend para isso ainda precisa ser implementada).
 
+## **Gestão de Perfis (RBAC)**
+
+O sistema utiliza um controlo de acesso baseado em perfis (Role-Based Access Control) para garantir a integridade dos dados e a segurança das operações:
+
+### 👤 Administrador (ADMIN)
+*   **Gestão de Utilizadores:** Controlo total sobre as contas de acesso.
+*   **Infraestrutura:** Acesso a ferramentas de Backup e gestão da Base de Dados.
+*   **Gestão de Denúncias:** Visualização completa das ocorrências reportadas.
+*   **Dashboard:** Acesso a todos os menus técnicos e administrativos.
+
+### 🔬 Investigador (RESEARCHER)
+*   **Recolha e Análise:** Focado no lançamento de inquéritos e análise estatística.
+*   **Consultas:** Filtragem avançada e comparação de percepções de segurança.
+*   **Relatórios:** Criação de relatórios técnicos baseados nos dados importados.
+*   **Dashboard:** Menu otimizado para tarefas de pesquisa científica.
+
 ---
 
 ## **Painel Principal (Dashboard)**
 
-O dashboard é a área principal para utilizadores autenticados, com menus dinâmicos baseados no perfil do utilizador.
+O dashboard é a área principal para utilizadores autenticados, com menus dinâmicos carregados automaticamente com base no perfil (`role`) do utilizador guardado na base de dados.
 
-### Estrutura do Menu
+### Estrutura do Menu Dinâmico
 
-O menu lateral exibe itens diferentes dependendo do perfil do utilizador (Administrador ou Investigador). Atualmente, o perfil é definido como "admin" por padrão no `src/app/dashboard/layout.tsx`.
-
-**Itens de Menu para Administrador:**
+**Menu Administrativo (ADMIN):**
 *   Gerir Utilizadores (`/dashboard/users`)
-*   Registar Dados (`/dashboard/data-entry`)
+*   Lançamento de Inquéritos (`/dashboard/data-entry`)
 *   Gerir Base de Dados (`/dashboard/database-management`)
-*   Ocorrências (`/dashboard/occurrences`)
-*   Ver Gráficos e Relatórios (`/dashboard/reports`)
-*   Exportar Dados (`/dashboard/export`)
+*   Gestão de Denúncias (`/dashboard/occurrences`)
+*   Painel Estatístico (`/dashboard/reports`)
 *   Backup (`/dashboard/backup`)
 *   Upload Excel (`/dashboard/excel-upload`)
 *   Chatbot (`/dashboard/chatbot`)
 *   Gráficos (`/dashboard/graphs`)
 
-**Itens de Menu para Investigador / Pesquisador:**
-*   Página Inicial (`/`)
+**Menu de Investigação (RESEARCHER):**
+*   Lançamento de Inquéritos (`/dashboard/data-entry`)
 *   Consultar Dados (`/dashboard/data-query`)
 *   Gerar Gráficos e Estatísticas (`/dashboard/analytics`)
 *   Filtrar Dados (`/dashboard/data-filter`)
-*   Ocorrências (`/dashboard/occurrences`)
+*   Denúncias Recebidas (`/dashboard/occurrences`)
 *   Comparar Percepções (`/dashboard/perception-comparison`)
 *   Criar Relatórios (`/dashboard/report-creation`)
 *   Upload Excel (`/dashboard/excel-upload`)
 *   Chatbot (`/dashboard/chatbot`)
 *   Gráficos (`/dashboard/graphs`)
-
-### Navegação
-
-O item de menu ativo é destacado na barra lateral.
 
 ---
 

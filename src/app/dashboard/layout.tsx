@@ -13,9 +13,8 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
   const [userName, setUserName] = useState("");
-  const systemName = "Vitimização Criminal"; // Placeholder for the system name
-  // Placeholder for user role - this would typically come from authentication context
-  const userRole: "admin" | "researcher" = "admin"; // Default to admin for now
+  const [userRole, setUserRole] = useState<"admin" | "researcher">("researcher");
+  const systemName = "Vitimização Criminal";
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -23,6 +22,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       const user = JSON.parse(storedUser);
       if (user && user.name) {
         setUserName(user.name);
+      }
+      if (user && user.role) {
+        setUserRole(user.role.toLowerCase() as "admin" | "researcher");
       }
     }
   }, []);

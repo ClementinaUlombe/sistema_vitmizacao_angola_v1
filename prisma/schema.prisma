@@ -15,6 +15,7 @@ model User {
   name      String?
   email     String   @unique
   password  String
+  role      String   @default("RESEARCHER") // Adicionado: ADMIN ou RESEARCHER
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

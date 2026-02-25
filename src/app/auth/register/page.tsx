@@ -8,12 +8,20 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SuccessModal from "@/components/SuccessModal"; 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("RESEARCHER");
   const [error, setError] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -32,7 +40,7 @@ export default function RegisterPage() {
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, role }),
       });
 
       const data = await response.json();
@@ -86,6 +94,18 @@ export default function RegisterPage() {
               required
               className="h-12 border-muted-foreground/20"
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="role" className="text-sm font-semibold">Perfil de Acesso</Label>
+            <Select onValueChange={(value) => setRole(value)} defaultValue={role}>
+              <SelectTrigger className="h-12 border-muted-foreground/20">
+                <SelectValue placeholder="Selecione o perfil" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ADMIN">Administrador (Gestão Total)</SelectItem>
+                <SelectItem value="RESEARCHER">Investigador (Análise de Dados)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">

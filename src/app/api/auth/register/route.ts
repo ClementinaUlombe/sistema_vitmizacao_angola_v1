@@ -34,7 +34,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, password, action } = body;
+    const { name, email, password, role, action } = body;
 
     // Handle management create action
     if (action === "create") {
@@ -63,11 +63,13 @@ export async function POST(request: Request) {
           name: name || null,
           email,
           password: hashedPassword,
+          role: role || "RESEARCHER",
         },
         select: {
           id: true,
           name: true,
           email: true,
+          role: true,
           createdAt: true,
         },
       });
@@ -89,13 +91,14 @@ export async function POST(request: Request) {
         name,
         email,
         password: hashedPassword,
+        role: role || "RESEARCHER",
       },
     });
 
     return NextResponse.json(
       {
         message: "User registered successfully",
-        user: { id: user.id, name: user.name, email: user.email },
+        user: { id: user.id, name: user.name, email: user.email, role: user.role },
       },
       { status: 201 }
     );

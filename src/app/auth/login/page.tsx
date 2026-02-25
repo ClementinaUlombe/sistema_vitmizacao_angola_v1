@@ -7,10 +7,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("RESEARCHER");
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -28,7 +36,15 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("user", JSON.stringify(data.user));
+        const user = data.user;
+        
+        // Validação extra opcional: Verificar se o role selecionado coincide com o da BD
+        if (user.role.toUpperCase() !== role.toUpperCase()) {
+          setError(`Este utilizador não tem permissões de ${role === "ADMIN" ? "Administrador" : "Investigador"}.`);
+          return;
+        }
+
+        localStorage.setItem("user", JSON.stringify(user));
         router.push("/dashboard"); 
       } else {
         setError(data.message || "Falha no login. Verifique suas credenciais.");
@@ -59,6 +75,18 @@ export default function LoginPage() {
               required
               className="h-12 border-muted-foreground/20 focus:border-primary transition-all"
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="role" className="text-sm font-semibold">Perfil de Acesso</Label>
+            <Select onValueChange={(value) => setRole(value)} defaultValue={role}>
+              <SelectTrigger className="h-12 border-muted-foreground/20 focus:border-primary transition-all">
+                <SelectValue placeholder="Selecione o perfil" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ADMIN">Administrador</SelectItem>
+                <SelectItem value="RESEARCHER">Investigador</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
