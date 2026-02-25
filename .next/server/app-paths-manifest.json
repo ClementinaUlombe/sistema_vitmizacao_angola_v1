@@ -1,7 +1,16 @@
 {
-  "/page": "app/page.js",
   "/api/notifications/route": "app/api/notifications/route.js",
+  "/api/data/residents-by-age-group/route": "app/api/data/residents-by-age-group/route.js",
+  "/api/data/victimization-by-education-level/route": "app/api/data/victimization-by-education-level/route.js",
+  "/api/data/day-night-security/route": "app/api/data/day-night-security/route.js",
+  "/api/data/security-perception-by-gender/route": "app/api/data/security-perception-by-gender/route.js",
+  "/api/data/occupation-victim/route": "app/api/data/occupation-victim/route.js",
+  "/api/data/victimization-by-age-and-gender/route": "app/api/data/victimization-by-age-and-gender/route.js",
+  "/api/data/crimes-by-neighborhood/route": "app/api/data/crimes-by-neighborhood/route.js",
+  "/api/data/victimization-by-crime-type/route": "app/api/data/victimization-by-crime-type/route.js",
   "/dashboard/report-creation/page": "app/dashboard/report-creation/page.js",
   "/dashboard/profile/page": "app/dashboard/profile/page.js",
-  "/dashboard/page": "app/dashboard/page.js"
+  "/dashboard/chatbot/page": "app/dashboard/chatbot/page.js",
+  "/dashboard/occurrences/page": "app/dashboard/occurrences/page.js",
+  "/dashboard/graphs/page": "app/dashboard/graphs/page.js"
 }

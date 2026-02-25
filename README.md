@@ -63,6 +63,7 @@ Este projeto é construído com:
 - ExcelJS (para processamento de arquivos Excel)
 - bcryptjs (para hash de senhas)
 - Recharts (para gráficos)
+- Nodemailer (para envio de e-mails)
 
 ---
 
@@ -77,113 +78,73 @@ Na raiz do projeto, execute:
 
 ```bash
 npm install
-# ou
-yarn install
-# ou
-pnpm install
 ```
 
 ### 2. Configuração do Prisma (Migrações)
 
-O projeto utiliza Prisma para interação com o banco de dados. Após instalar as dependências, você precisa aplicar as migrações do banco de dados para criar as tabelas necessárias.
+O projeto utiliza Prisma. Após instalar as dependências, aplique as migrações:
 
 ```bash
-npx prisma migrate dev --name add_report_model
+npx prisma db push
 ```
-Se você já executou migrações anteriormente, pode usar o nome da migração mais recente ou um nome descritivo.
 
 ### 3. Variáveis de Ambiente (`.env`)
 
-Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+Crie um arquivo `.env` na raiz do projeto:
 
-```
+```env
 DATABASE_URL="file:./prisma/dev.db"
-# Outras variáveis de ambiente, se houver
+
+# Configuração de E-mail (Exemplo Gmail)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=teu-email@gmail.com
+SMTP_PASS=tua-senha-de-aplicativo
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
-A `DATABASE_URL` aponta para o seu arquivo de banco de dados SQLite.
 
 ---
-
-## **Como Executar o Projeto**
-
-Para iniciar o servidor de desenvolvimento:
-
-```bash
-npm run dev
-```
-O aplicativo estará acessível em `http://localhost:3000`.
-
----
-
-## **Fluxo de Autenticação**
-
-O sistema possui um fluxo de autenticação completo com registo, login e recuperação de senha.
-
-*   **Registo de Utilizador:** `http://localhost:3000/auth/register`
-    *   Permite que novos utilizadores criem uma conta.
-    *   As senhas são armazenadas com hash usando `bcryptjs`.
-    *   Após o registo bem-sucedido, uma mensagem de sucesso é exibida num modal e o utilizador é redirecionado para a página de login.
-*   **Login de Utilizador:** `http://localhost:3000/auth/login`
-    *   Permite que utilizadores existentes acedam ao sistema.
-    *   Após o login bem-sucedido, uma mensagem de sucesso é exibida num modal e o utilizador é redirecionado para o Painel Principal (`/dashboard`).
-*   **Recuperação de Senha:** `http://localhost:3000/auth/forgot-password`
-    *   Página para iniciar o processo de recuperação de senha (a lógica de backend para isso ainda precisa ser implementada).
 
 ## **Gestão de Perfis (RBAC)**
 
 O sistema utiliza um controlo de acesso baseado em perfis (Role-Based Access Control):
 
 ### 👤 Administrador (ADMIN)
-*   **Gestão de Utilizadores:** Controlo total sobre as contas.
-*   **Infraestrutura:** Backup, Gestão de BD e Configurações.
-*   **Dashboard:** Acesso a todos os menus técnicos.
+*   **Gestão de Utilizadores:** Controlo total sobre as contas e permissões.
+*   **Infraestrutura:** Acesso a ferramentas de Backup e gestão da Base de Dados.
+*   **Dashboard:** Acesso a todos os menus técnicos e administrativos.
 
 ### 🔬 Investigador (RESEARCHER)
-*   **Análise Científica:** Lançamento de inquéritos, filtros avançados e comparação de percepções.
-*   **Relatórios:** Criação de relatórios técnicos e estatísticos.
+*   **Recolha e Análise:** Lançamento de inquéritos e análise estatística avançada.
+*   **Relatórios:** Criação de relatórios técnicos baseados nos dados importados.
 
 ### 👮 Autoridade Policial (POLICE)
-*   **Operacional:** Gestão de ocorrências e monitorização de denúncias em tempo real.
-*   **Estratégia:** Acesso a mapas de criminalidade e painéis de relatórios de incidentes.
+*   **Operacional:** Gestão de ocorrências e monitorização de denúncias.
+*   **Estratégia:** Acesso a gráficos de criminalidade e painéis de incidentes.
 
 ### 🏠 Cidadão (CITIZEN)
 *   **Participação:** Envio de relatos/denúncias e consulta do estado das suas participações.
-*   **Apoio:** Acesso ao Chatbot de auxílio e estatísticas públicas de segurança.
+*   **Apoio:** Acesso ao Chatbot de auxílio e estatísticas públicas.
 
 ---
 
-## **Painel Principal (Dashboard)**
+## **Fluxo de Autenticação e E-mail**
 
-O dashboard é a área principal para utilizadores autenticados, com menus dinâmicos carregados automaticamente com base no perfil (`role`) do utilizador guardado na base de dados.
-
-### Estrutura do Menu Dinâmico
-
-**Menu Administrativo (ADMIN):**
-*   Gerir Utilizadores (`/dashboard/users`)
-*   Lançamento de Inquéritos (`/dashboard/data-entry`)
-*   Gerir Base de Dados (`/dashboard/database-management`)
-*   Gestão de Denúncias (`/dashboard/occurrences`)
-*   Painel Estatístico (`/dashboard/reports`)
-*   Backup (`/dashboard/backup`)
-*   Upload Excel (`/dashboard/excel-upload`)
-*   Chatbot (`/dashboard/chatbot`)
-*   Gráficos (`/dashboard/graphs`)
-
-**Menu de Investigação (RESEARCHER):**
-*   Lançamento de Inquéritos (`/dashboard/data-entry`)
-*   Consultar Dados (`/dashboard/data-query`)
-*   Gerar Gráficos e Estatísticas (`/dashboard/analytics`)
-*   Filtrar Dados (`/dashboard/data-filter`)
-*   Denúncias Recebidas (`/dashboard/occurrences`)
-*   Comparar Percepções (`/dashboard/perception-comparison`)
-*   Criar Relatórios (`/dashboard/report-creation`)
-*   Upload Excel (`/dashboard/excel-upload`)
-*   Chatbot (`/dashboard/chatbot`)
-*   Gráficos (`/dashboard/graphs`)
+*   **Registo com Perfil:** O utilizador escolhe o seu cargo ao registar-se.
+*   **E-mail de Boas-vindas:** Após o registo, o sistema envia automaticamente um e-mail profissional para o utilizador com um botão de acesso direto ao login.
+*   **Login Seguro:** O sistema valida se o perfil selecionado no login coincide com o perfil real na base de dados.
 
 ---
 
-## **Funcionalidades Principais**
+## **Edição de Perfil e Foto**
+
+*   **Página de Perfil:** Acedida via menu lateral ou clicando no avatar do cabeçalho.
+*   **Personalização:** O utilizador pode alterar o seu nome, e-mail e carregar uma **foto de perfil**.
+*   **Avatar Dinâmico:** Se o utilizador não carregar foto, o sistema gera um avatar com as iniciais do nome.
+
+---
+
+## **Funcionalidades do Dashboard**
 
 ### 1. Upload de Dados Excel
 

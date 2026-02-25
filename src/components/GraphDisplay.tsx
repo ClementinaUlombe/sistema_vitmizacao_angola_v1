@@ -113,7 +113,7 @@ interface VictimizationByEducationLevelData {
 }
 
 
-type GraphType = 'residentsByAge' | 'victimizationByCrimeType' | 'securityPerceptionByGender' | 'crimesByNeighborhood' | 'victimizationByAgeAndGender' | 'reasonsForNotReporting' | 'occupationVictim' | 'policeTrust' | 'dayNightSecurity' | 'victimizationByEducationLevel';
+type GraphType = 'residentsByAge' | 'victimizationByCrimeType' | 'securityPerceptionByGender' | 'crimesByNeighborhood' | 'victimizationByAgeAndGender' | 'occupationVictim' | 'dayNightSecurity' | 'victimizationByEducationLevel';
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#a4de6c', '#d0ed57'];
 
@@ -157,14 +157,8 @@ const GraphDisplay: React.FC = () => {
         case 'victimizationByAgeAndGender':
             endpoint = '/api/data/victimization-by-age-and-gender';
             break;
-        case 'reasonsForNotReporting':
-            endpoint = '/api/data/reasons-for-not-reporting';
-            break;
         case 'occupationVictim':
             endpoint = '/api/data/occupation-victim';
-            break;
-        case 'policeTrust':
-            endpoint = '/api/data/police-trust';
             break;
         case 'dayNightSecurity':
             endpoint = '/api/data/day-night-security';
@@ -301,13 +295,6 @@ const GraphDisplay: React.FC = () => {
                 </BarChart>
             );
         })(),
-        reasonsForNotReporting: (
-            <PieChart>
-                <Pie data={data.map(item => ({...item, name: translate(item.name)})) as ReasonsForNotReportingData[]} dataKey="count" nameKey="name" cx="50%" cy="50%" outerRadius={150} fill="#8884d8" labelLine={false} label={renderCustomizedLabel}>
-                    {data.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
-                </Pie>
-            </PieChart>
-        ),
         occupationVictim: (
             <BarChart data={data.map(item => ({...item, occupation: translate(item.occupation)})) as OccupationVictimData[]}
                       margin={{
@@ -320,19 +307,6 @@ const GraphDisplay: React.FC = () => {
                 <YAxis tick={{ fontSize: 12 }} />
                 <Bar dataKey="victims" stackId="a" fill="#8884d8" name="Vítimas" />
                 <Bar dataKey="nonVictims" stackId="a" fill="#82ca9d" name="Não Vítimas" />
-            </BarChart>
-        ),
-        policeTrust: (
-            <BarChart data={data.map(item => ({...item, trustLevel: translate(item.trustLevel)})) as PoliceTrustData[]}
-                      margin={{
-                          top: 20,
-                          right: 30,
-                          left: 20,
-                          bottom: 5,
-                      }}>
-                <XAxis dataKey="trustLevel" tick={{ fontSize: 12 }} angle={-45} textAnchor="end" height={100} />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Bar dataKey="count" fill="#8884d8" name="Nível de Confiança" />
             </BarChart>
         ),
         dayNightSecurity: (
@@ -405,9 +379,7 @@ const GraphDisplay: React.FC = () => {
               <SelectItem value="securityPerceptionByGender">Percepção de Segurança por Gênero</SelectItem>
               <SelectItem value="crimesByNeighborhood">Crimes por Bairro</SelectItem>
               <SelectItem value="victimizationByAgeAndGender">Vitimização por Faixa Etária e Gênero</SelectItem>
-              <SelectItem value="reasonsForNotReporting">Razões para Não Denunciar Crimes</SelectItem>
               <SelectItem value="occupationVictim">Ocupação vs. Vítima de Crime</SelectItem>
-              <SelectItem value="policeTrust">Confiança na Polícia</SelectItem>
               <SelectItem value="dayNightSecurity">Percepção de Segurança (Dia vs. Noite)</SelectItem>
               <SelectItem value="victimizationByEducationLevel">Vitimização por Nível de Escolaridade</SelectItem>
             </SelectContent>
