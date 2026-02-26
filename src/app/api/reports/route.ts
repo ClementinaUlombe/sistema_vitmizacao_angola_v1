@@ -1,61 +1,51 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+
+    const reports = await prisma.report.findMany({
+      where: userId ? { userId: parseInt(userId) } : {}, // Se houver userId, filtra as denúncias desse utilizador
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return NextResponse.json(reports);
+  } catch (error) {
+    return NextResponse.json({ message: "Erro ao procurar denúncias" }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const {
-      name,
-      email,
-      age,
-      gender,
-      occupation,
-      educationLevel,
-      residenceTime,
-      neighborhood,
-      subject,
-      message,
-      wasVictim,
-      theft,
-      robbery,
-      aggression,
-      domesticViolence,
-      rape,
-      fraud,
-      cybercrime,
-      otherCrime,
-    } = body;
-
-    const newReport = await prisma.report.create({
+    const report = await prisma.report.create({
       data: {
-        name: name || null,
-        email: email || null,
-        age: age || null,
-        gender: gender || null,
-        occupation: occupation || null,
-        educationLevel: educationLevel || null,
-        residenceTime: residenceTime || null,
-        neighborhood: neighborhood || null,
-        subject,
-        message,
-        wasVictim: wasVictim || null,
-        theft: theft || false,
-        robbery: robbery || false,
-        aggression: aggression || false,
-        domesticViolence: domesticViolence || false,
-        rape: rape || false,
-        fraud: fraud || false,
-        cybercrime: cybercrime || false,
-        otherCrime: otherCrime || null,
+        ...body,
+        userId: body.userId ? parseInt(body.userId) : null,
       },
     });
-
-    return NextResponse.json(newReport, { status: 201 });
+    return NextResponse.json(report, { status: 201 });
   } catch (error) {
-    console.error("Error saving report to database:", error);
-    return NextResponse.json(
-      { message: "Failed to save report", error: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 }
-    );
+    console.error("Erro ao criar relato:", error);
+    return NextResponse.json({ message: "Erro ao criar relato" }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const { id, status, read } = await request.json();
+    const updated = await prisma.report.update({
+      where: { id },
+      data: {
+        ...(status && { status }),
+        ...(read !== undefined && { read }),
+      },
+    });
+    return NextResponse.json(updated);
+  } catch (error) {
+    return NextResponse.json({ message: "Erro ao atualizar estado" }, { status: 500 });
   }
 }

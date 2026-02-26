@@ -145,10 +145,12 @@ model SecurityPerception {
 
 model Report {
   id                    Int      @id @default(autoincrement())
+  userId                Int?     // Adicionado: ID do utilizador que enviou (se logado)
   name                  String?
   email                 String?
   subject               String
   message               String
+  status                String   @default("Pendente") // Adicionado: Pendente, Em Análise, Encaminhado, Resolvido
   age                   String?
   gender                String?
   occupation            String?

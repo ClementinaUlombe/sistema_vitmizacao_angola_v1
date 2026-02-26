@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label'; // Import Label component
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 // Define interfaces for data types
@@ -135,8 +137,12 @@ const GraphDisplay: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
+    setSearchTerm("");
+    setShowAll(false);
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -237,37 +243,108 @@ const GraphDisplay: React.FC = () => {
             </BarChart>
         ),
         crimesByNeighborhood: (() => {
-            const crimeTypes = Array.from(new Set(data.flatMap(Object.keys))).filter(key => key !== 'neighborhood');
-            const translatedCrimeTypes = crimeTypes.map(translate);
-            const translatedData = data.map(item => {
-                const translatedItem: { [key: string]: string | number } = { neighborhood: translate(item.neighborhood) };
+            const crimeTypes = Array.from(new Set(data.flatMap(Object.keys))).filter(key => key !== 'neighborhood' && key !== 'id');
+            
+            // 1. Mapear e calcular totais
+            let processedData = data.map(item => {
+                const neighborhoodName = translate(item.neighborhood);
+                const stats: any = { neighborhood: neighborhoodName };
+                let total = 0;
+                
                 crimeTypes.forEach(crime => {
-                    translatedItem[translate(crime)] = item[crime] || 0;
+                    const value = Number(item[crime] || 0);
+                    stats[translate(crime)] = value;
+                    total += value;
                 });
-                return translatedItem;
+                stats.total = total;
+                return stats;
             });
+
+            const translatedCrimeTypes = crimeTypes.map(translate);
+
+            // 2. Filtrar por pesquisa
+            if (searchTerm) {
+                processedData = processedData.filter(item => 
+                    item.neighborhood.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+
+            // 3. Ordenar (Sempre mostrar os mais perigosos primeiro)
+            processedData.sort((a, b) => b.total - a.total);
+
+            // 4. Aplicar limite Top 10 apenas se não estiver em modo "Todos" e não houver pesquisa
+            if (!showAll && !searchTerm) {
+                processedData = processedData.slice(0, 10);
+            }
+
+            // 5. Definir altura dinâmica
+            const chartHeight = Math.max(processedData.length * 45 + 50, 400);
+
             return (
-                <div className="overflow-x-auto">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="min-w-[180px]">Bairro</TableHead>
+                <div className="space-y-4">
+                    <div className="flex flex-wrap items-center gap-4 bg-muted/30 p-4 rounded-xl border border-border/50">
+                        <div className="flex-1 min-w-[200px]">
+                            <Label htmlFor="search" className="text-sm font-semibold mb-2 block">Pesquisar Bairro Específico</Label>
+                            <Input 
+                                id="search"
+                                placeholder="Pesquisar..." 
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="h-10 bg-background"
+                            />
+                        </div>
+                        <div className="flex items-center gap-2 pt-6">
+                            <Button 
+                                variant={!showAll ? "default" : "outline"} 
+                                onClick={() => { setShowAll(false); setSearchTerm(""); }}
+                                className="h-10 px-6 font-bold"
+                            >
+                                Top 10
+                            </Button>
+                            <Button 
+                                variant={showAll ? "default" : "outline"} 
+                                onClick={() => { setShowAll(true); setSearchTerm(""); }}
+                                className="h-10 px-6 font-bold"
+                            >
+                                Ver Todos
+                            </Button>
+                        </div>
+                    </div>
+                    
+                    <div className="bg-card rounded-xl p-4 border shadow-sm overflow-hidden">
+                        <ResponsiveContainer width="100%" height={chartHeight}>
+                            <BarChart 
+                                data={processedData} 
+                                layout="vertical"
+                                margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(0,0,0,0.1)" />
+                                <XAxis type="number" hide={false} />
+                                <YAxis 
+                                    dataKey="neighborhood" 
+                                    type="category" 
+                                    width={130}
+                                    tick={{ fontSize: 12, fontWeight: 600 }}
+                                />
+                                <Tooltip cursor={{fill: 'rgba(0,0,0,0.02)'}} />
+                                <Legend verticalAlign="top" wrapperStyle={{paddingBottom: '20px'}} />
                                 {translatedCrimeTypes.map((crime, index) => (
-                                    <TableHead key={index} className="min-w-[150px]">{crime}</TableHead>
+                                    <Bar 
+                                        key={crime} 
+                                        dataKey={crime} 
+                                        stackId="a" 
+                                        fill={COLORS[index % COLORS.length]} 
+                                        name={crime}
+                                        radius={[0, 4, 4, 0]}
+                                        barSize={25}
+                                    />
                                 ))}
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {translatedData.map((item, index) => (
-                                <TableRow key={index}>
-                                    <TableCell className="font-medium min-w-[180px]">{item.neighborhood}</TableCell>
-                                    {translatedCrimeTypes.map((crime, crimeIndex) => (
-                                        <TableCell key={crimeIndex} className="min-w-[150px]">{item[crime]}</TableCell>
-                                    ))}
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <p className="text-xs text-center text-muted-foreground">
+                        Mostrando {processedData.length} bairros {searchTerm ? `para "${searchTerm}"` : (showAll ? "" : "(Top 10 mais críticos)")}
+                    </p>
                 </div>
             );
         })(),
@@ -341,18 +418,20 @@ const GraphDisplay: React.FC = () => {
 
     const chart = chartComponents[selectedGraph];
 
+    // Se for o gráfico de bairros, ele já traz o seu próprio container e layout especial
     if (selectedGraph === 'crimesByNeighborhood') {
-      return chart;
+        return chart;
     }
 
-    const height = selectedGraph === 'residentsByAge' || selectedGraph === 'victimizationByCrimeType' ? 300 : 400;
+    // Para todos os outros gráficos, usamos o layout padrão
+    const height = selectedGraph === 'residentsByAge' || selectedGraph === 'victimizationByCrimeType' ? 300 : 500;
 
     return (
         <ResponsiveContainer width="100%" height={height}>
-            {React.cloneElement(chart, {
+            {React.cloneElement(chart as React.ReactElement, {
                 children: [
                     <CartesianGrid key="grid" strokeDasharray="3 3" />,
-                    ...React.Children.toArray(chart.props.children),
+                    ...React.Children.toArray((chart as React.ReactElement).props.children),
                     <Tooltip key="tooltip" />,
                     <Legend key="legend" />,
                 ],
