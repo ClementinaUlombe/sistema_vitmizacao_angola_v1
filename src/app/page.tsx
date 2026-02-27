@@ -12,6 +12,7 @@ import ChatbotInterface from "@/components/ChatbotInterface";
 import GraphDisplay from "@/components/GraphDisplay";
 import ReportModal from "@/components/ReportModal";
 import DenunciaModal from "@/components/DenunciaModal";
+import ParallaxSection from "@/components/ParallaxSection";
 import { useState, useEffect } from "react";
 
 interface SummaryData {
@@ -622,6 +623,9 @@ const Page = () => {
           </div>
         </div>
       </section>
+
+      {/* O que Fazemos - Seção Parallax com Imagem */}
+      <ParallaxSection />
 
       {/* Seção de Ferramentas */}
       <section className="bg-gradient-light py-16 sm:py-24">
