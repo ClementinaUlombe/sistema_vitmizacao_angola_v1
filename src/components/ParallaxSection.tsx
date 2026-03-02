@@ -53,6 +53,18 @@ export default function ParallaxSection() {
         <h2 className="text-5xl sm:text-7xl font-bold text-white mb-8 text-center drop-shadow-2xl animate-fade-in">
           O Que Fazemos
         </h2>
+        <p className="text-center text-white mb-12 text-lg max-w-3xl mx-auto">
+            Transformamos dados em soluções concretas para a segurança da comunidade
+          </p>
+
+          <div className="mb-12 max-w-4xl mx-auto">
+            <p className="text-lg text-white mb-4 leading-relaxed">
+              A missão é criar uma plataforma digital inteligente que analise e apresente indicadores sobre vitimização, percepção de segurança e confiança institucional.
+            </p>
+            <p className="text-lg text-white leading-relaxed">
+              O sistema integra dados estatísticos, relatórios de campo e ferramentas de visualização interativa, permitindo às autoridades locais e à sociedade civil compreender melhor as dinâmicas da criminalidade e planear ações preventivas.
+            </p>
+          </div>
         
         <div className="grid gap-8 md:grid-cols-3 mt-16">
           {[

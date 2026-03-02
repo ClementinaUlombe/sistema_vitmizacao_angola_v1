@@ -87,21 +87,15 @@ const Page = () => {
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-              Sistema de Análise da Vitimização Criminal
-            </h1>
-            <p className="text-xl text-white/95 mb-4 drop-shadow-md">
-              Bairro Gamek à Direita – Distrito Urbano da Samba, Luanda, 2025
-            </p>
-            <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto drop-shadow-md">
-              Uma plataforma inteligente que transforma dados de pesquisa social em informação científica acessível, apoiando políticas públicas e o conhecimento sobre segurança urbana em Angola.
-            </p>
+Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção de Segurança            </h1>
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" className="text-base shadow-lg hover-scale">
                 Sobre o Estudo
               </Button>
               <ReportModal>
                 <Button size="lg" className="text-base bg-blue-500 text-white hover:bg-blue-600 shadow-lg hover-scale">
-                  Enviar Denúncia
+                  Reporte de Crimes
                 </Button>
               </ReportModal>
               {isLoggedIn ? (
@@ -169,7 +163,7 @@ const Page = () => {
             Conhecimento e Tecnologia pela Segurança de Angola
           </h2>
           <p className="text-center text-muted-foreground mb-12 text-lg">
-            Uma iniciativa pioneira do INSUTEC para transformar dados em ação
+            Uma iniciativa pioneira para transformar dados em ação
           </p>
           
           <div className="prose prose-lg max-w-none text-foreground/85 space-y-6 mb-12">
@@ -177,17 +171,15 @@ const Page = () => {
               Todos os anos, milhares de cidadãos em Angola são direta ou indiretamente afetados pela criminalidade urbana. O impacto desses atos vai muito além das perdas materiais — fere a confiança nas instituições, gera medo e mina o bem-estar das comunidades. A segurança pública é, portanto, um direito fundamental e um pilar essencial para o desenvolvimento humano e social do país.
             </p>
             <p className="text-lg leading-relaxed">
-              O Instituto Superior de Ciências e Tecnologias (INSUTEC), comprometido com a missão de formar profissionais capazes de responder aos desafios reais da sociedade angolana, reconheceu a necessidade de unir conhecimento e tecnologia em prol da segurança nacional. Dessa visão nasceu o projeto "Sistema de Análise de Vitimização Criminal e Percepção de Segurança da População do Bairro Gamek à Direita", uma iniciativa que marca o encontro entre dois campos estratégicos: as Ciências Criminais, responsáveis por compreender as causas e os impactos do crime, e a Engenharia Informática e Sistemas de Informação, encarregada de transformar dados em soluções inteligentes.
+              Dessa visão nasceu o projeto "Desenvolvimento de uma Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção de Segurança no Município da Samba" uma iniciativa que marca o encontro entre dois campos estratégicos: as Ciências Criminais, responsáveis por compreender as causas e os impactos do crime, e a Engenharia Informática e Sistemas de Informação, encarregada de transformar dados em soluções inteligentes.
             </p>
             <p className="text-lg leading-relaxed">
               Mais do que um estudo académico, este projeto representa um compromisso com a nação angolana — um esforço para compreender o fenómeno da vitimização, identificar as vulnerabilidades das comunidades e criar ferramentas tecnológicas que auxiliem as autoridades, os investigadores e os cidadãos na construção de um ambiente mais seguro.
             </p>
             <p className="text-lg leading-relaxed">
-              Através da recolha de dados reais, da análise estatística e do uso de tecnologias avançadas de informação, o sistema permitirá monitorar padrões de criminalidade, avaliar a perceção de segurança e propor políticas públicas baseadas em evidências concretas. Além disso, o projeto incorpora uma componente inovadora de inteligência artificial, capaz de interagir com o utilizador e oferecer informações, tendências e previsões de forma acessível e transparente.
+              Através da recolha de dados reais, da análise estatística e do uso de tecnologias avançadas de informação, o sistema permitirá monitorar padrões de criminalidade, avaliar a percepção de segurança e propor  uma solução inovadora para enfrentar lacunas importantes na gestão e prevenção da criminalidade. Além disso, o projeto incorpora uma componente inovadora de inteligência artificial, capaz de interagir com o utilizador e oferecer informações, tendências, gráficos e previsões de forma acessível e transparente.
             </p>
-            <p className="text-lg leading-relaxed">
-              O ano de 2025 marca um novo capítulo para o INSUTEC e para Angola: o início de uma era em que a ciência e a tecnologia se unem pela justiça, pela segurança e pela dignidade do cidadão.
-            </p>
+            
             <p className="italic font-semibold text-primary text-xl text-center mt-8">
               "Proteger vidas, compreender o crime e fortalecer a confiança pública — eis o propósito que move o futuro da segurança em Angola."
             </p>
@@ -466,7 +458,7 @@ const Page = () => {
               </CardHeader>
               <CardContent>
                 <p className="leading-relaxed">
-                  O INSUTEC é uma iniciativa universitária multidisciplinar criada para promover investigação aplicada, inovação tecnológica e apoio à comunidade no combate à criminalidade urbana.
+                  É uma iniciativa universitária multidisciplinar criada para promover investigação aplicada, inovação tecnológica e apoio à comunidade no combate à criminalidade urbana.
                 </p>
               </CardContent>
             </Card>
@@ -530,18 +522,14 @@ const Page = () => {
       <section className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4 text-center">
-            O Que Fazemos
           </h2>
           <p className="text-center text-muted-foreground mb-12 text-lg max-w-3xl mx-auto">
-            Transformamos dados em soluções concretas para a segurança da comunidade
           </p>
 
           <div className="mb-12 max-w-4xl mx-auto">
             <p className="text-lg text-foreground/85 mb-4 leading-relaxed">
-              A missão do INSUTEC é criar uma plataforma digital inteligente que analise e apresente indicadores sobre vitimização, perceção de segurança e confiança institucional.
             </p>
             <p className="text-lg text-foreground/85 leading-relaxed">
-              O sistema integra dados estatísticos, relatórios de campo e ferramentas de visualização interativa, permitindo às autoridades locais e à sociedade civil compreender melhor as dinâmicas da criminalidade e planear ações preventivas.
             </p>
           </div>
 
@@ -554,7 +542,7 @@ const Page = () => {
               },
               {
                 title: "Dados Confiáveis",
-                description: "Facilitar o acesso a dados confiáveis sobre criminalidade e perceção social",
+                description: "Facilitar o acesso a dados confiáveis sobre criminalidade e percepção social",
                 icon: "📊"
               },
               {

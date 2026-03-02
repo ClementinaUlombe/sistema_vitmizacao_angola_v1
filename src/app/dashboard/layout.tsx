@@ -78,7 +78,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Minhas Denúncias", href: "/dashboard/occurrences" },
     { name: "Enviar Relato", href: "/dashboard/report-creation" },
     { name: "Estatísticas Públicas", href: "/dashboard/graphs" },
-    { name: "Chatbot de Apoio", href: "/dashboard/chatbot" },
+    { name: "Chatbot Crime", href: "/dashboard/chatbot" },
   ];
 
   const getMenuItems = () => {

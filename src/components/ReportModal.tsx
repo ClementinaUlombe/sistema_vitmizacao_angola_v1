@@ -47,8 +47,9 @@ interface FormData {
     aggression: boolean;
     domesticViolence: boolean;
     rape: boolean;
+    Coruption: boolean;
     fraud: boolean;
-    cybercrime: boolean;
+    trafic: boolean;
     otherCrime: string;
   };
 }
@@ -72,8 +73,9 @@ const ReportModal: React.FC<ReportModalProps> = ({ children }) => {
       aggression: false,
       domesticViolence: false,
       rape: false,
+      Coruption: false,
       fraud: false,
-      cybercrime: false,
+      trafic: false,
       otherCrime: "",
     },
   });
@@ -143,8 +145,9 @@ const ReportModal: React.FC<ReportModalProps> = ({ children }) => {
         aggression: formData.crimeTypes.aggression,
         domesticViolence: formData.crimeTypes.domesticViolence,
         rape: formData.crimeTypes.rape,
+        Coruption: formData.crimeTypes.Coruption,
         fraud: formData.crimeTypes.fraud,
-        cybercrime: formData.crimeTypes.cybercrime,
+        trafic: formData.crimeTypes.trafic,
         otherCrime: formData.crimeTypes.otherCrime || null,
       };
 
@@ -199,8 +202,9 @@ const ReportModal: React.FC<ReportModalProps> = ({ children }) => {
           aggression: false,
           domesticViolence: false,
           rape: false,
+          Coruption: false,
           fraud: false,
-          cybercrime: false,
+          trafic: false,
           otherCrime: "",
         },
       });
@@ -221,7 +225,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ children }) => {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Enviar Denúncia</DialogTitle>
+            <DialogTitle>Enviar Reporte</DialogTitle>
             <DialogDescription>
               Preencha os campos abaixo para enviar sua denúncia ou informação.
               Você pode permanecer anônimo se preferir, deixando os campos de
@@ -363,13 +367,13 @@ const ReportModal: React.FC<ReportModalProps> = ({ children }) => {
                 <Label>Tipo de crime (marcação múltipla)</Label>
                 <div className="grid grid-cols-2 gap-3 pl-2">
                   {[
-                    { id: "theft", label: "Furto" },
-                    { id: "robbery", label: "Roubo" },
-                    { id: "aggression", label: "Agressão" },
+                    { id: "theft", label: "Furto/Roubo" },
+                    { id: "aggression", label: "Agressão Física" },
+                    { id: "Coruption", label: "Corrupção" },
                     { id: "domesticViolence", label: "Violência doméstica" },
-                    { id: "rape", label: "Estupro" },
-                    { id: "fraud", label: "Fraude" },
-                    { id: "cybercrime", label: "Crime cibernético" },
+                    { id: "rape", label: "Abuso Sexual" },
+                    { id: "fraud", label: "Burla" },
+                    { id: "trafic", label: "Tráfico de Droga" },
                   ].map((crime) => (
                     <div key={crime.id} className="flex items-center space-x-2">
                       <Checkbox
@@ -416,14 +420,14 @@ const ReportModal: React.FC<ReportModalProps> = ({ children }) => {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  placeholder="Descreva em detalhes o que aconteceu..."
+                  placeholder="Descreva em detalhes o que aconteceu (Horário, O Autor do Crime, Arma de fogo, Arma branca , outros)..."
                   className="min-h-[100px]"
                 />
               </div>
             </div>
 
             <Button type="submit" disabled={status === "loading"} className="w-full">
-              {status === "loading" ? "Enviando..." : "Enviar Denúncia"}
+              {status === "loading" ? "Enviando..." : "Enviar Reporte"}
             </Button>
 
             {status === "error" && (
