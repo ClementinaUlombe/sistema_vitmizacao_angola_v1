@@ -6,6 +6,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    const researcherId = searchParams.get("researcherId");
 
     // Se tiver ?id=X, retorna um residente específico
     if (id) {
@@ -14,16 +15,26 @@ export async function GET(request: Request) {
         include: {
           victimizations: true,
           securityPerceptions: true,
+          researcher: {
+            select: { name: true, email: true }
+          }
         },
       });
       return NextResponse.json(resident);
     }
 
+    // Filtro por pesquisador (opcional)
+    const where = researcherId ? { researcherId: parseInt(researcherId) } : {};
+
     // Caso contrário, retorna todos os residentes
     const residents = await prisma.resident.findMany({
+      where,
       include: {
         victimizations: true,
         securityPerceptions: true,
+        researcher: {
+          select: { name: true, email: true }
+        }
       },
       orderBy: { id: "desc" },
     });
@@ -38,7 +49,7 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { id, neighborhood, ageGroup, gender } = body;
+    const { id, neighborhood, ageGroup, gender, status } = body;
 
     if (!id) {
       return NextResponse.json(
@@ -53,18 +64,11 @@ export async function PUT(request: Request) {
         ...(neighborhood && { neighborhood }),
         ...(ageGroup && { ageGroup }),
         ...(gender && { gender }),
+        ...(status && { status }),
       },
       include: {
         victimizations: true,
         securityPerceptions: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-          },
-        },
       },
     });
 
@@ -114,6 +118,7 @@ export async function POST(request: Request) {
       ageGroup,
       gender,
       occupation,
+      residenceTime,
       neighborhood,
       educationLevel,
       wasVictim,
@@ -123,6 +128,7 @@ export async function POST(request: Request) {
       daySecurity,
       nightSecurity,
       localPoliceTrustLevel,
+      researcherId,
     } = body;
 
     const resident = await prisma.resident.create({
@@ -131,8 +137,11 @@ export async function POST(request: Request) {
         ageGroup,
         gender,
         occupation,
+        residenceTime,
         neighborhood,
         educationLevel,
+        researcherId: researcherId ? parseInt(researcherId) : null,
+        status: "PENDENTE",
         victimizations: {
           create: {
             wasVictim,

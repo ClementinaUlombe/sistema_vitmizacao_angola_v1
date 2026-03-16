@@ -30,13 +30,16 @@ export default function BackupPage() {
   const [importing, setImporting] = useState(false);
   const [stats, setStats] = useState<BackupStats | null>(null);
 
-  const fetchStats = async () => {
+  const fetchStats = async (showToast = false) => {
     setLoading(true);
     try {
       const response = await fetch("/api/backup");
       if (response.ok) {
         const data = await response.json();
         setStats(data.stats);
+        if (showToast) {
+          toast.success("Estatísticas atualizadas com sucesso!");
+        }
       }
     } catch (error) {
       console.error("Erro ao carregar estatísticas:", error);
@@ -47,7 +50,7 @@ export default function BackupPage() {
   };
 
   useEffect(() => {
-    fetchStats();
+    fetchStats(false);
   }, []);
 
   const handleExportJSON = async () => {
@@ -268,7 +271,7 @@ export default function BackupPage() {
       </Card>
       
       <div className="flex justify-center">
-        <Button variant="ghost" size="sm" onClick={fetchStats} disabled={loading}>
+        <Button variant="ghost" size="sm" onClick={() => fetchStats(true)} disabled={loading}>
           <RefreshCcw className={`mr-2 h-3 w-3 ${loading ? "animate-spin" : ""}`} />
           Atualizar Estatísticas
         </Button>

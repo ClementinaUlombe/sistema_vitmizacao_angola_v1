@@ -25,35 +25,37 @@ model User {
 model Resident {
   id                             Int      @id @default(autoincrement())
   residentNumber                 String   @unique
-  surveyDate                     DateTime?
+  surveyDate                     DateTime? @default(now())
+  status                         String   @default("PENDENTE") // PENDENTE, VALIDADO, REJEITADO
+  researcherId                   Int?
+  researcher                     User?    @relation(fields: [researcherId], references: [id])
   ageGroup                       String
   gender                         String
   occupation                     String?
   residenceTime                  String?
   neighborhood                   String
   educationLevel                 String?
-  school                         String? // Novo: Coluna 'ESCOLA'
-  emailContact                   String? // Novo: Coluna 'Direccióndecorreoelectrónicofilter_$' (renomeado para clareza)
-  // protectionMeasures String[] // Alterado para campos Boolean? individuais
-  protectionMeasureP1            Boolean? // Novo: Coluna 'p1'
-  protectionMeasureP2            Boolean? // Novo: Coluna 'p2'
-  protectionMeasureP3            Boolean? // Novo: Coluna 'p3'
-  protectionMeasureP4            Boolean? // Novo: Coluna 'p4'
-  protectionMeasureP5            Boolean? // Novo: Coluna 'p5'
-  protectionMeasureP6            Boolean? // Novo: Coluna 'p6'
-  protectionMeasureP7            Boolean? // Novo: Coluna 'p7'
-  protectionMeasureP8            Boolean? // Novo: Coluna 'p8'
-  protectionMeasureP9            Boolean? // Novo: Coluna 'p9'
-  protectionMeasureP10           Boolean? // Novo: Coluna 'p10'
-  crimeImpactOnDailyLife         String? // Novo: Coluna '@35.AcriminalidadeafetousuarotinadiáriaoudesuafamíliaDequemaneira'
-  neighborCooperation            String? // Novo: Coluna '@36.Comodescrevearelaçãoentrevizinhosemtermosdecooperaçãopar'
-  communityInitiativeParticipation String? // Novo: Coluna '@37.VocêparticipadealgumainiciativacomunitáriavoltadaparaaseguSesimqual'
-  securityImprovementSuggestions String? // Novo: Coluna '@38.Quaismedidasvocêsugeririaparamelhorarasegurançanobairro'
-  victimSupportServicesKnowledge Boolean? // Novo: Coluna '@39.Vocêconheceserviçosdeapoioàsvítimasdecrimenobairro'
-  crimeImpactDetails             String? // Novo: Coluna 'Dequemaneira'
-  improvementSuggestionsDetails  String? // Novo: Coluna 'VIII.SUGESTÕESDEMELHORIA'
-  communityInitiativeDetails     String? // Novo: Coluna 'Sesimqual'
-  filterColumn                   String? // Novo: Coluna 'filter_$'
+  school                         String? 
+  emailContact                   String? 
+  protectionMeasureP1            Boolean? 
+  protectionMeasureP2            Boolean? 
+  protectionMeasureP3            Boolean? 
+  protectionMeasureP4            Boolean? 
+  protectionMeasureP5            Boolean? 
+  protectionMeasureP6            Boolean? 
+  protectionMeasureP7            Boolean? 
+  protectionMeasureP8            Boolean? 
+  protectionMeasureP9            Boolean? 
+  protectionMeasureP10           Boolean? 
+  crimeImpactOnDailyLife         String? 
+  neighborCooperation            String? 
+  communityInitiativeParticipation String? 
+  securityImprovementSuggestions String? 
+  victimSupportServicesKnowledge Boolean? 
+  crimeImpactDetails             String? 
+  improvementSuggestionsDetails  String? 
+  communityInitiativeDetails     String? 
+  filterColumn                   String? 
 
   victimizations                 Victimization[]
   securityPerceptions            SecurityPerception[]
@@ -80,78 +82,76 @@ model Victimization {
   cybercrime                     Boolean? // CrimeCibernetico
   otherCrime                     String? // Outro
   crimeFrequency                 String? // Quantasvezes
-  reportedCrimeQuestion          String? // VAR00056 @10.Oscrimesfoiramdenunciadosàsautoridadespoliciais
-  reportedCrime                  Boolean // Denunciou
-  // notReportingReasons String[] // Alterado para campos Boolean? individuais
-  notReportingReasonA1           Boolean? // Novo: Coluna 'a1'
-  notReportingReasonA2           Boolean? // Novo: Coluna 'a2'
-  notReportingReasonA3           Boolean? // Novo: Coluna 'a3'
-  notReportingReasonA4           Boolean? // Novo: Coluna 'a4'
-  notReportingReasonA5           Boolean? // Novo: Coluna 'a5'
-  notReportingReasonA6           Boolean? // Novo: Coluna 'a6'
-  notReportingReasonA7           Boolean? // Novo: Coluna 'a7'
-  notReportingReasonA8           Boolean? // Novo: Coluna 'a8'
-  notReportingReasonA9           Boolean? // Novo: Coluna 'a9'
-  notReportingReasonA10          Boolean? // Novo: Coluna 'a10'
-  crimeYear                      Int? // Ano
-  crimeMonth                     String? // Mês
-  crimeHour                      String? // Horário (MêsHorário seems redundant)
-  crimeLocation                  String? // Localizaçãoexatadentrodobairro
-  perpetratorCount               String
-  damages                        String? // Danoseconsequênciassofridaspodesermaisdeumaopção (alterado para String?)
-  minorsInvolved                 Boolean // @15.Vocêpercebeenvolvimentodemenoresouadolescentesemactividades
-  crimesByWomen                  Boolean // @16.Jápresenciouousoubedecrimescometidospormulheres
-  crimesAgainstWomen             Boolean // @17.Jápresenciouousoubedecrimescometidoscontramulheres
-  gangPresence                   Boolean // @18.Identificaapresençadeganguesouassociaçõescriminosasnobair
+  reportedCrimeQuestion          String? // VAR00056 
+  reportedCrime                  Boolean? // Denunciou
+  notReportingReasonA1           Boolean? 
+  notReportingReasonA2           Boolean? 
+  notReportingReasonA3           Boolean? 
+  notReportingReasonA4           Boolean? 
+  notReportingReasonA5           Boolean? 
+  notReportingReasonA6           Boolean? 
+  notReportingReasonA7           Boolean? 
+  notReportingReasonA8           Boolean? 
+  notReportingReasonA9           Boolean? 
+  notReportingReasonA10          Boolean? 
+  crimeYear                      Int? 
+  crimeMonth                     String? 
+  crimeHour                      String? 
+  crimeLocation                  String? 
+  perpetratorCount               String?
+  damages                        String? 
+  minorsInvolved                 Boolean? 
+  crimesByWomen                  Boolean? 
+  crimesAgainstWomen             Boolean? 
+  gangPresence                   Boolean? 
 }
 
 model SecurityPerception {
   id                             Int      @id @default(autoincrement())
   residentId                     Int
   resident                       Resident @relation(fields: [residentId], references: [id])
-  daySecurity                    String // Mapeia para '@19.Comoavaliaasuasensaçãodesegurançaaocircularnobairrodurant'
-  nightSecurity                  String // Mapeia para '@20.Comoavaliaasuasensaçãodesegurançaaocircularnobairrodurant'
-  securityComparison             String? // Novo: Coluna '@21.Comparadoaosanosanterioresasuasensaçãodesegurança'
-  mostDangerousAreas             String? // Novo: Coluna '@22.Quaisáreasespecíficasdobairrovocêconsideramaisperigosas'
-  mostInsecureHours              String? // Novo: Coluna '@23.Emquaishoráriosdodiavocêsesentemaisinseguroa'
-  insecurityFactors              String? // Novo: Coluna '@24.Nasuaopiniãoquaisfactoresmaiscontribuemparaainsegurançanob'
-  // insecurityFactorsList String[] // Alterado para campos Boolean? individuais
-  insecurityFactorF1             Boolean? // Novo: Coluna 'f1'
-  insecurityFactorF2             Boolean? // Novo: Coluna 'f2'
-  insecurityFactorF3             Boolean? // Novo: Coluna 'f3'
-  insecurityFactorF4             Boolean? // Novo: Coluna 'f4'
-  insecurityFactorF5             Boolean? // Novo: Coluna 'f5'
-  insecurityFactorF6             Boolean? // Novo: Coluna 'f6'
-  insecurityFactorF7             Boolean? // Novo: Coluna 'f7'
-  insecurityFactorF8             Boolean? // Novo: Coluna 'f8'
-  insecurityFactorF9             Boolean? // Novo: Coluna 'f9'
-  insecurityFactorF10            Boolean? // Novo: Coluna 'f10'
-  insecurityFactorF11            Boolean? // Novo: Coluna 'f11'
-  insecurityFactorF12            Boolean? // Novo: Coluna 'f12'
-  insecurityFactorF13            Boolean? // Novo: Coluna 'f13'
-  crimeFrequencyPerceptionGeneral String? // Novo: Coluna '@26.Comquefrequênciavocêachaqueocorremosseguintescrimesnobairr'
-  crimeFrequencyPerceptionA      String? // Novo: Coluna '@26.Comquefrequênciavocêachaqueocorremosseguintescrimesnobai_A'
-  crimeFrequencyPerceptionB      String? // Novo: Coluna '@26.Comquefrequênciavocêachaqueocorremosseguintescrimesnobai_B'
-  crimeFrequencyPerceptionC      String? // Novo: Coluna '@26.Comquefrequênciavocêachaqueocorremosseguintescrimesnobai_C'
-  crimeGravityPerception         String? // Novo: Coluna '@27.Comoavaliaagravidadedoscrimesqueocorremnobairro'
-  policePresenceEvaluation       String? // Novo: Coluna '@28.Comoavaliaapresençapolicialnobairro'
-  policeResponseSpeedEvaluation  String? // Novo: Coluna '@29.Comoavaliaarapidezderespostadapolícia'
-  policeEffectivenessEvaluation  String? // Novo: Coluna '@30.Comoavaliaaeficáciadapolícianocombateaocrimenasuaárea'
-  localPoliceTrustLevel          String? // Novo: Coluna '@31.Comodescreveoseuníveldeconfiançanapolícialocal'
-  personalPoliceInteraction      String? // Novo: Coluna '@32.JátevealgumainteraçãopessoalcomapolícialocalSesimcomofoiainteração'
-  personalPoliceInteractionDetails String? // Novo: Coluna 'Sesimcomofoiainteração'
-  trustInPoliceAndJusticeSystem  Boolean? // Novo: Coluna '@33.Vocêconfiaqueapolíciaeosistemajudiciallidamadequadamenteco'
-  victimSupportBelief            Boolean? // Novo: Coluna '@34.Vocêacreditaqueasvítimasrecebemoapoionecessáriodasautorid'
+  daySecurity                    String 
+  nightSecurity                  String 
+  securityComparison             String? 
+  mostDangerousAreas             String? 
+  mostInsecureHours              String? 
+  insecurityFactors              String? 
+  insecurityFactorF1             Boolean? 
+  insecurityFactorF2             Boolean? 
+  insecurityFactorF3             Boolean? 
+  insecurityFactorF4             Boolean? 
+  insecurityFactorF5             Boolean? 
+  insecurityFactorF6             Boolean? 
+  insecurityFactorF7             Boolean? 
+  insecurityFactorF8             Boolean? 
+  insecurityFactorF9             Boolean? 
+  insecurityFactorF10            Boolean? 
+  insecurityFactorF11            Boolean? 
+  insecurityFactorF12            Boolean? 
+  insecurityFactorF13            Boolean? 
+  crimeFrequencyPerceptionGeneral String? 
+  crimeFrequencyPerceptionA      String? 
+  crimeFrequencyPerceptionB      String? 
+  crimeFrequencyPerceptionC      String? 
+  crimeGravityPerception         String? 
+  policePresenceEvaluation       String? 
+  policeResponseSpeedEvaluation  String? 
+  policeEffectivenessEvaluation  String? 
+  localPoliceTrustLevel          String? 
+  personalPoliceInteraction      String? 
+  personalPoliceInteractionDetails String? 
+  trustInPoliceAndJusticeSystem  Boolean? 
+  victimSupportBelief            Boolean? 
 }
 
 model Report {
   id                    Int      @id @default(autoincrement())
-  userId                Int?     // Adicionado: ID do utilizador que enviou (se logado)
+  userId                Int?     
   name                  String?
   email                 String?
   subject               String
   message               String
-  status                String   @default("Pendente") // Adicionado: Pendente, Em Análise, Encaminhado, Resolvido
+  status                String   @default("Pendente") 
   age                   String?
   gender                String?
   occupation            String?
@@ -159,7 +159,7 @@ model Report {
   residenceTime         String?
   neighborhood          String?
   wasVictim             Boolean?
-  crimeTypes            String?  // JSON array of selected crimes
+  crimeTypes            String?  
   theft                 Boolean? @default(false)
   robbery               Boolean? @default(false)
   aggression            Boolean? @default(false)
