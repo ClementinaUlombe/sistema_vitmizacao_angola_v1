@@ -44,99 +44,235 @@ export default function DataEntryPage() {
   return <ResearcherDataEntryForm />;
 }
 
+interface Resident {
+  id: number;
+  residentNumber: string;
+  neighborhood: string;
+  ageGroup: string;
+  gender: string;
+  victimizations: Array<{
+    wasVictim: boolean;
+  }>;
+}
+
 // Componente para ADMIN revisar lançamentos
 const AdminDataEntryManagement = () => {
+  const [residents, setResidents] = useState<Resident[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedResident, setSelectedResident] = useState<Resident | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchResidents();
+  }, []);
+
+  const fetchResidents = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/data");
+      if (!response.ok) throw new Error("Erro ao procurar lançamentos");
+      const data = await response.json();
+      setResidents(data);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível carregar os lançamentos",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch("/api/data", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) throw new Error("Erro ao eliminar");
+      setResidents(residents.filter((r) => r.id !== id));
+      setDeleteConfirm(null);
+      toast({
+        title: "Eliminado",
+        description: "O lançamento foi eliminado com sucesso",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível eliminar o lançamento",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const filteredResidents = residents.filter(
+    (r) =>
+      r.residentNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.neighborhood.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">A carregar lançamentos...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-primary mb-2">
-          Revisar Lançamentos de Inquéritos
-        </h1>
+        <h1 className="text-3xl font-bold text-primary mb-2">Revisar Lançamentos de Inquéritos</h1>
         <p className="text-muted-foreground">
           Visualize, edite e gerencie todos os lançamentos enviados por investigadores
         </p>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-blue-900 mb-4">✅ Painel de Revisão para ADMIN</h2>
-        <div className="space-y-3 text-blue-800">
-          <p>
-            <strong>Nova funcionalidade:</strong> Acesso exclusivo para administradores gerenciarem todos os lançamentos
-          </p>
-          <p>
-            <strong>O que pode fazer:</strong>
-          </p>
-          <ul className="list-disc list-inside ml-4 space-y-1">
-            <li>✅ Visualizar todos os lançamentos enviados</li>
-            <li>✅ Pesquisar por número de inquérito ou bairro</li>
-            <li>✅ Ver detalhes completos de cada lançamento</li>
-            <li>✅ Editar dados dos lançamentos</li>
-            <li>✅ Eliminar lançamentos (com confirmação)</li>
-          </ul>
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Filtro de Busca</CardTitle>
+          <CardDescription>Procure por número, bairro ou investigador</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Input
+            placeholder="Procure por número de inquérito, bairro ou nome do investigador..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full"
+          />
+        </CardContent>
+      </Card>
 
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-green-900 mb-4">📊 Funcionalidade em Desenvolvimento</h2>
-        <div className="space-y-2 text-green-800">
-          <p>A tabela de lançamentos será exibida aqui com as seguintes colunas:</p>
-          <ul className="list-disc list-inside ml-4 space-y-1">
-            <li>Nº Inquérito</li>
-            <li>Bairro</li>
-            <li>Idade</li>
-            <li>Género</li>
-            <li>Foi Vítima (Sim/Não)</li>
-            <li>Data de Registro</li>
-            <li>Ações (Ver, Editar, Eliminar)</li>
-          </ul>
+      {filteredResidents.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Nenhum lançamento encontrado</p>
         </div>
-      </div>
+      ) : (
+        <Card className="overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted border-b">
+                <tr>
+                  <th className="px-4 py-3 text-left font-semibold">Nº Inquérito</th>
+                  <th className="px-4 py-3 text-left font-semibold">Investigador</th>
+                  <th className="px-4 py-3 text-left font-semibold">Bairro</th>
+                  <th className="px-4 py-3 text-left font-semibold">Idade</th>
+                  <th className="px-4 py-3 text-left font-semibold">Género</th>
+                  <th className="px-4 py-3 text-left font-semibold">Vítima</th>
+                  <th className="px-4 py-3 text-left font-semibold">Data</th>
+                  <th className="px-4 py-3 text-left font-semibold">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {filteredResidents.map((resident) => (
+                  <tr key={resident.id} className="hover:bg-muted/50 transition">
+                    <td className="px-4 py-3 font-semibold text-blue-600">{resident.residentNumber}</td>
+                    <td className="px-4 py-3">—</td>
+                    <td className="px-4 py-3">{resident.neighborhood}</td>
+                    <td className="px-4 py-3">{resident.ageGroup}</td>
+                    <td className="px-4 py-3">{resident.gender}</td>
+                    <td className="px-4 py-3">
+                      {resident.victimizations[0]?.wasVictim ? (
+                        <span className="text-red-600 font-semibold">Sim</span>
+                      ) : (
+                        <span className="text-green-600 font-semibold">Não</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">—</td>
+                    <td className="px-4 py-3 flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setSelectedResident(resident)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 w-8 p-0"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => setDeleteConfirm(resident.id)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      )}
 
-      <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-purple-900 mb-4">🔄 Fluxo de Trabalho</h2>
-        <div className="space-y-3 text-purple-800 text-sm">
-          <div className="flex items-start gap-3">
-            <span className="font-bold text-lg">1️⃣</span>
+      {selectedResident && (
+        <Card className="bg-blue-50 border-blue-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <div>
-              <strong>RESEARCHER envia inquéritos</strong>
-              <p>Via menu "Lançamento de Inquéritos" (sem o ?admin=true)</p>
+              <CardTitle>Detalhes do Lançamento #{selectedResident.residentNumber}</CardTitle>
+              <CardDescription>Informações do inquérito</CardDescription>
             </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <span className="font-bold text-lg">2️⃣</span>
+            <Button variant="ghost" onClick={() => setSelectedResident(null)}>✕</Button>
+          </CardHeader>
+          <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <strong>ADMIN revisa lançamentos</strong>
-              <p>Via menu "Revisar Lançamentos" → Vê todos os enviados → Gerencia conforme necessário</p>
+              <p className="text-sm text-muted-foreground">Bairro</p>
+              <p className="font-semibold">{selectedResident.neighborhood}</p>
             </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <span className="font-bold text-lg">3️⃣</span>
             <div>
-              <strong>Dados processados</strong>
-              <p>Sistema gera gráficos e estatísticas automaticamente</p>
+              <p className="text-sm text-muted-foreground">Idade</p>
+              <p className="font-semibold">{selectedResident.ageGroup}</p>
             </div>
-          </div>
-        </div>
-      </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Género</p>
+              <p className="font-semibold">{selectedResident.gender}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Foi Vítima</p>
+              <p className="font-semibold">
+                {selectedResident.victimizations[0]?.wasVictim ? "Sim ⚠️" : "Não ✅"}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-900 mb-2">👤 ADMIN</h3>
-          <p className="text-sm text-blue-800">✅ Ver "Revisar Lançamentos"</p>
-        </div>
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h3 className="font-semibold text-green-900 mb-2">👨‍💼 RESEARCHER</h3>
-          <p className="text-sm text-green-800">✅ Ver "Lançamento de Inquéritos"</p>
-        </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h3 className="font-semibold text-red-900 mb-2">👮 POLICE</h3>
-          <p className="text-sm text-red-800">❌ Sem acesso a estes menus</p>
-        </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h3 className="font-semibold text-red-900 mb-2">👥 CITIZEN</h3>
-          <p className="text-sm text-red-800">❌ Sem acesso a estes menus</p>
-        </div>
-      </div>
+      {deleteConfirm && (
+        <Card className="bg-red-50 border-red-200">
+          <CardHeader>
+            <CardTitle className="text-red-700">Confirmar Eliminação</CardTitle>
+            <CardDescription>
+              Tem certeza que deseja eliminar este lançamento? Esta ação é irreversível.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setDeleteConfirm(null)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => handleDelete(deleteConfirm)}
+            >
+              Eliminar
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
@@ -172,15 +308,49 @@ const ResearcherDataEntryForm = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
-    // In a real scenario, we would POST to /api/data/register
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erro ao salvar lançamento");
+      }
+
       setLoading(false);
       toast({
-        title: "Dados Registrados",
-        description: "O inquérito foi salvo com sucesso na base de dados.",
+        title: "Inquérito Salvo ✅",
+        description: "O inquérito foi salvo com sucesso na base de dados",
+        duration: 3000,
       });
+      
       setStep(1);
-    }, 1500);
+      setFormData({
+        residentNumber: "",
+        ageGroup: "",
+        gender: "",
+        occupation: "",
+        neighborhood: "",
+        educationLevel: "",
+        wasVictim: false,
+        crimeGeneral: "",
+        reportedCrime: false,
+        crimeFrequency: "Nunca",
+        daySecurity: "Muito Seguro",
+        nightSecurity: "Muito Inseguro",
+        localPoliceTrustLevel: "Baixa",
+      });
+    } catch (error: any) {
+      setLoading(false);
+      toast({
+        title: "Erro",
+        description: error.message || "Não foi possível salvar o lançamento",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

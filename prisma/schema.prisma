@@ -15,22 +15,23 @@ model User {
   name      String?
   email     String   @unique
   password  String
-  role      String   @default("RESEARCHER") // Adicionado: ADMIN ou RESEARCHER
-  image     String?  // Adicionado: URL ou base64 da foto de perfil
+  role      String   @default("RESEARCHER")
+  image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  residents Resident[]
 }
 
 model Resident {
   id                             Int      @id @default(autoincrement())
-  residentNumber                 String   @unique // Novo: Coluna 'Número' do Excel
-  surveyDate                     DateTime? // Novo: Coluna 'Data' do Excel
-  ageGroup                       String // Mapeia para 'Idade'
-  gender                         String // Mapeia para 'Género'
-  occupation                     String // Mapeia para 'Ocupação'
-  residenceTime                  String // Mapeia para 'Tempo_de_residência_no_bairro'
-  neighborhood                   String // Mapeia para 'Bairro'
-  educationLevel                 String // Mapeia para 'Escolaridade'
+  residentNumber                 String   @unique
+  surveyDate                     DateTime?
+  ageGroup                       String
+  gender                         String
+  occupation                     String?
+  residenceTime                  String?
+  neighborhood                   String
+  educationLevel                 String?
   school                         String? // Novo: Coluna 'ESCOLA'
   emailContact                   String? // Novo: Coluna 'Direccióndecorreoelectrónicofilter_$' (renomeado para clareza)
   // protectionMeasures String[] // Alterado para campos Boolean? individuais
@@ -78,7 +79,7 @@ model Victimization {
   fraud                          Boolean? // Fraude
   cybercrime                     Boolean? // CrimeCibernetico
   otherCrime                     String? // Outro
-  crimeFrequency                 String // Quantasvezes
+  crimeFrequency                 String? // Quantasvezes
   reportedCrimeQuestion          String? // VAR00056 @10.Oscrimesfoiramdenunciadosàsautoridadespoliciais
   reportedCrime                  Boolean // Denunciou
   // notReportingReasons String[] // Alterado para campos Boolean? individuais

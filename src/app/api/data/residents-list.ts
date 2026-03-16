@@ -12,6 +12,14 @@ export async function GET(request: Request) {
         include: {
           victimizations: true,
           securityPerceptions: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              role: true,
+            },
+          },
         },
       });
       return NextResponse.json(resident);
@@ -21,8 +29,16 @@ export async function GET(request: Request) {
       include: {
         victimizations: true,
         securityPerceptions: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
       },
-      orderBy: { id: "desc" },
+      orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(residents);
   } catch (error) {
@@ -56,6 +72,14 @@ export async function PUT(request: Request) {
       include: {
         victimizations: true,
         securityPerceptions: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
       },
     });
 
@@ -90,6 +114,75 @@ export async function DELETE(request: Request) {
     console.error("Error deleting resident:", error);
     return NextResponse.json(
       { message: "Erro ao eliminar lançamento" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const {
+      residentNumber,
+      ageGroup,
+      gender,
+      occupation,
+      neighborhood,
+      educationLevel,
+      wasVictim,
+      crimeGeneral,
+      reportedCrime,
+      crimeFrequency,
+      daySecurity,
+      nightSecurity,
+      localPoliceTrustLevel,
+      userId,
+    } = body;
+
+    const resident = await prisma.resident.create({
+      data: {
+        residentNumber,
+        ageGroup,
+        gender,
+        occupation,
+        neighborhood,
+        educationLevel,
+        userId: userId ? parseInt(userId) : undefined,
+        victimizations: {
+          create: {
+            wasVictim,
+            crimeGeneral,
+            reportedCrime,
+            crimeFrequency,
+          },
+        },
+        securityPerceptions: {
+          create: {
+            daySecurity,
+            nightSecurity,
+            localPoliceTrustLevel,
+          },
+        },
+      },
+      include: {
+        victimizations: true,
+        securityPerceptions: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(resident, { status: 201 });
+  } catch (error) {
+    console.error("Error creating resident:", error);
+    return NextResponse.json(
+      { message: "Erro ao salvar lançamento" },
       { status: 500 }
     );
   }
