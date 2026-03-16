@@ -54,6 +54,44 @@ const translations: { [key: string]: string } = {
     'secondary': 'Ensino secundário',
     'higher': 'Ensino superior',
     'none': 'Nenhum',
+    'drugtrafficking': 'Tráfico de Drogas',
+    'drug-trafficking': 'Tráfico de Drogas',
+    'rape': 'Violação',
+    'extortion': 'Extorsão',
+    'domestic-violence': 'Violência Doméstica',
+    'domesticviolence': 'Violência Doméstica',
+    'cybercrime': 'Crime Cibernético',
+    'assault-aggression': 'Agressão',
+    'aggression': 'Agressão',
+    'othercrime': 'Outros Crimes',
+    'other-crime': 'Outros Crimes',
+    'other_crime': 'Outros Crimes',
+    'others': 'Outros',
+    'other': 'Outros',
+    'victim': 'Vítima',
+    'non-victim': 'Não Vítima',
+    'victims': 'Vítimas',
+    'nonvictims': 'Não Vítimas',
+    'non-victims': 'Não Vítimas',
+    'non_victims': 'Não Vítimas',
+    'crimegeneral': 'Crime em Geral',
+    'crime-general': 'Crime em Geral',
+    'crime_general': 'Crime em Geral',
+    'vandalism': 'Vandalismo',
+    'kidnapping': 'Sequestro',
+    'homicide': 'Homicídio',
+    'fraud': 'Fraude',
+    'burglary': 'Arrombamento',
+    'robbery': 'Roubo',
+    'theft': 'Furto',
+    'assault': 'Assalto',
+    'victimization': 'Vitimização',
+    'reported': 'Denunciado',
+    'not-reported': 'Não Denunciado',
+    'gender': 'Gênero',
+    'age-group': 'Faixa Etária',
+    'occupation': 'Ocupação',
+    'education-level': 'Nível de Escolaridade',
 };
 
 const translate = (key: string | null | undefined): string => {
@@ -62,6 +100,11 @@ const translate = (key: string | null | undefined): string => {
     }
     const normalizedKey = key.toLowerCase().replace(/[ _]/g, '-');
     return translations[normalizedKey] || key;
+};
+
+const shortenName = (name: string, maxLength: number = 25): string => {
+    if (name.length <= maxLength) return name;
+    return name.substring(0, maxLength - 3) + '...';
 };
 
 
@@ -74,11 +117,6 @@ interface SecurityPerceptionData {
   gender: string;
   avgDaySecurity: number;
   avgNightSecurity: number;
-}
-
-interface CrimesByNeighborhoodData {
-    neighborhood: string;
-    [key: string]: string | number;
 }
 
 interface VictimizationByAgeAndGenderData {
@@ -115,9 +153,14 @@ interface VictimizationByEducationLevelData {
 }
 
 
-type GraphType = 'residentsByAge' | 'victimizationByCrimeType' | 'securityPerceptionByGender' | 'crimesByNeighborhood' | 'victimizationByAgeAndGender' | 'occupationVictim' | 'dayNightSecurity' | 'victimizationByEducationLevel';
+type GraphType = 'residentsByAge' | 'victimizationByCrimeType' | 'securityPerceptionByGender' | 'victimizationByAgeAndGender' | 'occupationVictim' | 'victimizationByEducationLevel';
 
-const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#a4de6c', '#d0ed57'];
+const COLORS = [
+  '#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE', 
+  '#00C49F', '#FFBB28', '#FF8042', '#a4de6c', '#d0ed57',
+  '#ff4d4d', '#4d79ff', '#33cc33', '#ff9933', '#cc33ff',
+  '#33cccc', '#ff6666', '#99cc00', '#6666ff', '#cc9900'
+];
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }: any) => {
@@ -157,17 +200,11 @@ const GraphDisplay: React.FC = () => {
         case 'securityPerceptionByGender':
           endpoint = '/api/data/security-perception-by-gender';
           break;
-        case 'crimesByNeighborhood':
-            endpoint = '/api/data/crimes-by-neighborhood';
-            break;
         case 'victimizationByAgeAndGender':
             endpoint = '/api/data/victimization-by-age-and-gender';
             break;
         case 'occupationVictim':
             endpoint = '/api/data/occupation-victim';
-            break;
-        case 'dayNightSecurity':
-            endpoint = '/api/data/day-night-security';
             break;
         case 'victimizationByEducationLevel':
             endpoint = '/api/data/victimization-by-education-level';
@@ -222,11 +259,18 @@ const GraphDisplay: React.FC = () => {
             </BarChart>
         ),
         victimizationByCrimeType: (
-            <PieChart>
-                <Pie data={data.map(item => ({...item, name: translate(item.name)})) as CrimeTypeData[]} dataKey="count" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" labelLine={false} label={renderCustomizedLabel}>
+            <BarChart 
+                data={data.map(item => ({...item, name: translate(item.name)})) as CrimeTypeData[]}
+                layout="vertical"
+                margin={{ top: 20, right: 30, left: 100, bottom: 5 }}
+            >
+                <XAxis type="number" />
+                <YAxis dataKey="name" type="category" width={150} tick={{ fontSize: 12, fontWeight: 500 }} />
+                <Tooltip cursor={{fill: 'rgba(0,0,0,0.05)'}} />
+                <Bar dataKey="count" fill="#8884d8" radius={[0, 4, 4, 0]}>
                     {data.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
-                </Pie>
-            </PieChart>
+                </Bar>
+            </BarChart>
         ),
         securityPerceptionByGender: (
             <BarChart data={data.map(item => ({...item, gender: translate(item.gender)})) as SecurityPerceptionData[]}
@@ -242,112 +286,6 @@ const GraphDisplay: React.FC = () => {
                 <Bar dataKey="avgNightSecurity" fill="#ffc658" name="Segurança Noturna Média" />
             </BarChart>
         ),
-        crimesByNeighborhood: (() => {
-            const crimeTypes = Array.from(new Set(data.flatMap(Object.keys))).filter(key => key !== 'neighborhood' && key !== 'id');
-            
-            // 1. Mapear e calcular totais
-            let processedData = data.map(item => {
-                const neighborhoodName = translate(item.neighborhood);
-                const stats: any = { neighborhood: neighborhoodName };
-                let total = 0;
-                
-                crimeTypes.forEach(crime => {
-                    const value = Number(item[crime] || 0);
-                    stats[translate(crime)] = value;
-                    total += value;
-                });
-                stats.total = total;
-                return stats;
-            });
-
-            const translatedCrimeTypes = crimeTypes.map(translate);
-
-            // 2. Filtrar por pesquisa
-            if (searchTerm) {
-                processedData = processedData.filter(item => 
-                    item.neighborhood.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-            }
-
-            // 3. Ordenar (Sempre mostrar os mais perigosos primeiro)
-            processedData.sort((a, b) => b.total - a.total);
-
-            // 4. Aplicar limite Top 10 apenas se não estiver em modo "Todos" e não houver pesquisa
-            if (!showAll && !searchTerm) {
-                processedData = processedData.slice(0, 10);
-            }
-
-            // 5. Definir altura dinâmica
-            const chartHeight = Math.max(processedData.length * 45 + 50, 400);
-
-            return (
-                <div className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-4 bg-muted/30 p-4 rounded-xl border border-border/50">
-                        <div className="flex-1 min-w-[200px]">
-                            <Label htmlFor="search" className="text-sm font-semibold mb-2 block">Pesquisar Bairro Específico</Label>
-                            <Input 
-                                id="search"
-                                placeholder="Pesquisar..." 
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="h-10 bg-background"
-                            />
-                        </div>
-                        <div className="flex items-center gap-2 pt-6">
-                            <Button 
-                                variant={!showAll ? "default" : "outline"} 
-                                onClick={() => { setShowAll(false); setSearchTerm(""); }}
-                                className="h-10 px-6 font-bold"
-                            >
-                                Top 10
-                            </Button>
-                            <Button 
-                                variant={showAll ? "default" : "outline"} 
-                                onClick={() => { setShowAll(true); setSearchTerm(""); }}
-                                className="h-10 px-6 font-bold"
-                            >
-                                Ver Todos
-                            </Button>
-                        </div>
-                    </div>
-                    
-                    <div className="bg-card rounded-xl p-4 border shadow-sm overflow-hidden">
-                        <ResponsiveContainer width="100%" height={chartHeight}>
-                            <BarChart 
-                                data={processedData} 
-                                layout="vertical"
-                                margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
-                            >
-                                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(0,0,0,0.1)" />
-                                <XAxis type="number" hide={false} />
-                                <YAxis 
-                                    dataKey="neighborhood" 
-                                    type="category" 
-                                    width={130}
-                                    tick={{ fontSize: 12, fontWeight: 600 }}
-                                />
-                                <Tooltip cursor={{fill: 'rgba(0,0,0,0.02)'}} />
-                                <Legend verticalAlign="top" wrapperStyle={{paddingBottom: '20px'}} />
-                                {translatedCrimeTypes.map((crime, index) => (
-                                    <Bar 
-                                        key={crime} 
-                                        dataKey={crime} 
-                                        stackId="a" 
-                                        fill={COLORS[index % COLORS.length]} 
-                                        name={crime}
-                                        radius={[0, 4, 4, 0]}
-                                        barSize={25}
-                                    />
-                                ))}
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                    <p className="text-xs text-center text-muted-foreground">
-                        Mostrando {processedData.length} bairros {searchTerm ? `para "${searchTerm}"` : (showAll ? "" : "(Top 10 mais críticos)")}
-                    </p>
-                </div>
-            );
-        })(),
         victimizationByAgeAndGender: (() => {
             const genderTypes = Array.from(new Set(data.flatMap(Object.keys))).filter(key => key !== 'ageGroup');
             const translatedGenderTypes = genderTypes.map(translate);
@@ -386,20 +324,6 @@ const GraphDisplay: React.FC = () => {
                 <Bar dataKey="nonVictims" stackId="a" fill="#82ca9d" name="Não Vítimas" />
             </BarChart>
         ),
-        dayNightSecurity: (
-            <BarChart data={data.map(item => ({...item, neighborhood: translate(item.neighborhood)})) as DayNightSecurityData[]}
-                      margin={{
-                          top: 20,
-                          right: 30,
-                          left: 20,
-                          bottom: 5,
-                      }}>
-                <XAxis dataKey="neighborhood" tick={{ fontSize: 12 }} angle={-45} textAnchor="end" height={100} />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Bar dataKey="daySecurity" fill="#82ca9d" name="Segurança Diurna" />
-                <Bar dataKey="nightSecurity" fill="#ffc658" name="Segurança Noturna" />
-            </BarChart>
-        ),
         victimizationByEducationLevel: (
             <BarChart data={data.map(item => ({...item, educationLevel: translate(item.educationLevel)})) as VictimizationByEducationLevelData[]}
                       margin={{
@@ -418,22 +342,17 @@ const GraphDisplay: React.FC = () => {
 
     const chart = chartComponents[selectedGraph];
 
-    // Se for o gráfico de bairros, ele já traz o seu próprio container e layout especial
-    if (selectedGraph === 'crimesByNeighborhood') {
-        return chart;
-    }
-
     // Para todos os outros gráficos, usamos o layout padrão
-    const height = selectedGraph === 'residentsByAge' || selectedGraph === 'victimizationByCrimeType' ? 300 : 500;
+    const height = selectedGraph === 'residentsByAge' ? 300 : 600;
 
     return (
         <ResponsiveContainer width="100%" height={height}>
             {React.cloneElement(chart as React.ReactElement, {
                 children: [
-                    <CartesianGrid key="grid" strokeDasharray="3 3" />,
+                    selectedGraph !== 'victimizationByCrimeType' && <CartesianGrid key="grid" strokeDasharray="3 3" />,
                     ...React.Children.toArray((chart as React.ReactElement).props.children),
                     <Tooltip key="tooltip" />,
-                    <Legend key="legend" />,
+                    <Legend key="legend" layout="vertical" verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: '20px' }} />,
                 ],
             })}
         </ResponsiveContainer>
@@ -441,7 +360,7 @@ const GraphDisplay: React.FC = () => {
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full max-w-6xl mx-auto">
       <CardHeader>
         <CardTitle>Visualização de Dados</CardTitle>
       </CardHeader>
@@ -449,17 +368,15 @@ const GraphDisplay: React.FC = () => {
         <div className="mb-4">
           <Label htmlFor="graph-select">Selecionar Gráfico:</Label>
           <Select value={selectedGraph} onValueChange={(value: GraphType) => setSelectedGraph(value)}>
-            <SelectTrigger id="graph-select" className="w-[240px]">
+            <SelectTrigger id="graph-select" className="w-[320px]">
               <SelectValue placeholder="Selecione um gráfico" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="residentsByAge">Residentes por Faixa Etária</SelectItem>
               <SelectItem value="victimizationByCrimeType">Vitimização por Tipo de Crime</SelectItem>
               <SelectItem value="securityPerceptionByGender">Percepção de Segurança por Gênero</SelectItem>
-              <SelectItem value="crimesByNeighborhood">Crimes por Bairro</SelectItem>
               <SelectItem value="victimizationByAgeAndGender">Vitimização por Faixa Etária e Gênero</SelectItem>
               <SelectItem value="occupationVictim">Ocupação vs. Vítima de Crime</SelectItem>
-              <SelectItem value="dayNightSecurity">Percepção de Segurança (Dia vs. Noite)</SelectItem>
               <SelectItem value="victimizationByEducationLevel">Vitimização por Nível de Escolaridade</SelectItem>
             </SelectContent>
           </Select>

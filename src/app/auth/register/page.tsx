@@ -16,6 +16,38 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+// Função para calcular a força da senha
+const getPasswordStrength = (password: string): { score: number; level: string; color: string } => {
+  let score = 0;
+  
+  if (!password) return { score: 0, level: "", color: "" };
+  
+  // Comprimento mínimo
+  if (password.length >= 8) score++;
+  if (password.length >= 12) score++;
+  if (password.length >= 16) score++;
+  
+  // Maiúsculas
+  if (/[A-Z]/.test(password)) score++;
+  
+  // Minúsculas
+  if (/[a-z]/.test(password)) score++;
+  
+  // Números
+  if (/\d/.test(password)) score++;
+  
+  // Caracteres especiais
+  if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) score++;
+  
+  if (score <= 2) {
+    return { score, level: "Fraca", color: "bg-red-500" };
+  } else if (score <= 4) {
+    return { score, level: "Normal", color: "bg-orange-500" };
+  } else {
+    return { score, level: "Forte", color: "bg-green-500" };
+  }
+};
+
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,10 +58,17 @@ export default function RegisterPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const router = useRouter();
+  const passwordStrength = getPasswordStrength(password);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // Validar força da senha
+    if (passwordStrength.level === "Fraca") {
+      setError("A senha é muito fraca. Deve conter pelo menos 8 caracteres com maiúsculas, minúsculas, números e caracteres especiais.");
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError("As senhas não coincidem");
@@ -120,6 +159,44 @@ export default function RegisterPage() {
                 required
                 className="h-12 border-muted-foreground/20"
               />
+              
+              {password && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-muted-foreground">Força da Senha:</span>
+                    <span className={`text-xs font-bold ${
+                      passwordStrength.level === "Fraca" ? "text-red-500" :
+                      passwordStrength.level === "Normal" ? "text-orange-500" :
+                      "text-green-500"
+                    }`}>
+                      {passwordStrength.level}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-300 ${passwordStrength.color}`}
+                      style={{ width: `${(passwordStrength.score / 7) * 100}%` }}
+                    ></div>
+                  </div>
+                  <ul className="text-xs text-muted-foreground space-y-1">
+                    <li className={password.length >= 8 ? "text-green-600 font-semibold" : ""}>
+                      {password.length >= 8 ? "✓" : "○"} Mínimo 8 caracteres
+                    </li>
+                    <li className={/[A-Z]/.test(password) ? "text-green-600 font-semibold" : ""}>
+                      {/[A-Z]/.test(password) ? "✓" : "○"} Contém maiúsculas
+                    </li>
+                    <li className={/[a-z]/.test(password) ? "text-green-600 font-semibold" : ""}>
+                      {/[a-z]/.test(password) ? "✓" : "○"} Contém minúsculas
+                    </li>
+                    <li className={/\d/.test(password) ? "text-green-600 font-semibold" : ""}>
+                      {/\d/.test(password) ? "✓" : "○"} Contém números
+                    </li>
+                    <li className={/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) ? "text-green-600 font-semibold" : ""}>
+                      {/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) ? "✓" : "○"} Contém caracteres especiais
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirm-password" name="Confirmar Senha" className="text-sm font-semibold">Confirmar Senha</Label>
@@ -131,6 +208,14 @@ export default function RegisterPage() {
                 required
                 className="h-12 border-muted-foreground/20"
               />
+              
+              {confirmPassword && password !== confirmPassword && (
+                <p className="text-xs text-red-500 font-semibold">✗ As senhas não coincidem</p>
+              )}
+              
+              {confirmPassword && password === confirmPassword && (
+                <p className="text-xs text-green-600 font-semibold">✓ As senhas coincidem</p>
+              )}
             </div>
           </div>
           

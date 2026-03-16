@@ -38,7 +38,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Página Inicial", href: "/dashboard" },
     { name: "O Meu Perfil", href: "/dashboard/profile" },
     { name: "Gerir Utilizadores", href: "/dashboard/users" },
-    { name: "Lançamento de Inquéritos", href: "/dashboard/data-entry" },
+    { name: "Revisar Lançamentos", href: "/dashboard/data-entry?admin=true" },
     { name: "Gerir Base de Dados", href: "/dashboard/database-management" },
     { name: "Gestão de Denúncias", href: "/dashboard/occurrences" },
     { name: "Painel Estatístico", href: "/dashboard/reports" },

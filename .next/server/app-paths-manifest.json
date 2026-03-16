@@ -1,8 +1,8 @@
 {
   "/api/notifications/route": "app/api/notifications/route.js",
-  "/dashboard/graphs/page": "app/dashboard/graphs/page.js",
-  "/dashboard/chatbot/page": "app/dashboard/chatbot/page.js",
-  "/dashboard/report-creation/page": "app/dashboard/report-creation/page.js",
-  "/auth/login/page": "app/auth/login/page.js",
-  "/dashboard/page": "app/dashboard/page.js"
+  "/dashboard/database-management/page": "app/dashboard/database-management/page.js",
+  "/dashboard/data-entry/page": "app/dashboard/data-entry/page.js",
+  "/dashboard/reports/page": "app/dashboard/reports/page.js",
+  "/dashboard/data-query/page": "app/dashboard/data-query/page.js",
+  "/dashboard/occurrences/page": "app/dashboard/occurrences/page.js"
 }

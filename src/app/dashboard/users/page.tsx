@@ -38,8 +38,9 @@ interface User {
   id: number;
   name: string | null;
   email: string;
+  role: string;
+  image: string | null;
   createdAt: string;
-  updatedAt: string;
 }
 
 interface FormData {
@@ -70,7 +71,7 @@ const UsersPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/auth/register?action=list");
+      const response = await fetch("/api/auth/users");
       if (!response.ok) {
         throw new Error("Falha ao carregar utilizadores");
       }
@@ -299,8 +300,8 @@ const UsersPage: React.FC = () => {
               <TableRow>
                 <TableHead className="min-w-[150px]">Nome</TableHead>
                 <TableHead className="min-w-[200px]">Email</TableHead>
+                <TableHead className="min-w-[120px]">Perfil</TableHead>
                 <TableHead className="min-w-[180px]">Data de Criação</TableHead>
-                <TableHead className="min-w-[180px]">Última Atualização</TableHead>
                 <TableHead className="w-[100px] text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
@@ -312,12 +313,20 @@ const UsersPage: React.FC = () => {
                   </TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
-                    {format(new Date(user.createdAt), "dd/MM/yyyy HH:mm", {
-                      locale: ptBR,
-                    })}
+                    <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
+                      user.role === "ADMIN" ? "bg-red-100 text-red-800" :
+                      user.role === "RESEARCHER" ? "bg-blue-100 text-blue-800" :
+                      user.role === "POLICE" ? "bg-yellow-100 text-yellow-800" :
+                      "bg-gray-100 text-gray-800"
+                    }`}>
+                      {user.role === "ADMIN" ? "Administrador" :
+                       user.role === "RESEARCHER" ? "Investigador" :
+                       user.role === "POLICE" ? "Polícia" :
+                       "Cidadão"}
+                    </span>
                   </TableCell>
                   <TableCell>
-                    {format(new Date(user.updatedAt), "dd/MM/yyyy HH:mm", {
+                    {format(new Date(user.createdAt), "dd/MM/yyyy HH:mm", {
                       locale: ptBR,
                     })}
                   </TableCell>

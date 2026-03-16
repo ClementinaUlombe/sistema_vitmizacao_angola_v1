@@ -14,6 +14,7 @@ import ReportModal from "@/components/ReportModal";
 import DenunciaModal from "@/components/DenunciaModal";
 import ParallaxSection from "@/components/ParallaxSection";
 import { useState, useEffect } from "react";
+import { newsData } from "@/lib/news-data";
 
 interface SummaryData {
   totalResidents: number;
@@ -77,6 +78,12 @@ const Page = () => {
     "/telefone.webp",
   ];
 
+  const destaqueImages = [
+    "/nochao.jpg",
+    "/maos.jpg",
+    "/livro.jpeg",
+  ];
+
   return (
     <div className="min-h-screen">
       <AppHeader />
@@ -123,7 +130,7 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
             <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
                 <CardTitle className="text-primary text-4xl font-bold">
-                  {summaryData ? <NumberCounter targetValue={summaryData.totalResidents} /> : "0"}
+                  <NumberCounter targetValue={522} />
                 </CardTitle>
                 <CardDescription>Residentes Inquiridos</CardDescription>
               </CardHeader>
@@ -160,7 +167,7 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
       <section id="sobre-estudo" className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4 text-center">
-            Conhecimento e Tecnologia pela Segurança de Angola
+            Conhecimento e Tecnologia pela Segurança de Angola A Celina vai me mandar o artiigo científico
           </h2>
           <p className="text-center text-muted-foreground mb-12 text-lg">
             Uma iniciativa pioneira para transformar dados em ação
@@ -184,109 +191,163 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
               "Proteger vidas, compreender o crime e fortalecer a confiança pública — eis o propósito que move o futuro da segurança em Angola."
             </p>
           </div>
+        </div>
+      </section>
 
-          {/* Problema e Hipóteses */}
-          <div className="grid gap-8 md:grid-cols-2 mt-16">
-            <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="text-2xl text-primary">Problema de Investigação</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-foreground/80 leading-relaxed">
-                  Qual é o índice de vitimização criminal no bairro Gamek à Direita e como ele se relaciona com a percepção de segurança e a confiança nas autoridades policiais?
-                </p>
-                <p className="text-sm text-muted-foreground mt-4">
-                  Motivado pela alta incidência de crimes, subnotificação e necessidade de dados locais para intervenções eficazes.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-card border-primary/20 hover:shadow-xl transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="text-2xl text-primary">Objetivo Geral</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-foreground/80 leading-relaxed">
-                  Analisar o índice de vitimização criminal e a percepção de segurança da população do bairro Gamek à Direita, identificando factores associados à subnotificação de crimes e à insegurança percebida.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Hipóteses */}
-          <div className="mt-12">
-            <h3 className="text-2xl font-bold text-foreground mb-6">Hipóteses de Investigação</h3>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {[
-                { id: "H1", text: "O índice de vitimização no bairro é elevado (>50% nos últimos 12 meses)" },
-                { id: "H2", text: "O nível de denúncia é baixo (<30% das vítimas formalizam queixas)" },
-                { id: "H3", text: "Baixa confiança institucional aumenta a não denúncia de crimes" },
-                { id: "H4", text: "Baixa denúncia está associada a maior percepção de insegurança" }
-              ].map((hipotese, idx) => (
-                <Card key={idx} className="border-l-4 border-l-accent hover:shadow-md transition-all duration-300 hover:translate-x-1">
-                  <CardContent className="pt-6">
-                    <span className="font-bold text-accent">{hipotese.id}:</span>{" "}
-                    <span className="text-foreground/80">{hipotese.text}</span>
-                  </CardContent>
-                </Card>
-              ))}
+      {/* Seção Destaques */}
+      <section id="destaques" className="bg-background py-16 sm:py-24 border-t border-border/10">
+        <div className="mx-auto max-w-7xl px-6">
+          <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-12 text-center">
+            Destaques
+          </h2>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Imagens (Lado Esquerdo) */}
+            <div className="relative h-[450px] rounded-2xl overflow-hidden shadow-2xl group border-4 border-primary/10">
+               <HeroSlideshow images={destaqueImages} intervalMs={3500} />
+               <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
+            {/* Texto (Lado Direito) */}
+            <div className="space-y-6">
+              <p className="text-xl text-foreground/80 leading-relaxed font-medium">
+                Inovação e Compromisso com a Segurança de Angola
+              </p>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Nossa plataforma destaca-se pela integração de dados reais com ferramentas tecnológicas avançadas. Estamos focados em fornecer uma visão clara dos desafios de segurança, permitindo que cidadãos e instituições colaborem para um ambiente mais protegido e resiliente em todo o país.
+              </p>
+              <div className="pt-4">
+                <Button className="bg-primary text-white hover:bg-primary/90">
+                  Ver Detalhes do Estudo
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Seção Parallax com Objetivos */}
-      <section className="relative py-24 sm:py-32 overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-fixed bg-center bg-cover"
-          style={{ 
-            backgroundImage: `url(${parallaxBg})`,
-            transform: 'translateZ(0)',
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-hero opacity-90" />
-        
-        <div className="relative z-10 mx-auto max-w-6xl px-6">
-          <h2 className="text-3xl sm:text-5xl font-bold text-white mb-12 text-center drop-shadow-lg">
-            Objetivos Específicos do Estudo
+      {/* Seção de Notícias */}
+      <section id="noticias" className="bg-gradient-light py-20 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 text-center mb-16">
+          <h2 className="text-4xl sm:text-6xl font-extrabold text-foreground mb-6 tracking-tight">
+            Notícias e Atualizações
           </h2>
-          
-          <div className="grid gap-6 md:grid-cols-2">
-            {[
-              {
-                icon: "📊",
-                title: "Mapear Crimes",
-                description: "Identificar tipos e frequência de crimes reportados nos últimos 12 meses no bairro."
-              },
-              {
-                icon: "🔍",
-                title: "Avaliar Percepção",
-                description: "Analisar a percepção de segurança diurna e noturna considerando variáveis sociodemográficas."
-              },
-              {
-                icon: "📢",
-                title: "Identificar Motivos",
-                description: "Compreender razões para não denúncia e nível de confiança nas instituições policiais."
-              },
-              {
-                icon: "💡",
-                title: "Propor Soluções",
-                description: "Desenvolver recomendações para políticas de segurança pública baseadas em evidências."
-              }
-            ].map((objetivo, idx) => (
-              <Card key={idx} className="bg-card/95 backdrop-blur-sm border-border/20 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover-scale">
-                <CardHeader>
-                  <div className="text-4xl mb-2">{objetivo.icon}</div>
-                  <CardTitle className="text-xl text-primary">{objetivo.title}</CardTitle>
+          <p className="text-muted-foreground text-xl max-w-2xl mx-auto leading-relaxed">
+            Acompanhe o progresso do nosso estudo e as últimas novidades sobre a segurança pública no Município da Samba.
+          </p>
+        </div>
+
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {newsData.map((news) => (
+              <Card key={news.id} className="overflow-hidden hover:shadow-2xl transition-all duration-500 group flex flex-col bg-card border-primary/5 rounded-3xl shadow-lg border-2 hover:border-primary/20">
+                <div className="h-64 overflow-hidden relative">
+                  <img 
+                    src={news.image} 
+                    alt={news.title} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                  />
+                  <div className="absolute top-6 left-6 bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-2xl backdrop-blur-md">
+                    {news.date}
+                  </div>
+                </div>
+                <CardHeader className="flex-grow p-8">
+                  <CardTitle className="text-2xl font-bold leading-tight group-hover:text-primary transition-colors mb-4">
+                    {news.title}
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-foreground/80">{objetivo.description}</p>
+                <CardContent className="px-8 pb-8 pt-0">
+                  <p className="text-muted-foreground text-lg mb-8 leading-relaxed line-clamp-3">
+                    {news.description}
+                  </p>
+                  <Link href={`/noticias/${news.id}`}>
+                    <Button variant="outline" className="w-full rounded-2xl font-bold text-primary border-primary/20 hover:bg-primary hover:text-white transition-all py-6">
+                      Ler Notícia Completa
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Seção Galeria de Fotos */}
+      <section id="galeria" className="bg-background py-20 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 mb-16">
+          <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4">
+            Galeria do Projeto
+          </h2>
+          <p className="text-muted-foreground text-lg">
+            Momentos da recolha de dados e interações com a comunidade.
+          </p>
+        </div>
+        <div className="mx-auto max-w-7xl px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            "/recolha.jpeg", "/recolha1.jpeg", "/recolha2.jpeg", "/recolha3.jpeg",
+            "/recolha4.jpeg", "/recolha2.jpeg", "/recolha1.jpeg", "/imagesmaos.jpeg"
+          ].map((img, i) => (
+            <div key={i} className="group relative h-64 rounded-2xl overflow-hidden cursor-pointer shadow-md">
+              <img src={img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Galeria" />
+              <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span className="text-white font-bold">Ver Foto</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Seção Conselhos de Prevenção (Premium Refined) */}
+      <section className="bg-background py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="bg-gradient-hero rounded-[3rem] p-10 sm:p-20 text-white relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+            <div className="relative z-10 grid lg:grid-cols-2 gap-16 items-center">
+              <div>
+                <h2 className="text-4xl sm:text-6xl font-black mb-10 leading-tight">
+                  Conselhos de <br/><span className="text-accent-foreground">Prevenção</span>
+                </h2>
+                <div className="space-y-8">
+                  {[
+                    { icon: "👀", title: "Mantenha-se Alerta", text: "Esteja atento ao seu redor, especialmente em locais pouco iluminados." },
+                    { icon: "🤝", title: "Rede de Vizinhos", text: "A união da comunidade é o maior dissuasor contra a criminalidade." },
+                    { icon: "📱", title: "Denúncia Digital", text: "Utilize nossa plataforma para reportar incidentes e ajudar no mapeamento." }
+                  ].map((tip, i) => (
+                    <div key={i} className="flex gap-6 items-start group">
+                      <div className="bg-white/20 h-14 w-14 rounded-2xl flex items-center justify-center flex-shrink-0 text-3xl group-hover:scale-110 transition-transform shadow-lg backdrop-blur-md">
+                        {tip.icon}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-2xl mb-2">{tip.title}</h4>
+                        <p className="text-white/80 text-lg leading-relaxed">{tip.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-10 border border-white/20 shadow-2xl text-center">
+                <h4 className="text-3xl font-bold mb-8">Canais de Emergência</h4>
+                <div className="space-y-6">
+                  <div className="bg-white/20 p-6 rounded-2xl hover:bg-white/30 transition-colors cursor-pointer">
+                    <p className="text-xs font-bold uppercase tracking-[0.2em] mb-2 opacity-70">Polícia Nacional</p>
+                    <p className="text-5xl font-black">113</p>
+                  </div>
+                  <div className="bg-white/20 p-6 rounded-2xl hover:bg-white/30 transition-colors cursor-pointer">
+                    <p className="text-xs font-bold uppercase tracking-[0.2em] mb-2 opacity-70">Emergência Médica</p>
+                    <p className="text-5xl font-black">112</p>
+                  </div>
+                </div>
+                <p className="text-lg mt-10 text-white/80 italic font-medium">
+                  "Sua segurança começa com a sua atenção."
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      {/* Parceiros Institucionais */}
+  
 
       {/* Dados da Investigação */}
       <section id="dados" className="bg-background py-16 sm:py-24">
@@ -295,7 +356,7 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
             Resultados da Investigação
           </h2>
           <p className="text-center text-muted-foreground mb-12 text-lg">
-            Dados recolhidos de 522 residentes do Bairro Gamek à Direita
+            Dados recolhidos de 522 residentes do Município da Samba
           </p>
 
           {/* Vitimização */}
@@ -487,34 +548,7 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
           </div>
 
           {/* Metodologia */}
-          <div className="bg-card rounded-xl p-8 shadow-lg">
-            <h3 className="text-2xl font-bold text-primary mb-6">Metodologia da Investigação</h3>
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                  <span className="text-2xl">👥</span> Amostra Estratificada
-                </h4>
-                <p className="text-foreground/80 mb-4">
-                  522 residentes distribuídos em 4 bairros: Pedalé (29.7%), Huambo (26.8%), Inorad (21.5%) e Saber Andar (22.0%)
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Margem de erro: 5% | Nível de confiança: 95%
-                </p>
-              </div>
-
-              <div>
-                <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                  <span className="text-2xl">📋</span> Técnicas de Recolha
-                </h4>
-                <ul className="space-y-2 text-foreground/80">
-                  <li>• Inquéritos por questionário estruturado</li>
-                  <li>• Entrevistas semiestruturadas</li>
-                  <li>• Observação direta do ambiente urbano</li>
-                  <li>• Análise estatística com SPSS</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+        
         </div>
       </section>
 
@@ -637,21 +671,55 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
         </div>
       </section>
 
-      {/* Encontre Ajuda */}
-      <section className="bg-blue-soft py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
-            Encontre Ajuda
-          </h2>
-          <p className="text-lg text-foreground/85 max-w-3xl mb-8">
-            Seja forte. Você não está sozinho. Através do sistema INSUTEC, você pode encontrar serviços de apoio à vítima, instituições comunitárias e centros de orientação jurídica mais próximos de si.
-          </p>
-          <Button className="bg-gradient-primary" size="lg" onClick={() => setIsModalOpen(true)}>
-            Encontrar Serviço de Apoio
-          </Button>
+          {/* Seção FAQ */}
+      <section className="bg-gradient-light py-20 sm:py-32">
+        <div className="mx-auto max-w-4xl px-6">
+          <h2 className="text-3xl sm:text-5xl font-bold text-center mb-16">Perguntas Frequentes</h2>
+          <div className="space-y-6">
+            {[
+              { q: "O que é a Plataforma Digital Vitimização Crimial?", a: "É uma iniciativa académica que utiliza tecnologia para analisar o crime e melhorar a percepção de segurança em Luanda." },
+              { q: "Como meus dados são protegidos?", a: "Garantimos o anonimato total dos inquiridos seguindo rigorosos protocolos éticos de investigação." },
+              { q: "Posso denunciar crimes pela plataforma?", a: "Sim, oferecemos um canal de reporte anónimo que ajuda a mapear áreas de risco em tempo real." }
+            ].map((item, i) => (
+              <Card key={i} className="border-primary/10 hover:border-primary/30 transition-colors">
+                <CardHeader>
+                  <CardTitle className="text-xl text-primary">{item.q}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{item.a}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
-
+      {/* Parceiros Institucionais */}
+      <section className="bg-background py-24 border-t border-border/10">
+        <div className="mx-auto max-w-7xl px-6 text-center">
+          <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-16">Possíveis Parceiros e Apoio</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 items-center justify-center opacity-60 grayscale hover:grayscale-0 transition-all duration-700">
+            {[
+              { name: "INSUTEC", logo: "/insutec.jpeg" },
+              { name: "POLÍCIA NACIONAL", logo: "/policia.png" },
+              { name: "GOVERNO DE LUANDA", logo: "/governoluanda.jpg" },
+              { name: "MININT", logo: "/minint.jpg" }
+            ].map((partner, i) => (
+              <div key={i} className="flex flex-col items-center gap-6 group cursor-pointer">
+                <div className="h-24 w-40 flex items-center justify-center overflow-hidden rounded-2xl border-2 border-primary/5 group-hover:border-primary/20 group-hover:bg-white/50 transition-all duration-300 p-4 shadow-sm group-hover:shadow-xl">
+                  <img 
+                    src={partner.logo} 
+                    alt={partner.name} 
+                    className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500" 
+                  />
+                </div>
+                <div className="text-sm md:text-base font-black tracking-tight text-foreground/80 group-hover:text-primary transition-colors">
+                  {partner.name}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
       <AppFooter />
       <DenunciaModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

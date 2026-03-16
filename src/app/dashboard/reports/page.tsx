@@ -53,7 +53,7 @@ export default function StatisticalPanelPage() {
         <div>
           <h2 className="text-3xl font-bold text-foreground tracking-tight">Painel Estatístico e Analítico</h2>
           <p className="text-muted-foreground mt-1">
-            Observatório de Segurança Criminal - Bairro Gamek à Direita.
+            Observatório de Segurança Criminal - Município da Samba.
           </p>
         </div>
         <div className="flex gap-2">

@@ -13,15 +13,16 @@ export function AppFooter() {
                     </div>
                     <span className="font-semibold">Vitimização Criminal</span>
                   </Link>          <p className="text-sm text-white/80">
-            Análise de vitimização e perceção de segurança no Gamek à Direita.
+            Análise de vitimização e perceção de segurança no Município da Samba.
           </p>
         </div>
         <div>
           <h4 className="font-semibold mb-3">Projeto</h4>
           <ul className="text-sm text-white/80 space-y-2">
-            <li><a href="#sobre-estudo" className="hover:text-white transition-colors">Sobre o Estudo</a></li>
-            <li><a href="#quem-somos" className="hover:text-white transition-colors">Quem Somos</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Metodologia</a></li>
+            <li><Link href="/sobre" className="hover:text-white transition-colors">Sobre o Estudo</Link></li>
+            <li><Link href="/quem-somos" className="hover:text-white transition-colors">Quem Somos</Link></li>
+            <li><Link href="/metodologia" className="hover:text-white transition-colors">Metodologia</Link></li>
+            <li><Link href="/analise-dados" className="hover:text-white transition-colors">Análise de Dados</Link></li>
           </ul>
         </div>
         <div>
@@ -36,8 +37,8 @@ export function AppFooter() {
           <h4 className="font-semibold mb-3">Contacto</h4>
           <ul className="text-sm text-white/80 space-y-2">
             <li>Luanda, Angola</li>
-            <li><a href="#" className="hover:text-white transition-colors">Política de Privacidade</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Termos de Uso</a></li>
+            <li><Link href="/termos-de-uso" className="hover:text-white transition-colors">Política de Privacidade</Link></li>
+            <li><Link href="/termos-de-uso" className="hover:text-white transition-colors">Termos de Uso</Link></li>
           </ul>
         </div>
       </div>

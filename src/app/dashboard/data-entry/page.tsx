@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useSearchParams } from "next/navigation";
 import { 
   UserCircle, 
   ShieldAlert, 
@@ -16,10 +17,132 @@ import {
   ChevronRight, 
   ChevronLeft, 
   Save,
-  CheckCircle2
+  CheckCircle2,
+  Trash2,
+  Edit2
 } from "lucide-react";
 
 export default function DataEntryPage() {
+  const searchParams = useSearchParams();
+  const isAdminView = searchParams.get("admin") === "true";
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserRole(user.role);
+    }
+  }, []);
+
+  // Mostrar página de revisão para admin
+  if (isAdminView && userRole === "ADMIN") {
+    return <AdminDataEntryManagement />;
+  }
+
+  // Mostrar formulário normal para researcher
+  return <ResearcherDataEntryForm />;
+}
+
+// Componente para ADMIN revisar lançamentos
+const AdminDataEntryManagement = () => {
+  return (
+    <div className="w-full space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-primary mb-2">
+          Revisar Lançamentos de Inquéritos
+        </h1>
+        <p className="text-muted-foreground">
+          Visualize, edite e gerencie todos os lançamentos enviados por investigadores
+        </p>
+      </div>
+
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <h2 className="text-lg font-semibold text-blue-900 mb-4">✅ Painel de Revisão para ADMIN</h2>
+        <div className="space-y-3 text-blue-800">
+          <p>
+            <strong>Nova funcionalidade:</strong> Acesso exclusivo para administradores gerenciarem todos os lançamentos
+          </p>
+          <p>
+            <strong>O que pode fazer:</strong>
+          </p>
+          <ul className="list-disc list-inside ml-4 space-y-1">
+            <li>✅ Visualizar todos os lançamentos enviados</li>
+            <li>✅ Pesquisar por número de inquérito ou bairro</li>
+            <li>✅ Ver detalhes completos de cada lançamento</li>
+            <li>✅ Editar dados dos lançamentos</li>
+            <li>✅ Eliminar lançamentos (com confirmação)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+        <h2 className="text-lg font-semibold text-green-900 mb-4">📊 Funcionalidade em Desenvolvimento</h2>
+        <div className="space-y-2 text-green-800">
+          <p>A tabela de lançamentos será exibida aqui com as seguintes colunas:</p>
+          <ul className="list-disc list-inside ml-4 space-y-1">
+            <li>Nº Inquérito</li>
+            <li>Bairro</li>
+            <li>Idade</li>
+            <li>Género</li>
+            <li>Foi Vítima (Sim/Não)</li>
+            <li>Data de Registro</li>
+            <li>Ações (Ver, Editar, Eliminar)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+        <h2 className="text-lg font-semibold text-purple-900 mb-4">🔄 Fluxo de Trabalho</h2>
+        <div className="space-y-3 text-purple-800 text-sm">
+          <div className="flex items-start gap-3">
+            <span className="font-bold text-lg">1️⃣</span>
+            <div>
+              <strong>RESEARCHER envia inquéritos</strong>
+              <p>Via menu "Lançamento de Inquéritos" (sem o ?admin=true)</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="font-bold text-lg">2️⃣</span>
+            <div>
+              <strong>ADMIN revisa lançamentos</strong>
+              <p>Via menu "Revisar Lançamentos" → Vê todos os enviados → Gerencia conforme necessário</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <span className="font-bold text-lg">3️⃣</span>
+            <div>
+              <strong>Dados processados</strong>
+              <p>Sistema gera gráficos e estatísticas automaticamente</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 className="font-semibold text-blue-900 mb-2">👤 ADMIN</h3>
+          <p className="text-sm text-blue-800">✅ Ver "Revisar Lançamentos"</p>
+        </div>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <h3 className="font-semibold text-green-900 mb-2">👨‍💼 RESEARCHER</h3>
+          <p className="text-sm text-green-800">✅ Ver "Lançamento de Inquéritos"</p>
+        </div>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h3 className="font-semibold text-red-900 mb-2">👮 POLICE</h3>
+          <p className="text-sm text-red-800">❌ Sem acesso a estes menus</p>
+        </div>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h3 className="font-semibold text-red-900 mb-2">👥 CITIZEN</h3>
+          <p className="text-sm text-red-800">❌ Sem acesso a estes menus</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Componente para RESEARCHER enviar dados (original)
+const ResearcherDataEntryForm = () => {
   const [step, setStep] = useState(1);
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);

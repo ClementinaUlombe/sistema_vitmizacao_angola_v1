@@ -191,7 +191,7 @@ export default function DashboardPage() {
               <div className="pt-4">
                 <h4 className="text-sm font-bold mb-3 uppercase tracking-wider text-muted-foreground">Resumo da Missão</h4>
                 <p className="text-sm leading-relaxed text-foreground/80">
-                  O sistema de <span className="text-primary font-bold">Vitimização Criminal</span> visa transformar dados brutos em inteligência científica para apoiar a segurança urbana no Bairro Gamek à Direita. Continue monitorando os indicadores para auxiliar em políticas públicas baseadas em evidências.
+                  O sistema de <span className="text-primary font-bold">Vitimização Criminal</span> visa transformar dados brutos em inteligência científica para apoiar a segurança urbana no Município da Samba. Continue monitorando os indicadores para auxiliar em políticas públicas baseadas em evidências.
                 </p>
               </div>
             </div>

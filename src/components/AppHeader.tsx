@@ -26,10 +26,11 @@ export function AppHeader() {
           <span className="font-semibold text-white">Vitimização Criminal</span>
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm text-white">
-          <a href="#inicio" className="hover:opacity-80 transition-opacity">Início</a>
-          <a href="#sobre-estudo" className="hover:opacity-80 transition-opacity">Sobre o Estudo</a>
-          <a href="#dados" className="hover:opacity-80 transition-opacity">Dados</a>
-          <a href="#quem-somos" className="hover:opacity-80 transition-opacity">Quem Somos</a>
+          <Link href="/" className="hover:opacity-80 transition-opacity">Início</Link>
+          <Link href="/sobre" className="hover:opacity-80 transition-opacity">Sobre o Estudo</Link>
+          <Link href="/metodologia" className="hover:opacity-80 transition-opacity">Metodologia</Link>
+          <Link href="/analise-dados" className="hover:opacity-80 transition-opacity">Análise de Dados</Link>
+          <Link href="/quem-somos" className="hover:opacity-80 transition-opacity">Quem Somos</Link>
           {isLoggedIn ? (
             <Link href="/dashboard" passHref>
               <Button variant="secondary" size="sm" className="ml-4 shadow-md bg-purple-light text-purple-deep hover:bg-white transition-all">

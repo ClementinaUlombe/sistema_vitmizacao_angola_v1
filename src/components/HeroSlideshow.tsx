@@ -19,7 +19,7 @@ const HeroSlideshow = ({ images, intervalMs = 5000 }: HeroSlideshowProps) => {
   }, [images.length, intervalMs]);
 
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden">
       {images.map((image, index) => (
         <div
           key={image}

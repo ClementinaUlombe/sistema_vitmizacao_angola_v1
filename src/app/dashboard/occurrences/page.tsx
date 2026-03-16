@@ -76,7 +76,7 @@ export default function OccurrencesPage() {
       <Card className="border-none shadow-lg">
         <CardHeader>
           <CardTitle>Denúncias Recebidas (Cidadão)</CardTitle>
-          <CardDescription>Estes são os relatos enviados espontaneamente pelos moradores do Bairro Gamek à Direita.</CardDescription>
+          <CardDescription>Estes são os relatos enviados espontaneamente pelos moradores do Município da Samba.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
