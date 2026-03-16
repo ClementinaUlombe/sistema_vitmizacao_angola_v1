@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -370,10 +371,10 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
 
   const fetchRecentUploads = async () => {
     try {
-      const response = await fetch(`/api/data?researcherId=${userId}`);
+      const response = await fetch(`/api/data`);
       if (response.ok) {
         const data = await response.json();
-        setRecentUploads(data.slice(0, 5)); // Mostrar apenas os 5 mais recentes
+        setRecentUploads(data); 
       }
     } catch (error) {
       console.error(error);
@@ -693,7 +694,9 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
           </CardContent>
           {recentUploads.length > 0 && (
             <div className="p-4 border-t text-center">
-              <Button variant="link" size="sm" className="text-xs">Ver todo o histórico</Button>
+              <Link href="/dashboard/analytics">
+                <Button variant="link" size="sm" className="text-xs">Ver todo o histórico</Button>
+              </Link>
             </div>
           )}
         </Card>

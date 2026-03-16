@@ -34,17 +34,8 @@ export default function SubmissionStatusPage() {
       setLoading(true);
       setError('');
       
-      const storedUser = localStorage.getItem("user");
-      let url = '/api/data';
-      
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        if (user.role === "RESEARCHER") {
-          url = `/api/data?researcherId=${user.id}`;
-        }
-      }
-
-      const response = await fetch(url);
+      // Busca todos os lançamentos sem filtrar por ID de investigador
+      const response = await fetch('/api/data');
       if (!response.ok) throw new Error('Erro ao carregar lançamentos');
       const data = await response.json();
       setSubmissions(data || []);

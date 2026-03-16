@@ -1,11 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { BookOpen, FileText, Globe, Users, TrendingUp, AlertCircle } from 'lucide-react';
+import { 
+  BookOpen, 
+  FileText, 
+  TrendingUp, 
+  Globe, 
+  Users, 
+  AlertCircle,
+  Search,
+  XCircle
+} from 'lucide-react';
 
 interface ScientificResource {
   id: string;
@@ -18,8 +27,7 @@ interface ScientificResource {
   tags: string[];
 }
 
-const scientificResources: ScientificResource[] = [
-  // ARTIGOS & PUBLICAÇÕES
+const SCIENTIFIC_RESOURCES: ScientificResource[] = [
   {
     id: 'icvs',
     title: 'International Crime Victimization Survey (ICVS) - Framework',
@@ -27,8 +35,7 @@ const scientificResources: ScientificResource[] = [
     author: 'United Nations Office on Drugs and Crime (UNODC)',
     year: '2023',
     description: 'Metodologia internacional padronizada para pesquisas de vitimização criminal. Utilizada em mais de 80 países.',
-    content: `
-O International Crime Victimization Survey (ICVS) é a pesquisa mais abrangente sobre vitimização criminal a nível mundial.
+    content: `O International Crime Victimization Survey (ICVS) é a pesquisa mais abrangente sobre vitimização criminal a nível mundial.
 
 CARACTERÍSTICAS PRINCIPAIS:
 • Amostragem aleatória de 2.000+ pessoas por país
@@ -50,8 +57,7 @@ CRIMES AVALIADOS:
 10. Violência doméstica
 
 APLICABILIDADE EM SAMBA:
-O framework ICVS pode ser adaptado para o contexto local angolano, permitindo comparações com dados nacionais e internacionais de segurança pública.
-    `,
+O framework ICVS pode ser adaptado para o contexto local angolano, permitindo comparações com dados nacionais e internacionais de segurança pública.`,
     tags: ['UNODC', 'Metodologia', 'Internacional', 'Padronização'],
   },
   {
@@ -61,8 +67,7 @@ O framework ICVS pode ser adaptado para o contexto local angolano, permitindo co
     author: 'UNODC & World Bank',
     year: '2023',
     description: 'Análise abrangente de homicídios e vitimização em África Subsaariana, incluindo Angola.',
-    content: `
-CONTEXTO AFRICANO:
+    content: `CONTEXTO AFRICANO:
 A África Subsaariana representa cerca de 50% dos homicídios globais apesar de ser apenas 13% da população mundial.
 
 ESTATÍSTICAS CHAVE:
@@ -82,24 +87,20 @@ FATORES DE RISCO IDENTIFICADOS:
 7. Fragmentação social
 
 IMPLICAÇÕES PARA ANGOLA/SAMBA:
-Samba, como município urbano, apresenta vulnerabilidades similares. Este estudo fornece benchmarks para políticas públicas baseadas em evidências.
-    `,
+Samba, como município urbano, apresenta vulnerabilidades similares. Este estudo fornece benchmarks para políticas públicas baseadas em evidências.`,
     tags: ['UNODC', 'Estatísticas', 'Homicídio', 'África', 'Urbano'],
   },
-
-  // METODOLOGIAS
   {
     id: 'survey-design',
     title: 'Metodologia de Pesquisa em Vitimização Criminal',
     category: 'methodology',
     author: 'Instituto de Pesquisa em Segurança Pública',
     description: 'Guia completo para design e condução de pesquisas de vitimização com abordagem científica.',
-    content: `
-FASES DE UMA PESQUISA DE VITIMIZAÇÃO:
+    content: `FASES DE UMA PESQUISA DE VITIMIZAÇÃO:
 
 1. PLANEJAMENTO & AMOSTRAGEM
    • Definir população-alvo (comunidade, bairro, cidade)
-   • Calcular tamanho da amostra (fórmula: n = z²×p×(1-p) / e²)
+   • Calcular tamanho da amostra
    • Seleção aleatória de respondentes
    • Estratificação por variáveis relevantes (idade, gênero, bairro)
 
@@ -108,47 +109,29 @@ FASES DE UMA PESQUISA DE VITIMIZAÇÃO:
    • Escalas Likert (1-5) para percepção de segurança
    • Questões demográficas (idade, ocupação, educação)
    • Questões sobre confiança institucional
-   • Questões sobre contexto (tipo de habitação, bairro)
 
 3. TREINAMENTO DE PESQUISADORES
-   • Sensibilidade ao trauma (para vítimas de crime violento)
+   • Sensibilidade ao trauma
    • Confidencialidade e anonimato
    • Técnicas de entrevista não-tendenciosa
    • Manejo de recusas/não-respostas
-   • Documentação de dados
 
 4. COLETA DE DADOS
    • Entrevistas face-a-face (mais preciso)
-   • Aplicação CAPI (Computer-Assisted Personal Interviewing)
    • Tempo estimado: 20-30 minutos por respondente
    • Taxa de resposta objetivo: >70%
 
 5. PROCESSAMENTO & ANÁLISE
    • Codificação de respostas abertas
-   • Limpeza de dados (outliers, missing values)
-   • Análise descritiva (frequências, médias)
-   • Análise inferencial (testes chi-quadrado, regressão)
-   • Comparações por grupos (demográficos, geográficos)
+   • Limpeza de dados
+   • Análise descritiva e inferencial
 
 6. RELATÓRIO & DISSEMINAÇÃO
-   • Relatório técnico (metodologia detalhada)
-   • Relatório executivo (para tomadores de decisão)
-   • Visualizações (gráficos, mapas)
-   • Conferências/publicações científicas
-   • Feedback para stakeholders locais
-
-BOAS PRÁTICAS:
-✓ Garantir anonimato completo (sem coletar nome/endereço exato)
-✓ Obter consentimento informado antes da entrevista
-✓ Treinar pesquisadores sobre sensibilidade cultural
-✓ Validar dados através de re-entrevistas (5-10% da amostra)
-✓ Documentar limitações metodológicas
-✓ Disponibilizar dataset para futuras pesquisas
-    `,
+   • Relatório técnico
+   • Relatório executivo
+   • Visualizações (gráficos, mapas)`,
     tags: ['Metodologia', 'Design', 'Pesquisa', 'Prática'],
   },
-
-  // NORMAS INTERNACIONAIS
   {
     id: 'unodc-standards',
     title: 'UN Manual on Victim Surveys - UNODC Standards',
@@ -156,52 +139,35 @@ BOAS PRÁTICAS:
     author: 'United Nations Office on Drugs and Crime',
     year: '2022',
     description: 'Manual oficial da ONU para padronização de pesquisas de vitimização em todo o mundo.',
-    content: `
-PADRÕES INTERNACIONAIS PARA PESQUISAS DE VITIMIZAÇÃO (UNODC 2022):
+    content: `PADRÕES INTERNACIONAIS PARA PESQUISAS DE VITIMIZAÇÃO (UNODC 2022):
 
-A. COBERTURA DE CRIMES (Harmonização Global)
+A. COBERTURA DE CRIMES
    • Crimes de rua (roubo, agressão, furto)
    • Crimes residenciais (arrombamento, furto)
    • Crimes pessoais (assalto, abuso sexual)
    • Crimes economicamente motivados (fraude, corrupção)
-   • Crimes de ódio (motivados por discriminação)
+   • Crimes de ódio
 
 B. COBERTURA DEMOGRÁFICA
-   Mínimo recomendado por estrato:
    • Por faixa etária: 18-24, 25-34, 35-49, 50-64, 65+
-   • Por gênero: desagregar homem/mulher em todos os crimes
-   • Por educação: ensino fundamental, médio, superior
-   • Por ocupação: empregado, desempregado, autônomo, estudante
+   • Por gênero: desagregar homem/mulher
+   • Por educação: fundamental, médio, superior
+   • Por ocupação: empregado, desempregado, autônomo
    • Por zona: urbana, periurbana, rural
 
 C. VARIÁVEIS DE CONFIANÇA INSTITUCIONAL
    • Confiança na polícia (escala 1-10)
-   • Sentimento de segurança durante o dia (escala 1-4)
-   • Sentimento de segurança durante a noite (escala 1-4)
-   • Denúncia à polícia (sim/não e razões da não-denúncia)
+   • Sentimento de segurança (dia vs noite)
+   • Denúncia à polícia (sim/não)
    • Satisfação com resposta policial
 
 D. QUALIDADE DE DADOS
-   • Cobertura: mínimo 70% de taxa de resposta
-   • Precisão: margem de erro < 5% (IC 95%)
-   • Consistência: testes de re-entrevista
-   • Documentação: metadados completos
-
-E. PROTEÇÃO DE DADOS SENSÍVEIS
-   • Garantir anonimato (sem identificadores diretos)
-   • Criptografia em armazenamento
-   • Acesso restrito (apenas pesquisadores autorizados)
-   • Consentimento explícito antes do processamento
-
-CONFORMIDADE DO SAFE ANGOLA:
-✓ Incorpora padrões UNODC em design de questionário
-✓ Coleta dados estratificados por demografia
-✓ Registra confiança institucional
-✓ Mantém anonimato dos respondentes
-    `,
+   • Taxa de resposta: mínimo 70%
+   • Margem de erro: < 5% (IC 95%)
+   • Testes de consistência
+   • Documentação: metadados completos`,
     tags: ['ONU', 'Padrão', 'Internacional', 'Qualidade'],
   },
-
   {
     id: 'undp-governance',
     title: 'UNDP - Crime Prevention & Governance Framework',
@@ -209,60 +175,42 @@ CONFORMIDADE DO SAFE ANGOLA:
     author: 'United Nations Development Programme',
     year: '2023',
     description: 'Framework UNDP para prevenção de crime e fortalecimento de governança local.',
-    content: `
-FRAMEWORK UNDP PARA SEGURANÇA PÚBLICA:
+    content: `FRAMEWORK UNDP PARA SEGURANÇA PÚBLICA:
 
 1. COLETA & ANÁLISE DE DADOS
-   • Pesquisas de vitimização como base de evidência
+   • Pesquisas de vitimização como base
    • Diagnósticos de segurança participativos
    • Mapas de criminalidade por zona
-   • Análise de causas raiz (desigualdade, desemprego)
 
 2. DIAGNÓSTICO DE SEGURANÇA LOCAL
-   Elementos-chave a estudar:
-   • Prevalência de crimes (tipos, frequência, localização)
-   • Vítimas mais vulneráveis (mulheres, crianças, idosos)
-   • Atuação das instituições (polícia, justiça, assistência social)
-   • Percepção de segurança da população
+   • Prevalência de crimes (tipos, frequência)
+   • Vítimas mais vulneráveis
    • Confiança nas autoridades
 
 3. PLANEJAMENTO PARTICIPATIVO
    • Envolver comunidades locais
-   • Ouvir necessidades de grupos vulneráveis
-   • Dialogar com autoridades locais
-   • Identificar recursos e capacidades existentes
+   • Ouvir grupos vulneráveis
+   • Dialogar com autoridades
 
-4. PROGRAMAS DE PREVENÇÃO (baseados em evidência)
+4. PROGRAMAS DE PREVENÇÃO
    A. Prevenção Social
       - Programas para jovens em risco
       - Geração de emprego
-      - Educação para paz e convivência
    
    B. Prevenção Situacional
       - Melhorar iluminação em zonas de risco
       - Policiamento comunitário
-      - Vigilância urbana
-      - Segurança de transportes públicos
    
-   C. Prevenção Reabilitativa
+   C. Reabilitação
       - Apoio a vítimas
-      - Reabilitação de ex-detentos
-      - Medidas reparativas
+      - Reinserção social
 
 5. MONITORAMENTO & AVALIAÇÃO
-   • Indicadores baseados em pesquisa de vitimização
+   • Indicadores baseados em pesquisa
    • Comparações antes/depois de intervenções
-   • Estudos de impacto
-   • Relatórios anuais transparentes
-
-APLICAÇÃO EM SAMBA:
-Esta pesquisa de vitimização alimenta o ciclo UNDP:
-Diagnóstico → Planejamento Participativo → Intervenção → Monitoramento → Ajustes
-    `,
+   • Relatórios anuais transparentes`,
     tags: ['UNDP', 'Governança', 'Prevenção', 'Framework'],
   },
-
-  // ESTUDO DE CASO
   {
     id: 'samba-case',
     title: 'Estudo de Caso: Vitimização em Samba, Angola',
@@ -270,339 +218,294 @@ Diagnóstico → Planejamento Participativo → Intervenção → Monitoramento 
     author: 'Município de Samba & Pesquisadores Locais',
     year: '2024',
     description: 'Análise contextualizada de criminalidade e vitimização no município de Samba.',
-    content: `
-CONTEXTO DE SAMBA:
+    content: `CONTEXTO DE SAMBA:
 
 CARACTERÍSTICAS DEMOGRÁFICAS:
-• População: ~150.000 habitantes (estimativa)
+• População: ~150.000 habitantes
 • Composição: urbana (70%), periurbana (20%), rural (10%)
 • Principais bairros: Kilamba, Talatona, Benilson, Zango
-• Taxa de urbanização: crescente (migrantes rurais)
 
-DESAFIOS SOCIAIS IDENTIFICADOS:
+DESAFIOS SOCIAIS:
 1. Desemprego juvenil (25-35% em zonas periurbanas)
-2. Desigualdade econômica (presença de população pobre adjacente a áreas de alta renda)
-3. Infraestrutura inadequada (iluminação, transporte, saneamento)
-4. Fraca coesão social (migrantes, famílias desagregadas)
-5. Confiança institucional baixa (percepção de ineficácia policial)
+2. Desigualdade econômica
+3. Infraestrutura inadequada
+4. Fraca coesão social
+5. Confiança institucional baixa
 
-CRIMES PREVALENTES EM SAMBA (baseado em pesquisa):
-• Assaltos à mão armada (média 5-8 por mês)
-• Furtos em residências (média 10-15 por mês)
-• Roubos de veículos/peças (média 8-12 por mês)
-• Violência doméstica (alta, mas subnotificada)
+CRIMES PREVALENTES:
+• Assaltos à mão armada (5-8 por mês)
+• Furtos em residências (10-15 por mês)
+• Roubos de veículos/peças (8-12 por mês)
+• Violência doméstica (subnotificada)
 • Narcotráfico (presente em bairros específicos)
 
-GRUPOS MAIS VULNERÁVEIS:
-→ Mulheres (assédio, violência doméstica, violência sexual)
-→ Jovens (18-35): como perpetradores e vítimas
-→ Idosos (furtos, golpes, negligência)
-→ Pessoas com deficiência (vulnerabilidade aumentada)
+GRUPOS VULNERÁVEIS:
+→ Mulheres (assédio, violência doméstica)
+→ Jovens (18-35 anos)
+→ Idosos (furtos, golpes)
+→ Pessoas com deficiência
 
 PERCEPÇÃO DE SEGURANÇA:
-• Durante o dia: 45% sentem-se seguros
-• Durante a noite: apenas 12% sentem-se seguros
+• Dia: 45% sentem-se seguros
+• Noite: 12% sentem-se seguros
 • Confiança na polícia: 28%
-• Denúncia à polícia: 35% (muitos não acreditam que será resolvido)
-
-RECOMENDAÇÕES BASEADAS EM EVIDÊNCIA:
-1. Aumentar policiamento comunitário em zonas de risco
-2. Programas de geração de emprego para jovens (18-25)
-3. Melhorar iluminação pública em bairros vulneráveis
-4. Centros de apoio a vítimas (especialmente domésticas)
-5. Treinamento policial em crimes sexuais e domésticos
-6. Campanhas de confiança institucional
-7. Dados abertos: publicar estatísticas mensais de crime
-    `,
+• Denúncia à polícia: 35%`,
     tags: ['Samba', 'Angola', 'Local', 'Contexto'],
   },
-
-  // GLOSSÁRIO
   {
     id: 'glossary',
     title: 'Glossário de Termos em Criminologia & Vitimização',
     category: 'glossary',
     description: 'Definições de termos técnicos utilizados em pesquisas de vitimização criminal.',
-    content: `
-GLOSSÁRIO - TERMOS ESSENCIAIS:
+    content: `GLOSSÁRIO - TERMOS ESSENCIAIS:
 
-📌 CONCEITOS FUNDAMENTAIS
+CONCEITOS FUNDAMENTAIS:
+• Vitimização: Experiência de ser vítima de crime
+• Crime: Ato proibido por lei com potencial de dano
+• Delito: Infrações graves contra a lei
+• Cifra Negra: Crimes não denunciados (60-70% em países em desenvolvimento)
 
-Vitimização: Experiência de ser vítima de crime. Inclui tentativas de crime.
-
-Crime: Ato proibido por lei, com potencial de causar dano. Pode ser denunciado ou não.
-
-Delito: Sinônimo de crime. Infrações graves contra a lei.
-
-Contravençãação: Infrações menores contra a lei (multa, advertência).
-
-Cifra Negra: Crimes não denunciados à polícia. Estimativa: 60-70% dos crimes em países em desenvolvimento.
-
-📌 TIPOLOGIA DE CRIMES
+TIPOLOGIA DE CRIMES:
 
 Crimes Violentos:
-• Homicídio: morte intencional de pessoa
-• Agressão/Assalto: ataque físico com intenção de causar dano
-• Abuso Sexual: contato sexual não consentido
-• Violência Doméstica: crime perpetrado por parceiro/familiar
+• Homicídio: morte intencional
+• Agressão/Assalto: ataque físico
+• Abuso Sexual: contato não consentido
+• Violência Doméstica: crime por parceiro/familiar
 
 Crimes Contra Propriedade:
-• Roubo: apropriação ilegal com violência ou ameaça
-• Furto: apropriação ilegal sem violência
-• Arrombamento: entrada ilegal em habitação
-• Vandalismo: dano intencional a propriedade alheia
+• Roubo: apropriação com violência
+• Furto: apropriação sem violência
+• Arrombamento: entrada ilegal
+• Vandalismo: dano intencional
 
 Crimes Econômicos:
-• Fraude: engano deliberado para obter ganho
-• Corrupção: abuso de poder para benefício pessoal
-• Tráfico: comércio ilegal de drogas, pessoas, armas
-• Contrabando: transporte ilegal de bens
+• Fraude: engano para ganho
+• Corrupção: abuso de poder
+• Tráfico: comércio ilegal
+• Contrabando: transporte ilegal
 
-📌 CONCEITOS DE PESQUISA
+CONCEITOS DE PESQUISA:
+• Amostragem Aleatória: seleção casual evitando viés
+• Margem de Erro: diferença máxima esperada
+• Taxa de Resposta: % de participantes (objetivo >70%)
+• Anonimato: proteção de identidade
+• Validade: capacidade de medir
 
-Amostragem Aleatória: seleção casual de participantes (evita viés)
+INDICADORES DE SEGURANÇA:
+• Taxa de Prevalência: % da população vítima de crime
+• Taxa de Incidência: crimes por 100.000 habitantes
+• Medo do Crime: percepção subjetiva de insegurança
+• Confiança Institucional: crença em polícia e justiça
 
-Margem de Erro: diferença máxima esperada entre amostra e população (ex: ±5%)
-
-Taxa de Resposta: porcentagem de pessoas que participam da pesquisa (objetivo: >70%)
-
-Consentimento Informado: acordo livre do respondente após entender a pesquisa
-
-Anonimato: proteção da identidade do respondente
-
-Validade: capacidade do questionário medir o que se propõe
-
-Confiabilidade: consistência dos resultados (teste-reteste)
-
-📌 INDICADORES DE SEGURANÇA
-
-Taxa de Prevalência de Vitimização: % da população que sofreu crime no período
-  Exemplo: "25% da população sofreu roubo no ano passado"
-
-Taxa de Incidência: número de crimes por 100.000 habitantes
-  Exemplo: "Taxa de homicídio: 18 por 100.000 habitantes"
-
-Medo do Crime: percepção subjetiva de insegurança
-
-Confiança Institucional: crença na capacidade da polícia e justiça
-
-Percepção de Segurança: sentimento subjetivo de estar seguro (dia vs noite)
-
-📌 ANÁLISE ESTATÍSTICA
-
-Chi-Quadrado (χ²): teste de relação entre variáveis categóricas
-Regressão Logística: modelo para prever vitimização (sim/não)
-Correlação: medida de associação entre variáveis (-1 a +1)
-P-value (p): probabilidade de resultado ocorrer por acaso (p<0.05 = significativo)
-Intervalo de Confiança (IC): margem de certeza (ex: 95% IC = 95% de probabilidade)
-
-📌 TERMOS INSTITUCIONAIS
-
-Denúncia: reporte formal de crime à polícia
-Inquérito Policial: investigação preliminar de crime (Safe Angola)
-Processo Judicial: ação legal formal
-Condenação: decisão judicial de culpabilidade
-Reabilitação: programa de reinserção social de ex-detentos
-
-📌 POPULAÇÕES VULNERÁVEIS
-
-Vítima Primária: pessoa diretamente afetada pelo crime
-Vítima Secundária: membro da família de vítima primária
-Vítima Terciária: comunidade afetada pelo crime (perda de confiança, medo)
-
-Grupo Vulnerável: população em risco elevado de vitimização
-  Exemplos: mulheres, crianças, idosos, LGBTQ+, pessoas com deficiência
-    `,
+TERMOS INSTITUCIONAIS:
+• Denúncia: reporte formal à polícia
+• Inquérito Policial: investigação preliminar
+• Condenação: decisão judicial de culpabilidade
+• Reabilitação: reinserção social`,
     tags: ['Glossário', 'Definições', 'Técnico', 'Referência'],
   },
+];
+
+const CATEGORIES = [
+  { id: 'article', label: 'Artigos & Publicações', icon: FileText, color: 'bg-blue-50 text-blue-700' },
+  { id: 'methodology', label: 'Metodologias', icon: TrendingUp, color: 'bg-green-50 text-green-700' },
+  { id: 'standard', label: 'Normas Internacionais', icon: Globe, color: 'bg-purple-50 text-purple-700' },
+  { id: 'casestudy', label: 'Estudos de Caso', icon: Users, color: 'bg-orange-50 text-orange-700' },
+  { id: 'glossary', label: 'Glossário', icon: BookOpen, color: 'bg-pink-50 text-pink-700' },
 ];
 
 export default function ScientificLibraryPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [expandedResource, setExpandedResource] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const categories = [
-    { id: 'article', label: 'Artigos & Publicações', icon: FileText, color: 'bg-blue-50 text-blue-700' },
-    { id: 'methodology', label: 'Metodologias', icon: TrendingUp, color: 'bg-green-50 text-green-700' },
-    { id: 'standard', label: 'Normas Internacionais', icon: Globe, color: 'bg-purple-50 text-purple-700' },
-    { id: 'casestudy', label: 'Estudos de Caso', icon: Users, color: 'bg-orange-50 text-orange-700' },
-    { id: 'glossary', label: 'Glossário', icon: BookOpen, color: 'bg-pink-50 text-pink-700' },
-  ];
+  const filtered = useMemo(() => {
+    return SCIENTIFIC_RESOURCES.filter(resource => {
+      // Filtro de Categoria
+      const matchesCategory = selectedCategory === null || resource.category === selectedCategory;
+      
+      // Filtro de Texto (título, autor, descrição, tags)
+      const term = searchTerm.toLowerCase().trim();
+      const matchesSearch = term === '' || 
+        resource.title.toLowerCase().includes(term) ||
+        (resource.author && resource.author.toLowerCase().includes(term)) ||
+        resource.description.toLowerCase().includes(term) ||
+        resource.tags.some(tag => tag.toLowerCase().includes(term));
+      
+      return matchesCategory && matchesSearch;
+    });
+  }, [searchTerm, selectedCategory]);
 
-  const filteredResources = scientificResources.filter(resource => {
-    const matchesSearch = 
-      resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      resource.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      resource.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesCategory = !selectedCategory || resource.category === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
-  });
+  const toggleCategory = (categoryId: string | null) => {
+    if (selectedCategory === categoryId) {
+      setSelectedCategory(null);
+    } else {
+      setSelectedCategory(categoryId);
+    }
+    setExpandedId(null); // Fecha qualquer recurso aberto ao trocar de filtro
+  };
 
   const getCategoryColor = (categoryId: string) => {
-    const cat = categories.find(c => c.id === categoryId);
+    const cat = CATEGORIES.find(c => c.id === categoryId);
     return cat?.color || 'bg-gray-50 text-gray-700';
   };
 
   const getCategoryIcon = (categoryId: string) => {
-    const cat = categories.find(c => c.id === categoryId);
+    const cat = CATEGORIES.find(c => c.id === categoryId);
     return cat?.icon || BookOpen;
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
-          <BookOpen className="w-8 h-8" /> Biblioteca Científica
+          <BookOpen className="w-8 h-8 text-primary" /> Biblioteca Científica
         </h1>
         <p className="text-muted-foreground">
-          Referências, publicações e metodologias para pesquisa em vitimização criminal. Acesso a conhecimento científico internacional padronizado.
+          Referências, publicações e metodologias para pesquisa em vitimização criminal.
         </p>
       </div>
 
-      {/* Search & Filter */}
-      <Card>
+      {/* Seção de Pesquisa e Filtros */}
+      <Card className="border-none shadow-md">
         <CardHeader>
-          <CardTitle className="text-lg">Pesquisar & Filtrar</CardTitle>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Search className="w-5 h-5 text-primary" /> Pesquisar & Filtrar
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Input
-            placeholder="Buscar por título, autor, tags..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full"
-          />
+        <CardContent className="space-y-6">
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Buscar por título, autor, descrição ou palavras-chave..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 h-12"
+            />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          </div>
           
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant={selectedCategory === null ? 'default' : 'outline'}
-              onClick={() => setSelectedCategory(null)}
-              size="sm"
-            >
-              Tudo ({scientificResources.length})
-            </Button>
-            {categories.map(cat => (
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-muted-foreground">Filtrar por Categoria:</p>
+            <div className="flex flex-wrap gap-2">
               <Button
-                key={cat.id}
-                variant={selectedCategory === cat.id ? 'default' : 'outline'}
-                onClick={() => setSelectedCategory(cat.id)}
+                type="button"
+                variant={selectedCategory === null ? 'default' : 'outline'}
+                onClick={() => toggleCategory(null)}
                 size="sm"
-                className="gap-1"
+                className="rounded-full"
               >
-                {cat.label} ({scientificResources.filter(r => r.category === cat.id).length})
+                Todos ({SCIENTIFIC_RESOURCES.length})
               </Button>
-            ))}
+              {CATEGORIES.map((cat) => {
+                const count = SCIENTIFIC_RESOURCES.filter(r => r.category === cat.id).length;
+                const isSelected = selectedCategory === cat.id;
+                return (
+                  <Button
+                    key={cat.id}
+                    type="button"
+                    variant={isSelected ? 'default' : 'outline'}
+                    onClick={() => toggleCategory(cat.id)}
+                    size="sm"
+                    className="rounded-full gap-2"
+                  >
+                    <cat.icon className="w-4 h-4" />
+                    {cat.label} ({count})
+                  </Button>
+                );
+              })}
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Results */}
-      <div className="space-y-3">
-        {filteredResources.length === 0 ? (
-          <Card className="bg-yellow-50 border-yellow-200">
-            <CardContent className="pt-6 flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-600" />
-              <p className="text-yellow-700">Nenhum resultado encontrado. Tente outras palavras-chave.</p>
+      {/* Lista de Resultados */}
+      <div className="space-y-4">
+        {filtered.length === 0 ? (
+          <Card className="bg-muted/50 border-dashed border-2">
+            <CardContent className="pt-10 pb-10 flex flex-col items-center text-center">
+              <XCircle className="w-12 h-12 text-muted-foreground mb-4" />
+              <h3 className="text-xl font-bold">Nenhum recurso encontrado</h3>
+              <p className="text-muted-foreground max-w-md mt-2">
+                Não encontramos nada com os filtros aplicados. Tente usar termos mais genéricos ou limpar os filtros.
+              </p>
+              <Button 
+                variant="link" 
+                onClick={() => {setSearchTerm(''); setSelectedCategory(null);}}
+                className="mt-4 font-bold text-primary"
+              >
+                Limpar todos os filtros
+              </Button>
             </CardContent>
           </Card>
         ) : (
-          filteredResources.map(resource => {
+          filtered.map((resource) => {
+            const isExpanded = expandedId === resource.id;
+            const category = CATEGORIES.find(c => c.id === resource.category);
             const CategoryIcon = getCategoryIcon(resource.category);
-            const isExpanded = expandedResource === resource.id;
             
             return (
-              <Card key={resource.id} className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="space-y-2">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1">
-                        <div className="flex items-start gap-3">
-                          <div className={`p-2 rounded-lg mt-1 ${getCategoryColor(resource.category)}`}>
-                            <CategoryIcon className="w-5 h-5" />
-                          </div>
-                          <div className="flex-1">
-                            <CardTitle className="text-lg">{resource.title}</CardTitle>
-                            {resource.author && (
-                              <p className="text-sm text-muted-foreground mt-1">
-                                por <span className="font-semibold">{resource.author}</span>
-                                {resource.year && ` • ${resource.year}`}
-                              </p>
-                            )}
-                          </div>
+              <Card key={resource.id} className="hover:shadow-lg transition-all border-none shadow-sm overflow-hidden group">
+                <CardHeader className="pb-3 bg-card group-hover:bg-muted/30 transition-colors">
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex gap-4">
+                        <div className={`p-3 rounded-xl ${getCategoryColor(resource.category)} shadow-sm`}>
+                          <CategoryIcon className="w-6 h-6" />
+                        </div>
+                        <div className="space-y-1">
+                          <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                            {resource.title}
+                          </CardTitle>
+                          {resource.author && (
+                            <p className="text-sm text-muted-foreground">
+                              por <span className="font-semibold text-foreground">{resource.author}</span>
+                              {resource.year && <span className="mx-2">•</span>}
+                              {resource.year && <span className="bg-muted px-2 py-0.5 rounded text-xs">{resource.year}</span>}
+                            </p>
+                          )}
                         </div>
                       </div>
-                      <Badge variant="outline" className="text-xs">
-                        {categories.find(c => c.id === resource.category)?.label}
+                      <Badge variant="secondary" className="hidden sm:flex whitespace-nowrap px-3 py-1">
+                        {category?.label}
                       </Badge>
                     </div>
                     
-                    <CardDescription className="mt-2">
+                    <CardDescription className="text-base text-foreground/80 line-clamp-2">
                       {resource.description}
                     </CardDescription>
                     
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <div className="flex flex-wrap gap-2 pt-1">
                       {resource.tags.map(tag => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          {tag}
+                        <Badge key={tag} variant="outline" className="text-xs bg-background/50">
+                          #{tag}
                         </Badge>
                       ))}
                     </div>
                   </div>
                 </CardHeader>
 
-                {/* Content (expandable) */}
                 {isExpanded && (
-                  <CardContent className="border-t pt-4">
-                    <div className="prose prose-sm max-w-none text-sm space-y-3">
-                      {resource.content.split('\n').map((line, idx) => {
-                        if (!line.trim()) return null;
-                        
-                        // Styling for different line types
-                        if (line.startsWith('•') || line.startsWith('✓') || line.match(/^\d+\./)) {
-                          return (
-                            <div key={idx} className="ml-4 text-foreground">
-                              {line}
-                            </div>
-                          );
-                        }
-                        
-                        if (line.startsWith('→') || line.startsWith('A.') || line.startsWith('1.')) {
-                          return (
-                            <div key={idx} className="ml-4 font-semibold text-foreground">
-                              {line}
-                            </div>
-                          );
-                        }
-                        
-                        if (line.match(/^[A-Z\s]+:$/) || line.match(/^📌/)) {
-                          return (
-                            <div key={idx} className="font-bold text-foreground mt-3">
-                              {line}
-                            </div>
-                          );
-                        }
-                        
-                        return (
-                          <div key={idx} className="text-foreground">
-                            {line}
-                          </div>
-                        );
-                      })}
+                  <CardContent className="border-t pt-6 pb-6 bg-muted/20 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="space-y-4 text-sm whitespace-pre-wrap text-foreground font-mono leading-relaxed bg-background p-6 rounded-lg border shadow-inner">
+                      {resource.content}
                     </div>
                   </CardContent>
                 )}
 
-                {/* Action Button */}
-                <div className="px-6 py-3 border-t flex justify-end">
+                <div className="px-6 py-4 bg-muted/10 border-t flex justify-between items-center">
+                   <p className="text-xs text-muted-foreground italic">
+                     ID: {resource.id.toUpperCase()}
+                   </p>
                   <Button
-                    variant="outline"
+                    type="button"
+                    variant={isExpanded ? 'secondary' : 'default'}
                     size="sm"
-                    onClick={() => setExpandedResource(isExpanded ? null : resource.id)}
+                    onClick={() => setExpandedId(isExpanded ? null : resource.id)}
+                    className="font-bold"
                   >
-                    {isExpanded ? 'Recolher' : 'Ler Conteúdo Completo'}
+                    {isExpanded ? 'Recolher Documento' : 'Ler Conteúdo Completo'}
                   </Button>
                 </div>
               </Card>
@@ -611,11 +514,11 @@ export default function ScientificLibraryPage() {
         )}
       </div>
 
-      {/* Footer Info */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="pt-6">
-          <p className="text-sm text-blue-900">
-            <strong>💡 Dica:</strong> Esta biblioteca é um recurso educacional contínuo. Novos artigos, estudos de caso e metodologias são adicionados regularmente. Se tem artigos científicos para compartilhar com a comunidade de pesquisa, contate o administrador do sistema.
+      <Card className="bg-primary/5 border-primary/20 shadow-inner">
+        <CardContent className="pt-6 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-primary mt-0.5" />
+          <p className="text-sm text-primary/80 leading-relaxed">
+            <strong>Dica de Pesquisa:</strong> Você pode combinar os filtros. Por exemplo, selecione "Artigos" e digite "UNODC" na busca para encontrar publicações específicas da ONU sobre vitimização.
           </p>
         </CardContent>
       </Card>
