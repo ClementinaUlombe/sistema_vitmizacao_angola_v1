@@ -1,9 +1,8 @@
 {
   "/api/notifications/route": "app/api/notifications/route.js",
-  "/api/reports/summary/route": "app/api/reports/summary/route.js",
-  "/dashboard/excel-upload/page": "app/dashboard/excel-upload/page.js",
-  "/dashboard/perception-comparison/page": "app/dashboard/perception-comparison/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
   "/dashboard/data-entry/page": "app/dashboard/data-entry/page.js",
+  "/dashboard/perception-comparison/page": "app/dashboard/perception-comparison/page.js",
+  "/dashboard/excel-upload/page": "app/dashboard/excel-upload/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
   "/dashboard/report-creation/page": "app/dashboard/report-creation/page.js"
 }
