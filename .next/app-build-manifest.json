@@ -105,6 +105,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/dashboard/perception-comparison/page.js"
+    ],
+    "/dashboard/excel-upload/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/dashboard/excel-upload/page.js"
     ]
   }
 }
