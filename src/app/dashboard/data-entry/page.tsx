@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import SuccessModal from "@/components/SuccessModal";
 import { 
   UserCircle, 
   ShieldAlert, 
@@ -27,7 +28,6 @@ import {
   History,
   Search
 } from "lucide-react";
-
 export default function DataEntryPage() {
   const searchParams = useSearchParams();
   const isAdminView = searchParams.get("admin") === "true";
@@ -364,6 +364,7 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
   const [recentUploads, setRecentUploads] = useState<Resident[]>([]);
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // Pagination for Recent Submissions
   const [currentHistoryPage, setCurrentHistoryPage] = useState(1);
@@ -428,10 +429,7 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
         throw new Error(error.message || "Erro ao salvar lançamento");
       }
 
-      toast({
-        title: "Inquérito Enviado ✅",
-        description: "O inquérito foi enviado e aguarda validação do administrador.",
-      });
+      setShowSuccess(true);
       
       setStep(1);
       setFormData({
@@ -472,9 +470,9 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
   };
 
   return (
-    <div className="grid gap-8 md:grid-cols-12 max-w-7xl mx-auto animate-fade-in">
+    <div className="max-w-4xl mx-auto animate-fade-in">
       {/* Formulário Principal */}
-      <div className="md:col-span-8 space-y-6">
+      <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-bold text-foreground">Novo Inquérito</h2>
@@ -675,79 +673,12 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
         )}
       </div>
 
-      {/* Barra Lateral: Histórico Recente */}
-      <div className="md:col-span-4 space-y-6">
-        <Card className="border-none shadow-md">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <History className="h-5 w-5 text-primary" /> Envios Recentes
-            </CardTitle>
-            <CardDescription>Status dos seus últimos lançamentos</CardDescription>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="divide-y">
-              {currentHistoryItems.length === 0 ? (
-                <p className="p-6 text-center text-sm text-muted-foreground">Nenhum envio recente.</p>
-              ) : (
-                currentHistoryItems.map((resident) => (
-                  <div key={resident.id} className="p-4 hover:bg-muted/50 transition">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="font-bold text-sm">#{resident.residentNumber}</span>
-                      {getStatusBadge(resident.status)}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {resident.neighborhood} • {new Date(resident.surveyDate).toLocaleDateString()}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-            
-            {/* History Pagination Controls */}
-            {totalHistoryPages > 1 && (
-              <div className="p-4 border-t flex items-center justify-between bg-muted/20">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => paginateHistory(currentHistoryPage - 1)}
-                  disabled={currentHistoryPage === 1}
-                  className="h-8 w-8 p-0"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span className="text-xs font-medium">
-                  Página {currentHistoryPage} de {totalHistoryPages}
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => paginateHistory(currentHistoryPage + 1)}
-                  disabled={currentHistoryPage === totalHistoryPages}
-                  className="h-8 w-8 p-0"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-          </CardContent>
-          {recentUploads.length > 0 && (
-            <div className="p-4 border-t text-center">
-              <Link href="/dashboard/analytics">
-                <Button variant="link" size="sm" className="text-xs">Ver todo o histórico</Button>
-              </Link>
-            </div>
-          )}
-        </Card>
-
-        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200">
-          <h4 className="font-bold text-amber-800 text-sm flex items-center gap-2">
-            <ShieldAlert className="h-4 w-4" /> Nota Importante
-          </h4>
-          <p className="text-xs text-amber-700 mt-2 leading-relaxed">
-            Seus lançamentos ficam em estado <strong>Pendente</strong> até que um administrador revise e valide os dados. Somente dados validados aparecem nos relatórios estatísticos.
-          </p>
-        </div>
-      </div>
+      <SuccessModal
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title="Inquérito Enviado!"
+        message="Os dados foram registados e aguardam a validação do administrador para as estatísticas."
+      />
     </div>
   );
 };

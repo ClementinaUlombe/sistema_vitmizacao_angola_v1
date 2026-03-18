@@ -16,7 +16,7 @@ export async function GET(request: Request) {
           victimizations: true,
           securityPerceptions: true,
           researcher: {
-            select: { name: true, email: true }
+            select: { name: true, email: true, id: true }
           }
         },
       });
@@ -33,7 +33,7 @@ export async function GET(request: Request) {
         victimizations: true,
         securityPerceptions: true,
         researcher: {
-          select: { name: true, email: true }
+          select: { name: true, email: true, id: true }
         }
       },
       orderBy: { id: "desc" },
@@ -58,6 +58,11 @@ export async function PUT(request: Request) {
       );
     }
 
+    const oldResident = await prisma.resident.findUnique({
+      where: { id: parseInt(id) },
+      select: { status: true, researcherId: true, residentNumber: true }
+    });
+
     const updatedResident = await prisma.resident.update({
       where: { id: parseInt(id) },
       data: {
@@ -71,6 +76,19 @@ export async function PUT(request: Request) {
         securityPerceptions: true,
       },
     });
+
+    // Notify RESEARCHER if status changed to VALIDADO
+    if (status === "VALIDADO" && updatedResident.researcherId && oldResident?.status !== "VALIDADO") {
+      await prisma.notification.create({
+        data: {
+          userId: updatedResident.researcherId,
+          type: "ADMIN_VALIDATION",
+          title: "Inquérito Validado",
+          message: `O seu lançamento #${updatedResident.residentNumber} foi validado pelo administrador.`,
+          link: "/dashboard/data-entry"
+        }
+      });
+    }
 
     return NextResponse.json(updatedResident);
   } catch (error: any) {
@@ -163,6 +181,23 @@ export async function POST(request: Request) {
         securityPerceptions: true,
       },
     });
+
+    // Notify ADMINS
+    const adminUsers = await prisma.user.findMany({
+      where: { role: "ADMIN" }
+    });
+
+    for (const admin of adminUsers) {
+      await prisma.notification.create({
+        data: {
+          userId: admin.id,
+          type: "RESEARCHER_SUBMISSION",
+          title: "Novo Lançamento de Inquérito",
+          message: `Um investigador enviou um novo lançamento: #${resident.residentNumber}`,
+          link: "/dashboard/data-entry?admin=true"
+        }
+      });
+    }
 
     return NextResponse.json(resident, { status: 201 });
   } catch (error: any) {

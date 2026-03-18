@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const userId = searchParams.get("userId");
 
     const reports = await prisma.report.findMany({
-      where: userId ? { userId: parseInt(userId) } : {}, // Se houver userId, filtra as denúncias desse utilizador
+      where: userId ? { userId: parseInt(userId) } : {}, 
       orderBy: {
         createdAt: "desc",
       },
@@ -27,6 +27,24 @@ export async function POST(request: Request) {
         userId: body.userId ? parseInt(body.userId) : null,
       },
     });
+
+    // Notify POLICE
+    const policeUsers = await prisma.user.findMany({
+      where: { role: "POLICE" }
+    });
+
+    for (const police of policeUsers) {
+      await prisma.notification.create({
+        data: {
+          userId: police.id,
+          type: "CITIZEN_REPORT",
+          title: "Novo Relato de Crime",
+          message: `Um cidadão enviou um novo relato: ${report.subject}`,
+          link: "/dashboard/occurrences"
+        }
+      });
+    }
+
     return NextResponse.json(report, { status: 201 });
   } catch (error) {
     console.error("Erro ao criar relato:", error);
@@ -37,6 +55,8 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const { id, status, read } = await request.json();
+    const oldReport = await prisma.report.findUnique({ where: { id } });
+    
     const updated = await prisma.report.update({
       where: { id },
       data: {
@@ -44,8 +64,23 @@ export async function PUT(request: Request) {
         ...(read !== undefined && { read }),
       },
     });
+
+    // Notify CITIZEN if status changed to Validado
+    if (status === "Validado" && updated.userId && oldReport?.status !== "Validado") {
+      await prisma.notification.create({
+        data: {
+          userId: updated.userId,
+          type: "POLICE_VALIDATION",
+          title: "Relato Validado",
+          message: `O seu relato "${updated.subject}" foi validado pela polícia.`,
+          link: "/dashboard/occurrences"
+        }
+      });
+    }
+
     return NextResponse.json(updated);
   } catch (error) {
+    console.error("Erro ao atualizar estado:", error);
     return NextResponse.json({ message: "Erro ao atualizar estado" }, { status: 500 });
   }
 }

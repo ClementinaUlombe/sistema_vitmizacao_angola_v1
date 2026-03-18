@@ -171,3 +171,14 @@ model Report {
   createdAt             DateTime @default(now())
   read                  Boolean  @default(false)
 }
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  userId      Int      // Recipient
+  type        String   // CITIZEN_REPORT, POLICE_VALIDATION, RESEARCHER_SUBMISSION, ADMIN_VALIDATION
+  title       String
+  message     String
+  link        String   // Link to navigate
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}

@@ -31,21 +31,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/dashboard/occurrences/page.js"
     ],
-    "/_not-found/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
-    ],
-    "/dashboard/profile/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/profile/page.js"
-    ],
-    "/dashboard/graphs/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/graphs/page.js"
-    ],
     "/auth/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -56,20 +41,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/auth/layout.js"
     ],
-    "/dashboard/excel-upload/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/excel-upload/page.js"
-    ],
     "/dashboard/data-entry/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/dashboard/data-entry/page.js"
     ],
-    "/dashboard/analytics/page": [
+    "/dashboard/data-query/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/analytics/page.js"
+      "static/chunks/app/dashboard/data-query/page.js"
     ]
   }
 }
