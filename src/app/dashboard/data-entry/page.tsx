@@ -396,6 +396,7 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
   // Form State
   const [formData, setFormData] = useState({
     residentNumber: "",
+    name: "",  // ✅ NOVO: Nome do residente/inquirido
     ageGroup: "",
     gender: "",
     occupation: "",
@@ -497,6 +498,10 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
               </div>
             </CardHeader>
             <CardContent className="pt-6 grid gap-6 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label>Nome do Residente</Label>
+                <Input placeholder="Ex: João Silva" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+              </div>
               <div className="space-y-2">
                 <Label>Número do Inquérito</Label>
                 <Input placeholder="Ex: 001/2026" value={formData.residentNumber} onChange={(e) => setFormData({...formData, residentNumber: e.target.value})} />

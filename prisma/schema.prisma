@@ -25,6 +25,7 @@ model User {
 model Resident {
   id                             Int      @id @default(autoincrement())
   residentNumber                 String   @unique
+  name                           String?  // Nome do residente/inquirido
   surveyDate                     DateTime? @default(now())
   status                         String   @default("PENDENTE") // PENDENTE, VALIDADO, REJEITADO
   researcherId                   Int?
@@ -35,7 +36,7 @@ model Resident {
   residenceTime                  String?
   neighborhood                   String
   educationLevel                 String?
-  school                         String? 
+  school                         String?
   emailContact                   String? 
   protectionMeasureP1            Boolean? 
   protectionMeasureP2            Boolean? 

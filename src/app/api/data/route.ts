@@ -187,13 +187,19 @@ export async function POST(request: Request) {
       where: { role: "ADMIN" }
     });
 
+    // Buscar nome do residente para a notificação
+    let residentName = resident.residentNumber;  // Fallback: usar número do residente
+    if (resident.name) {
+      residentName = resident.name;  // Se tiver nome, usa o nome
+    }
+
     for (const admin of adminUsers) {
       await prisma.notification.create({
         data: {
           userId: admin.id,
           type: "RESEARCHER_SUBMISSION",
           title: "Novo Lançamento de Inquérito",
-          message: `Um investigador enviou um novo lançamento: #${resident.residentNumber}`,
+          message: `${residentName} foi inquirido e foi enviado um novo lançamento: #${resident.residentNumber}`,
           link: "/dashboard/data-entry?admin=true"
         }
       });
