@@ -65,13 +65,15 @@ const UsersPage: React.FC = () => {
     role: "RESEARCHER",
   });
   const [submitting, setSubmitting] = useState(false);
+  
+  // Success Modal State
   const [showSuccess, setShowSuccess] = useState(false);
   const [successTitle, setSuccessTitle] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7;
+  const itemsPerPage = 8;
 
   useEffect(() => {
     fetchUsers();
@@ -118,7 +120,6 @@ const UsersPage: React.FC = () => {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setFormData({ name: "", email: "", password: "", role: "RESEARCHER" });
-    setCurrentPage(1); // Reset pagination when closing dialog
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -163,8 +164,15 @@ const UsersPage: React.FC = () => {
         throw new Error(errorData.message || "Falha ao guardar utilizador");
       }
 
+      setSuccessTitle(isEditMode ? "Utilizador Atualizado!" : "Utilizador Criado!");
+      setSuccessMessage(isEditMode 
+        ? `As informações de ${formData.name || formData.email} foram atualizadas com sucesso.`
+        : `A conta para ${formData.name || formData.email} foi criada e já pode aceder ao sistema.`
+      );
+
       await fetchUsers();
       handleCloseDialog();
+      setShowSuccess(true);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -192,14 +200,6 @@ const UsersPage: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-full">
-        <p>Carregando utilizadores...</p>
-      </div>
-    );
-  }
-
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -208,18 +208,29 @@ const UsersPage: React.FC = () => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Carregando utilizadores...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Gerir Utilizadores</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => handleOpenDialog()} className="gap-2">
+            <Button onClick={() => handleOpenDialog()} className="gap-2 bg-primary hover:bg-primary/90 font-bold">
               <Plus size={18} />
               Novo Utilizador
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>
                 {isEditMode ? "Editar Utilizador" : "Criar Novo Utilizador"}
@@ -231,7 +242,7 @@ const UsersPage: React.FC = () => {
               </DialogDescription>
             </DialogHeader>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 pt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome (Opcional)</Label>
                 <Input
@@ -284,9 +295,9 @@ const UsersPage: React.FC = () => {
                 </div>
               )}
 
-              {error && <p className="text-red-500 text-sm">{error}</p>}
+              {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
 
-              <div className="flex justify-end gap-2 pt-4">
+              <div className="flex justify-end gap-2 pt-6">
                 <Button
                   type="button"
                   variant="outline"
@@ -294,12 +305,12 @@ const UsersPage: React.FC = () => {
                 >
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={submitting}>
+                <Button type="submit" disabled={submitting} className="font-bold">
                   {submitting
                     ? "Guardando..."
                     : isEditMode
-                    ? "Atualizar"
-                    : "Criar"}
+                    ? "Atualizar Utilizador"
+                    : "Criar Utilizador"}
                 </Button>
               </div>
             </form>
@@ -322,19 +333,19 @@ const UsersPage: React.FC = () => {
       )}
 
       {users.length === 0 ? (
-        <div className="text-center py-12">
+        <div className="text-center py-20 bg-muted/20 rounded-2xl border-2 border-dashed">
           <p className="text-muted-foreground mb-4">
-            Nenhum utilizador encontrado
+            Nenhum utilizador encontrado no sistema.
           </p>
-          <Button onClick={() => handleOpenDialog()}>
+          <Button onClick={() => handleOpenDialog()} className="font-bold">
             Criar Primeiro Utilizador
           </Button>
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto border rounded-lg">
+          <div className="overflow-hidden border rounded-xl shadow-sm bg-card">
             <Table>
-              <TableHeader>
+              <TableHeader className="bg-muted/50">
                 <TableRow>
                   <TableHead className="min-w-[150px]">Nome</TableHead>
                   <TableHead className="min-w-[200px]">Email</TableHead>
@@ -345,17 +356,17 @@ const UsersPage: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {currentUsers.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-medium">
+                  <TableRow key={user.id} className="hover:bg-muted/30 transition-colors">
+                    <TableCell className="font-semibold">
                       {user.name || "Sem nome"}
                     </TableCell>
-                    <TableCell>{user.email}</TableCell>
+                    <TableCell className="text-muted-foreground">{user.email}</TableCell>
                     <TableCell>
-                      <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
-                        user.role === "ADMIN" ? "bg-red-100 text-red-800" :
-                        user.role === "RESEARCHER" ? "bg-blue-100 text-blue-800" :
-                        user.role === "POLICE" ? "bg-yellow-100 text-yellow-800" :
-                        "bg-gray-100 text-gray-800"
+                      <span className={`inline-block px-2 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase ${
+                        user.role === "ADMIN" ? "bg-red-100 text-red-700 border border-red-200" :
+                        user.role === "RESEARCHER" ? "bg-blue-100 text-blue-700 border border-blue-200" :
+                        user.role === "POLICE" ? "bg-amber-100 text-amber-700 border border-amber-200" :
+                        "bg-green-100 text-green-700 border border-green-200"
                       }`}>
                         {user.role === "ADMIN" ? "Administrador" :
                          user.role === "RESEARCHER" ? "Investigador" :
@@ -363,7 +374,7 @@ const UsersPage: React.FC = () => {
                          "Cidadão"}
                       </span>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-muted-foreground">
                       {format(new Date(user.createdAt), "dd/MM/yyyy HH:mm", {
                         locale: ptBR,
                       })}
@@ -371,24 +382,22 @@ const UsersPage: React.FC = () => {
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button
-                          variant="outline"
-                          size="sm"
+                          variant="ghost"
+                          size="icon"
                           onClick={() => handleOpenDialog(user)}
-                          className="gap-1"
+                          className="h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
                         >
                           <Edit2 size={16} />
-                          Editar
                         </Button>
 
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
-                              variant="destructive"
-                              size="sm"
-                              className="gap-1"
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                             >
                               <Trash2 size={16} />
-                              Eliminar
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -423,9 +432,9 @@ const UsersPage: React.FC = () => {
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="border-t p-4 flex items-center justify-between">
-              <div className="text-xs text-muted-foreground">
-                Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, users.length)} de {users.length} utilizadores
+            <div className="mt-4 p-4 flex items-center justify-between bg-card border rounded-xl shadow-sm">
+              <div className="text-xs text-muted-foreground font-medium">
+                Mostrando <span className="text-foreground">{indexOfFirstItem + 1}</span> a <span className="text-foreground">{Math.min(indexOfLastItem, users.length)}</span> de <span className="text-foreground">{users.length}</span> utilizadores
               </div>
               <div className="flex items-center gap-1">
                 <Button
@@ -438,7 +447,7 @@ const UsersPage: React.FC = () => {
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
                 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 mx-2">
                   {[...Array(totalPages)].map((_, i) => {
                     const pageNumber = i + 1;
                     if (
@@ -452,7 +461,7 @@ const UsersPage: React.FC = () => {
                           variant={currentPage === pageNumber ? "default" : "outline"}
                           size="sm"
                           onClick={() => paginate(pageNumber)}
-                          className="h-8 w-8 p-0"
+                          className={`h-8 w-8 p-0 ${currentPage === pageNumber ? "shadow-md shadow-primary/20" : ""}`}
                         >
                           {pageNumber}
                         </Button>
@@ -461,7 +470,7 @@ const UsersPage: React.FC = () => {
                       pageNumber === currentPage - 2 || 
                       pageNumber === currentPage + 2
                     ) {
-                      return <span key={pageNumber} className="text-muted-foreground">...</span>;
+                      return <span key={pageNumber} className="text-muted-foreground px-1 text-xs">...</span>;
                     }
                     return null;
                   })}
@@ -481,6 +490,13 @@ const UsersPage: React.FC = () => {
           )}
         </>
       )}
+
+      <SuccessModal
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title={successTitle}
+        message={successMessage}
+      />
     </div>
   );
 };

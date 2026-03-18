@@ -29,7 +29,7 @@ export async function GET(request: Request) {
       include: {
         victimizations: true,
         securityPerceptions: true,
-        user: {
+        researcher: {
           select: {
             id: true,
             name: true,
@@ -38,7 +38,7 @@ export async function GET(request: Request) {
           },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { id: "desc" },
     });
     return NextResponse.json(residents);
   } catch (error) {
@@ -105,8 +105,20 @@ export async function DELETE(request: Request) {
       );
     }
 
+    const residentId = parseInt(id);
+
+    // Primeiro, eliminar registos dependentes para evitar erro de chave estrangeira
+    await prisma.victimization.deleteMany({
+      where: { residentId }
+    });
+
+    await prisma.securityPerception.deleteMany({
+      where: { residentId }
+    });
+
+    // Agora sim, eliminar o residente
     await prisma.resident.delete({
-      where: { id: parseInt(id) },
+      where: { id: residentId },
     });
 
     return NextResponse.json({ message: "Lançamento eliminado com sucesso" });

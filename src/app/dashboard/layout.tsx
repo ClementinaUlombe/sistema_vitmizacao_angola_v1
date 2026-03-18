@@ -85,7 +85,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Backup", href: "/dashboard/backup", icon: Download },
     { name: "Upload Excel", href: "/dashboard/excel-upload", icon: Upload },
     { name: "Chatbot", href: "/dashboard/chatbot", icon: MessageSquare },
-    { name: "Gráficos", href: "/dashboard/graphs", icon: BarChart3 },
+    { name: "Estatísticas Públicas", href: "/dashboard/graphs", icon: BarChart3 },
   ];
 
   const researcherMenuItems = [
@@ -163,7 +163,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <main className="flex-1 p-8">
         {/* Header for main content area - could include user info, logout, etc. */}
         <header className="flex justify-between items-center mb-8 bg-card p-4 rounded-xl shadow-sm border border-border">
-          <h1 className="text-2xl font-bold text-foreground">Olá, {userName}</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground leading-none">Olá, {userName}</h1>
+            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mt-1">
+              {userRole === "admin" ? "Administrador" :
+               userRole === "researcher" ? "Investigador" :
+               userRole === "police" ? "Polícia" :
+               userRole === "citizen" ? "Cidadão" : userRole}
+            </p>
+          </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <NotificationBell />

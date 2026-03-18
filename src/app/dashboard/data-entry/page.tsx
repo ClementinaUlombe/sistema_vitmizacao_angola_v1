@@ -26,7 +26,8 @@ import {
   Check,
   X,
   History,
-  Search
+  Search,
+  AlertTriangle
 } from "lucide-react";
 export default function DataEntryPage() {
   const searchParams = useSearchParams();
@@ -59,8 +60,11 @@ interface Resident {
   gender: string;
   status: string;
   surveyDate: string;
+  name?: string;
   researcher?: {
     name: string;
+    email?: string;
+    id?: number;
   };
   victimizations: Array<{
     wasVictim: boolean;
@@ -74,7 +78,14 @@ const AdminDataEntryManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedResident, setSelectedResident] = useState<Resident | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const { toast } = useToast();
+
+  // Success Modal States
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successTitle, setSuccessTitle] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -103,6 +114,25 @@ const AdminDataEntryManagement = () => {
     }
   };
 
+  const handleViewDetails = async (resident: Resident) => {
+    try {
+      // Fetch detailed resident info including researcher name
+      const response = await fetch(`/api/data?id=${resident.id}`);
+      if (response.ok) {
+        const detailedResident = await response.json();
+        setSelectedResident(detailedResident);
+        setIsDetailModalOpen(true);
+      } else {
+        setSelectedResident(resident);
+        setIsDetailModalOpen(true);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar detalhes:", error);
+      setSelectedResident(resident);
+      setIsDetailModalOpen(true);
+    }
+  };
+
   const handleUpdateStatus = async (id: number, status: string) => {
     try {
       const response = await fetch("/api/data", {
@@ -114,10 +144,13 @@ const AdminDataEntryManagement = () => {
       
       setResidents(residents.map(r => r.id === id ? { ...r, status } : r));
       
-      toast({
-        title: "Sucesso",
-        description: `Inquérito ${status === "VALIDADO" ? "validado" : "rejeitado"} com sucesso`,
-      });
+      // Show success modal
+      setSuccessTitle(status === "VALIDADO" ? "Inquérito Validado!" : "Inquérito Rejeitado!");
+      setSuccessMessage(status === "VALIDADO" 
+        ? "O inquérito foi validado e incluído nas estatísticas oficiais."
+        : "O inquérito foi rejeitado e não será incluído nas estatísticas."
+      );
+      setShowSuccess(true);
     } catch (error) {
       toast({
         title: "Erro",
@@ -137,10 +170,12 @@ const AdminDataEntryManagement = () => {
       if (!response.ok) throw new Error("Erro ao eliminar");
       setResidents(residents.filter((r) => r.id !== id));
       setDeleteConfirm(null);
-      toast({
-        title: "Eliminado",
-        description: "O lançamento foi eliminado com sucesso",
-      });
+      setIsDeleteConfirmOpen(false);
+      
+      // Show success modal
+      setSuccessTitle("Lançamento Eliminado!");
+      setSuccessMessage("O lançamento foi eliminado permanentemente do sistema.");
+      setShowSuccess(true);
     } catch (error) {
       toast({
         title: "Erro",
@@ -270,7 +305,7 @@ const AdminDataEntryManagement = () => {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => setSelectedResident(resident)}
+                        onClick={() => handleViewDetails(resident)}
                         className="h-8 w-8 p-0"
                         title="Ver Detalhes"
                       >
@@ -279,7 +314,10 @@ const AdminDataEntryManagement = () => {
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => setDeleteConfirm(resident.id)}
+                        onClick={() => {
+                          setDeleteConfirm(resident.id);
+                          setIsDeleteConfirmOpen(true);
+                        }}
                         className="h-8 w-8 p-0"
                         title="Eliminar permanentemente"
                       >
@@ -353,7 +391,154 @@ const AdminDataEntryManagement = () => {
         )}
       </Card>
 
-      {/* Detalhes e Confirmação de Eliminação omitidos para brevidade, mas devem ser mantidos ou melhorados */}
+      {/* Detail Modal */}
+      {isDetailModalOpen && selectedResident && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-lg max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6 border-b pb-4">
+                <h2 className="text-2xl font-bold">Detalhes do Inquérito</h2>
+                <button 
+                  onClick={() => setIsDetailModalOpen(false)}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Header Info */}
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Nº Inquérito</p>
+                      <p className="text-lg font-bold text-blue-600">{selectedResident.residentNumber}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Status</p>
+                      <div>{getStatusBadge(selectedResident.status)}</div>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Data de Levantamento</p>
+                      <p className="text-lg font-semibold">{new Date(selectedResident.surveyDate).toLocaleDateString('pt-PT')}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Investigator Info */}
+                <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                  <h3 className="font-semibold text-lg mb-3">👨‍💼 Investigador</h3>
+                  <div className="space-y-2">
+                    <div>
+                      <p className="text-sm text-gray-600">Nome</p>
+                      <p className="text-lg font-semibold text-orange-700">
+                        {selectedResident.researcher?.name || "Sistema"}
+                      </p>
+                    </div>
+                    {selectedResident.researcher?.email && (
+                      <div>
+                        <p className="text-sm text-gray-600">Email</p>
+                        <p className="text-sm text-gray-700">{selectedResident.researcher.email}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Demographics */}
+                <div>
+                  <h3 className="font-semibold text-lg mb-3 border-b pb-2">📊 Dados Demográficos</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Bairro</p>
+                      <p className="font-semibold">{selectedResident.neighborhood}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Grupo Etário</p>
+                      <p className="font-semibold">{selectedResident.ageGroup}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Género</p>
+                      <p className="font-semibold">{selectedResident.gender}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Victimization Status */}
+                <div>
+                  <h3 className="font-semibold text-lg mb-3 border-b pb-2">⚠️ Vitimização</h3>
+                  <p className="text-lg">
+                    {selectedResident.victimizations[0]?.wasVictim ? (
+                      <span className="text-red-600 font-semibold">✓ Vítima de Crime</span>
+                    ) : (
+                      <span className="text-green-600 font-semibold">✗ Sem Vitimização Reportada</span>
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-6 pt-6 border-t">
+                <button
+                  onClick={() => setIsDetailModalOpen(false)}
+                  className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-semibold transition"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteConfirmOpen && deleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-lg max-w-md shadow-xl">
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-red-100 p-3 rounded-full">
+                  <AlertTriangle className="h-6 w-6 text-red-600" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-900">Confirmar Eliminação</h2>
+              </div>
+
+              <p className="text-gray-600 mb-6">
+                Tem a certeza que deseja eliminar este lançamento? Esta ação não pode ser desfeita.
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setIsDeleteConfirmOpen(false);
+                    setDeleteConfirm(null);
+                  }}
+                  className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-semibold transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => {
+                    if (deleteConfirm) {
+                      handleDelete(deleteConfirm);
+                    }
+                  }}
+                  className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title={successTitle}
+        message={successMessage}
+        showProcessFirst={false}
+      />
     </div>
   );
 };

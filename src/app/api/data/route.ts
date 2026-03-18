@@ -29,7 +29,17 @@ export async function GET(request: Request) {
     // Caso contrário, retorna todos os residentes
     const residents = await prisma.resident.findMany({
       where,
-      include: {
+      select: {
+        id: true,
+        residentNumber: true,
+        surveyDate: true,
+        status: true,
+        researcherId: true,
+        ageGroup: true,
+        gender: true,
+        occupation: true,
+        neighborhood: true,
+        educationLevel: true,
         victimizations: true,
         securityPerceptions: true,
         researcher: {
@@ -113,15 +123,28 @@ export async function DELETE(request: Request) {
       );
     }
 
-    await prisma.resident.delete({
-      where: { id: parseInt(id) },
+    const residentId = parseInt(id);
+
+    // 1. Eliminar registos de vitimização dependentes
+    await prisma.victimization.deleteMany({
+      where: { residentId: residentId }
+    });
+
+    // 2. Eliminar registos de percepção de segurança dependentes
+    await prisma.securityPerception.deleteMany({
+      where: { residentId: residentId }
+    });
+
+    // 3. Eliminar o residente (usando deleteMany para evitar retorno de colunas inexistentes)
+    await prisma.resident.deleteMany({
+      where: { id: residentId },
     });
 
     return NextResponse.json({ message: "Lançamento eliminado com sucesso" });
   } catch (error: any) {
     console.error("Error deleting resident:", error);
     return NextResponse.json(
-      { message: "Erro ao eliminar lançamento" },
+      { message: "Erro ao eliminar lançamento: " + error.message },
       { status: 500 }
     );
   }

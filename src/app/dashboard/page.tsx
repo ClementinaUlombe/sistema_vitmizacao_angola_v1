@@ -93,12 +93,22 @@ export default function DashboardPage() {
 
   const quickActions = getQuickActions();
 
+  const getTranslatedRole = () => {
+    switch (userRole) {
+      case "ADMIN": return "Administrador";
+      case "RESEARCHER": return "Investigador";
+      case "POLICE": return "Polícia";
+      case "CITIZEN": return "Cidadão";
+      default: return userRole;
+    }
+  };
+
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Welcome Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-foreground tracking-tight">Painel do {userRole === "CITIZEN" ? "Cidadão" : "Gestor"}</h2>
+          <h2 className="text-3xl font-bold text-foreground tracking-tight">Painel do {getTranslatedRole()}</h2>
           <p className="text-muted-foreground mt-1">
             {userRole === "CITIZEN" 
               ? "Bem-vindo ao canal oficial de colaboração para a segurança de Samba."

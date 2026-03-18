@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
-import { Camera, Save, User as UserIcon } from "lucide-react";
+import { Camera, Save, User as UserIcon, Loader2 } from "lucide-react";
+import SuccessModal from "@/components/SuccessModal";
 
 export default function ProfilePage() {
   const [user, setUser] = useState<any>(null);
@@ -15,6 +16,7 @@ export default function ProfilePage() {
   const [email, setEmail] = useState("");
   const [image, setImage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -56,8 +58,7 @@ export default function ProfilePage() {
       if (response.ok) {
         const updatedUser = { ...user, name, email, image };
         localStorage.setItem("user", JSON.stringify(updatedUser));
-        toast.success("Perfil atualizado com sucesso!");
-        window.location.reload(); // Recarregar para atualizar o header
+        setShowSuccess(true);
       } else {
         toast.error("Erro ao atualizar perfil.");
       }
@@ -145,23 +146,42 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <Label>Nível de Acesso</Label>
               <div className="p-3 bg-muted rounded-md text-sm font-medium uppercase tracking-wider text-muted-foreground">
-                {user.role}
+                {user.role === "ADMIN" ? "Administrador" :
+                 user.role === "RESEARCHER" ? "Investigador" :
+                 user.role === "POLICE" ? "Polícia" :
+                 user.role === "CITIZEN" ? "Cidadão" : user.role}
               </div>
             </div>
 
             <div className="pt-4">
               <Button 
                 onClick={handleSave} 
-                className="w-full md:w-auto px-8 h-11" 
+                className="w-full md:w-auto px-8 h-11 font-bold" 
                 disabled={isSaving}
               >
-                {isSaving ? "A guardar..." : "Guardar Alterações"}
-                <Save className="ml-2 h-4 w-4" />
+                {isSaving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    A guardar...
+                  </>
+                ) : (
+                  <>
+                    Guardar Alterações
+                    <Save className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      <SuccessModal
+        isOpen={showSuccess}
+        onClose={() => window.location.reload()}
+        title="Perfil Atualizado!"
+        message="As suas informações e foto de perfil foram guardadas com sucesso no sistema."
+      />
     </div>
   );
 }
