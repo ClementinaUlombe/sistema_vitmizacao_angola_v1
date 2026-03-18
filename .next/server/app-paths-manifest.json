@@ -1,9 +1,9 @@
 {
   "/api/notifications/route": "app/api/notifications/route.js",
-  "/api/data/route": "app/api/data/route.js",
+  "/page": "app/page.js",
+  "/api/data/summary/route": "app/api/data/summary/route.js",
   "/auth/login/page": "app/auth/login/page.js",
+  "/dashboard/data-entry/page": "app/dashboard/data-entry/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/dashboard/occurrences/page": "app/dashboard/occurrences/page.js",
-  "/dashboard/data-query/page": "app/dashboard/data-query/page.js",
-  "/dashboard/data-entry/page": "app/dashboard/data-entry/page.js"
+  "/dashboard/data-query/page": "app/dashboard/data-query/page.js"
 }

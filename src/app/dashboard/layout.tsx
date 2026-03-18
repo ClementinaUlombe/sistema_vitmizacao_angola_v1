@@ -6,6 +6,9 @@ import { usePathname } from "next/navigation"; // Import usePathname
 import { ThemeToggle } from "@/components/ThemeToggle";
 import NotificationBell from "@/components/NotificationBell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -13,10 +16,16 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [userName, setUserName] = useState("");
   const [userImage, setUserImage] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<"admin" | "researcher" | "police" | "citizen">("citizen");
   const systemName = "Vitimização Criminal";
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    router.push("/auth/login");
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -113,12 +122,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             ))}
           </ul>
         </nav>
-
-        <div className="mt-auto pt-4 border-t border-white/20">
-          <Link href="/auth/login" className="flex items-center p-3 rounded-md text-white hover:bg-white/20 transition-colors">
-            Sair
-          </Link>
-        </div>
       </aside>
 
       {/* Main Content */}
@@ -126,13 +129,22 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Header for main content area - could include user info, logout, etc. */}
         <header className="flex justify-between items-center mb-8 bg-card p-4 rounded-xl shadow-sm border border-border">
           <h1 className="text-2xl font-bold text-foreground">Olá, {userName}</h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <ThemeToggle />
             <NotificationBell />
-            <Link href="/dashboard/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <Avatar className="h-10 w-10 border-2 border-primary/20">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleLogout}
+              className="text-foreground/70 hover:text-red-600 hover:bg-red-50 transition-all rounded-full h-9 w-9"
+              title="Sair do sistema"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+            <Link href="/dashboard/profile" className="flex items-center hover:opacity-80 transition-opacity ml-1">
+              <Avatar className="h-9 w-9 border-2 border-primary/20">
                 <AvatarImage src={userImage || ""} alt={userName} />
-                <AvatarFallback className="bg-primary text-primary-foreground font-bold">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
                   {userName.substring(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
