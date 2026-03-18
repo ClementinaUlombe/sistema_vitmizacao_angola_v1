@@ -115,11 +115,16 @@ export default function DashboardPage() {
               : "Visão geral dos indicadores de vitimização e segurança."}
           </p>
         </div>
-        {userRole !== "CITIZEN" && (
+        {userRole !== "CITIZEN" && userRole !== "POLICE" && (
           <div className="flex gap-3">
-            <Link href="/dashboard/data-entry">
+            <Link href={userRole === "ADMIN" ? "/dashboard/data-entry?admin=true" : "/dashboard/data-entry"}>
               <Button className="bg-primary hover:bg-primary/90 shadow-md">
-                <Plus className="mr-2 h-4 w-4" /> Novo Registro
+                {userRole === "ADMIN" ? (
+                  <FileText className="mr-2 h-4 w-4" />
+                ) : (
+                  <Plus className="mr-2 h-4 w-4" />
+                )}
+                {userRole === "ADMIN" ? "Gerir Lançamentos" : "Novo Registro"}
               </Button>
             </Link>
           </div>

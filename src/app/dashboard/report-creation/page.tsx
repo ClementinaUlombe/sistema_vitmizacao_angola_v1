@@ -41,6 +41,9 @@ export default function ReportCreationPage() {
   const [isExporting, setIsExporting] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
 
+  // Navegação do Relatório (Páginas A4)
+  const [activeReportPage, setActiveReportPage] = useState(1);
+
   // Pagination for neighborhoods
   const [currentNbPage, setCurrentNbPage] = useState(1);
   const nbPerPage = 10;
@@ -72,7 +75,16 @@ export default function ReportCreationPage() {
       // @ts-ignore
       const html2pdf = (await import('html2pdf.js')).default;
       
-      const element = reportRef.current;
+      // Criar um clone temporário para exportação que mostre todas as páginas
+      const element = reportRef.current.cloneNode(true) as HTMLElement;
+      
+      // Remover classes de "hidden" ou "display:none" do clone para o PDF ter tudo
+      const pages = element.querySelectorAll('.report-page');
+      pages.forEach((p: any) => {
+        p.style.display = 'block';
+        p.style.marginBottom = '0';
+      });
+
       const opt = {
         margin: 0,
         filename: `Relatorio_Executivo_Vitimizaçao_${new Date().toISOString().split('T')[0]}.pdf`,
@@ -111,40 +123,70 @@ export default function ReportCreationPage() {
   );
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-12">
+    <div className="space-y-6 max-w-6xl mx-auto pb-12 px-4">
       {/* Header com Ações */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Relatório Executivo</h1>
-          <p className="text-muted-foreground">Síntese oficial de vitimização criminal e segurança pública.</p>
+          <h1 className="text-3xl font-bold text-foreground tracking-tight">Relatório Executivo</h1>
+          <p className="text-muted-foreground">Documento técnico oficial de segurança pública.</p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={fetchReportData} disabled={isExporting}>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={fetchReportData} disabled={isExporting} className="font-semibold">
             Atualizar Dados
           </Button>
           <Button 
             onClick={handleDownloadPDF} 
             disabled={isExporting}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold"
+            className="bg-red-600 hover:bg-red-700 text-white font-bold shadow-lg shadow-red-500/20"
           >
             {isExporting ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <FileDown className="mr-2 h-4 w-4" />
             )}
-            BAIXAR RELATÓRIO (PDF)
+            BAIXAR PDF COMPLETO
           </Button>
         </div>
+      </div>
+
+      {/* Navegador de Páginas do Relatório */}
+      <div className="flex justify-center items-center gap-4 bg-muted/40 p-3 rounded-2xl border border-border/50 sticky top-4 z-30 backdrop-blur-md shadow-sm">
+        <Button 
+          variant={activeReportPage === 1 ? "default" : "ghost"}
+          onClick={() => setActiveReportPage(1)}
+          className="rounded-full font-bold transition-all"
+          size="sm"
+        >
+          1. Sumário
+        </Button>
+        <div className="h-4 w-[1px] bg-border"></div>
+        <Button 
+          variant={activeReportPage === 2 ? "default" : "ghost"}
+          onClick={() => setActiveReportPage(2)}
+          className="rounded-full font-bold transition-all"
+          size="sm"
+        >
+          2. Geografia
+        </Button>
+        <div className="h-4 w-[1px] bg-border"></div>
+        <Button 
+          variant={activeReportPage === 3 ? "default" : "ghost"}
+          onClick={() => setActiveReportPage(3)}
+          className="rounded-full font-bold transition-all"
+          size="sm"
+        >
+          3. Tipologias
+        </Button>
       </div>
 
       {/* PRÉ-VISUALIZAÇÃO DO DOCUMENTO */}
       <div 
         ref={reportRef} 
-        className="flex flex-col gap-8 items-center"
+        className="flex flex-col items-center"
       >
         
         {/* PÁGINA 1: SUMÁRIO EXECUTIVO */}
-        <div className="bg-white text-black p-12 shadow-xl border rounded-none overflow-hidden print:shadow-none print:border-none"
+        <div className={`report-page bg-white text-black p-12 shadow-2xl border rounded-none overflow-hidden print:shadow-none print:border-none ${activeReportPage !== 1 ? 'hidden' : 'block'}`}
              style={{ width: '210mm', minHeight: '297mm', position: 'relative' }}>
           
           {/* Cabeçalho do Documento */}
@@ -224,7 +266,7 @@ export default function ReportCreationPage() {
         </div>
 
         {/* PÁGINA 2: GEOGRAFIA E DEMOGRAFIA */}
-        <div className="bg-white text-black p-12 shadow-xl border rounded-none overflow-hidden print:shadow-none print:border-none"
+        <div className={`report-page bg-white text-black p-12 shadow-2xl border rounded-none overflow-hidden print:shadow-none print:border-none ${activeReportPage !== 2 ? 'hidden' : 'block'}`}
              style={{ width: '210mm', minHeight: '297mm', position: 'relative' }}>
           
           <div className="border-b-[3px] border-slate-900 pb-8 mb-10 flex justify-between items-start">
@@ -345,7 +387,7 @@ export default function ReportCreationPage() {
         </div>
 
         {/* PÁGINA 3: ESTATÍSTICAS DE CRIME E NOTAS TÉCNICAS */}
-        <div className="bg-white text-black p-12 shadow-xl border rounded-none overflow-hidden print:shadow-none print:border-none"
+        <div className={`report-page bg-white text-black p-12 shadow-2xl border rounded-none overflow-hidden print:shadow-none print:border-none ${activeReportPage !== 3 ? 'hidden' : 'block'}`}
              style={{ width: '210mm', minHeight: '297mm', position: 'relative' }}>
           
           <div className="border-b-[3px] border-red-600 pb-8 mb-10 flex justify-between items-start">
@@ -408,7 +450,27 @@ export default function ReportCreationPage() {
         </div>
 
       </div>
+
+      {/* Navegação Inferior (opcional para facilitar) */}
+      <div className="flex justify-between items-center max-w-[210mm] mx-auto mt-4">
+        <Button 
+          variant="outline" 
+          onClick={() => setActiveReportPage(p => Math.max(1, p - 1))}
+          disabled={activeReportPage === 1}
+        >
+          Página Anterior
+        </Button>
+        <span className="text-sm font-bold text-muted-foreground">Página {activeReportPage} de 3</span>
+        <Button 
+          variant="outline" 
+          onClick={() => setActiveReportPage(p => Math.min(3, p + 1))}
+          disabled={activeReportPage === 3}
+        >
+          Próxima Página
+        </Button>
+      </div>
     </div>
   );
 }
+
 

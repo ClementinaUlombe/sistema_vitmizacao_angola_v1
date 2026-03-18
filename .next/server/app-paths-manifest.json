@@ -1,10 +1,12 @@
 {
   "/api/notifications/route": "app/api/notifications/route.js",
-  "/api/data/summary/route": "app/api/data/summary/route.js",
   "/api/reports/route": "app/api/reports/route.js",
-  "/dashboard/page": "app/dashboard/page.js",
+  "/api/data/summary/route": "app/api/data/summary/route.js",
+  "/auth/login/page": "app/auth/login/page.js",
+  "/dashboard/report-creation/page": "app/dashboard/report-creation/page.js",
   "/dashboard/data-entry/page": "app/dashboard/data-entry/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/occurrences/page": "app/dashboard/occurrences/page.js",
   "/dashboard/profile/page": "app/dashboard/profile/page.js",
-  "/dashboard/chatbot/page": "app/dashboard/chatbot/page.js",
-  "/dashboard/occurrences/page": "app/dashboard/occurrences/page.js"
+  "/dashboard/graphs/page": "app/dashboard/graphs/page.js"
 }
