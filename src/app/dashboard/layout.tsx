@@ -69,8 +69,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const citizenMenuItems = [
     { name: "Página Inicial", href: "/dashboard" },
     { name: "O Meu Perfil", href: "/dashboard/profile" },
-    { name: "Minhas Denúncias", href: "/dashboard/occurrences" },
-    { name: "Enviar Relato", href: "/dashboard/report-creation" },
+    { name: "Enviar Relato", href: "/dashboard/occurrences" },
     { name: "Estatísticas Públicas", href: "/dashboard/graphs" },
     { name: "Chatbot Crime", href: "/dashboard/chatbot" },
   ];

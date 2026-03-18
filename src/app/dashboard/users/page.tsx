@@ -48,6 +48,7 @@ interface FormData {
   name: string;
   email: string;
   password?: string;
+  role: string;
 }
 
 const UsersPage: React.FC = () => {
@@ -60,6 +61,7 @@ const UsersPage: React.FC = () => {
     name: "",
     email: "",
     password: "",
+    role: "RESEARCHER",
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -91,6 +93,7 @@ const UsersPage: React.FC = () => {
         id: user.id,
         name: user.name || "",
         email: user.email,
+        role: user.role,
       });
     } else {
       setIsEditMode(false);
@@ -98,6 +101,7 @@ const UsersPage: React.FC = () => {
         name: "",
         email: "",
         password: "",
+        role: "RESEARCHER",
       });
     }
     setIsDialogOpen(true);
@@ -105,10 +109,10 @@ const UsersPage: React.FC = () => {
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
-    setFormData({ name: "", email: "", password: "" });
+    setFormData({ name: "", email: "", password: "", role: "RESEARCHER" });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -122,19 +126,19 @@ const UsersPage: React.FC = () => {
 
     try {
       const method = isEditMode ? "PUT" : "POST";
-
+      
       const payload = isEditMode
         ? {
-            action: "update",
             id: formData.id,
             name: formData.name,
             email: formData.email,
+            role: formData.role
           }
         : {
-            action: "create",
             name: formData.name,
             email: formData.email,
             password: formData.password,
+            role: formData.role
           };
 
       const response = await fetch("/api/auth/register", {
@@ -166,7 +170,7 @@ const UsersPage: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ action: "delete", id }),
+        body: JSON.stringify({ id }),
       });
 
       if (!response.ok) {
@@ -231,6 +235,22 @@ const UsersPage: React.FC = () => {
                   placeholder="email@exemplo.com"
                   required
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="role">Perfil de Acesso</Label>
+                <select
+                  id="role"
+                  value={formData.role}
+                  onChange={handleInputChange}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  required
+                >
+                  <option value="ADMIN">Administrador</option>
+                  <option value="RESEARCHER">Investigador</option>
+                  <option value="POLICE">Polícia</option>
+                  <option value="CITIZEN">Cidadão</option>
+                </select>
               </div>
 
               {!isEditMode && (

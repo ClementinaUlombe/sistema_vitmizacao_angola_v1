@@ -365,6 +365,10 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
+  // Pagination for Recent Submissions
+  const [currentHistoryPage, setCurrentHistoryPage] = useState(1);
+  const historyItemsPerPage = 5;
+
   useEffect(() => {
     fetchRecentUploads();
   }, []);
@@ -374,13 +378,20 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
       const response = await fetch(`/api/data`);
       if (response.ok) {
         const data = await response.json();
-        setRecentUploads(data); 
+        setRecentUploads(data);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
+  // Logic for history pagination
+  const indexOfLastHistoryItem = currentHistoryPage * historyItemsPerPage;
+  const indexOfFirstHistoryItem = indexOfLastHistoryItem - historyItemsPerPage;
+  const currentHistoryItems = recentUploads.slice(indexOfFirstHistoryItem, indexOfLastHistoryItem);
+  const totalHistoryPages = Math.ceil(recentUploads.length / historyItemsPerPage);
+
+  const paginateHistory = (pageNumber: number) => setCurrentHistoryPage(pageNumber);
   // Form State
   const [formData, setFormData] = useState({
     residentNumber: "",
@@ -675,10 +686,10 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y">
-              {recentUploads.length === 0 ? (
+              {currentHistoryItems.length === 0 ? (
                 <p className="p-6 text-center text-sm text-muted-foreground">Nenhum envio recente.</p>
               ) : (
-                recentUploads.map((resident) => (
+                currentHistoryItems.map((resident) => (
                   <div key={resident.id} className="p-4 hover:bg-muted/50 transition">
                     <div className="flex justify-between items-start mb-1">
                       <span className="font-bold text-sm">#{resident.residentNumber}</span>
@@ -691,6 +702,33 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
                 ))
               )}
             </div>
+            
+            {/* History Pagination Controls */}
+            {totalHistoryPages > 1 && (
+              <div className="p-4 border-t flex items-center justify-between bg-muted/20">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => paginateHistory(currentHistoryPage - 1)}
+                  disabled={currentHistoryPage === 1}
+                  className="h-8 w-8 p-0"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-xs font-medium">
+                  Página {currentHistoryPage} de {totalHistoryPages}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => paginateHistory(currentHistoryPage + 1)}
+                  disabled={currentHistoryPage === totalHistoryPages}
+                  className="h-8 w-8 p-0"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </CardContent>
           {recentUploads.length > 0 && (
             <div className="p-4 border-t text-center">

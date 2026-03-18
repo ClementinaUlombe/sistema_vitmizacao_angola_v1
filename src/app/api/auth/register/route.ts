@@ -87,3 +87,51 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Erro interno no servidor" }, { status: 500 });
   }
 }
+
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json();
+    const { id, name, email, role } = body;
+
+    if (!id) {
+      return NextResponse.json({ message: "ID do utilizador é obrigatório" }, { status: 400 });
+    }
+
+    const user = await prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        name,
+        email,
+        role,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Utilizador atualizado com sucesso",
+      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+    });
+  } catch (error) {
+    console.error("Update error:", error);
+    return NextResponse.json({ message: "Erro ao atualizar utilizador" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json();
+    const { id } = body;
+
+    if (!id) {
+      return NextResponse.json({ message: "ID do utilizador é obrigatório" }, { status: 400 });
+    }
+
+    await prisma.user.delete({
+      where: { id: Number(id) },
+    });
+
+    return NextResponse.json({ message: "Utilizador eliminado com sucesso" });
+  } catch (error) {
+    console.error("Delete error:", error);
+    return NextResponse.json({ message: "Erro ao eliminar utilizador" }, { status: 500 });
+  }
+}

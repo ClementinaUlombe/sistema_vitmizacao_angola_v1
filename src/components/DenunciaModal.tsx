@@ -28,7 +28,25 @@ const DenunciaModal: React.FC<DenunciaModalProps> = ({ isOpen, onClose }) => {
     email: "",
     subject: "",
     message: "",
+    userId: null as number | null
   });
+
+  // Carregar dados do utilizador ao abrir
+  React.useEffect(() => {
+    if (isOpen) {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        setFormData(prev => ({
+          ...prev,
+          name: user.name || "",
+          email: user.email || "",
+          userId: user.id
+        }));
+      }
+    }
+  }, [isOpen]);
+
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [step, setStep] = useState<"form" | "confirmation">("form");
@@ -63,18 +81,9 @@ const DenunciaModal: React.FC<DenunciaModalProps> = ({ isOpen, onClose }) => {
     setStatus("loading");
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Simula pequeno delay para feedback visual
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const formspreeResponse = await fetch("https://formspree.io/f/xdakqako", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (!formspreeResponse.ok) {
-        throw new Error("Failed to send report via Formspree.");
-      }
-
       const apiResponse = await fetch("/api/reports", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -85,7 +94,6 @@ const DenunciaModal: React.FC<DenunciaModalProps> = ({ isOpen, onClose }) => {
         throw new Error("Failed to save report to database.");
       }
 
-      setFormData({ name: "", email: "", subject: "", message: "" });
       setStep("form");
       onClose();
       setShowSuccessModal(true);
@@ -135,7 +143,7 @@ const DenunciaModal: React.FC<DenunciaModalProps> = ({ isOpen, onClose }) => {
             <>
               <DialogHeader className="text-center mb-6">
                 <DialogTitle className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
-                  Formulário de Denúncia
+                  Reporte de Crime
                 </DialogTitle>
                 <DialogDescription className={clsx("mt-2", {"text-gray-400": theme === "dark", "text-gray-500": theme === "light"})}>
                   Sua voz é importante. Envie sua denúncia de forma segura.

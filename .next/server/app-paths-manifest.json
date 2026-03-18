@@ -1,8 +1,11 @@
 {
   "/api/notifications/route": "app/api/notifications/route.js",
-  "/dashboard/data-entry/page": "app/dashboard/data-entry/page.js",
-  "/dashboard/perception-comparison/page": "app/dashboard/perception-comparison/page.js",
-  "/dashboard/excel-upload/page": "app/dashboard/excel-upload/page.js",
+  "/api/data/summary/route": "app/api/data/summary/route.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/reports/route": "app/api/reports/route.js",
+  "/dashboard/analytics/page": "app/dashboard/analytics/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/dashboard/report-creation/page": "app/dashboard/report-creation/page.js"
+  "/dashboard/occurrences/page": "app/dashboard/occurrences/page.js",
+  "/dashboard/data-entry/page": "app/dashboard/data-entry/page.js",
+  "/auth/login/page": "app/auth/login/page.js"
 }

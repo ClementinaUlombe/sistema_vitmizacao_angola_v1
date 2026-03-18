@@ -47,7 +47,7 @@ export function getWelcomeEmailHTML(name: string, role: string) {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
       <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
-        <h1 style="margin: 0;">Bem-vindo ao Sistema</h1>
+        <h1 style="margin: 0;">Bem-vindo(a) ao Sistema de Vitimização</h1>
       </div>
       <div style="padding: 30px; line-height: 1.6; color: #333;">
         <p>Olá, <strong>${name}</strong>,</p>
