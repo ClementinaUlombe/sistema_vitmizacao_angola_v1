@@ -32,7 +32,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Trash2, Edit2, Plus } from "lucide-react";
+import { Trash2, Edit2, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import SuccessModal from "@/components/SuccessModal";
 
 interface User {
   id: number;
@@ -64,6 +65,13 @@ const UsersPage: React.FC = () => {
     role: "RESEARCHER",
   });
   const [submitting, setSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successTitle, setSuccessTitle] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
 
   useEffect(() => {
     fetchUsers();
@@ -110,6 +118,7 @@ const UsersPage: React.FC = () => {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setFormData({ name: "", email: "", password: "", role: "RESEARCHER" });
+    setCurrentPage(1); // Reset pagination when closing dialog
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -190,6 +199,14 @@ const UsersPage: React.FC = () => {
       </div>
     );
   }
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentUsers = users.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div className="container mx-auto py-8">
@@ -314,94 +331,155 @@ const UsersPage: React.FC = () => {
           </Button>
         </div>
       ) : (
-        <div className="overflow-x-auto border rounded-lg">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="min-w-[150px]">Nome</TableHead>
-                <TableHead className="min-w-[200px]">Email</TableHead>
-                <TableHead className="min-w-[120px]">Perfil</TableHead>
-                <TableHead className="min-w-[180px]">Data de Criação</TableHead>
-                <TableHead className="w-[100px] text-right">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">
-                    {user.name || "Sem nome"}
-                  </TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>
-                    <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
-                      user.role === "ADMIN" ? "bg-red-100 text-red-800" :
-                      user.role === "RESEARCHER" ? "bg-blue-100 text-blue-800" :
-                      user.role === "POLICE" ? "bg-yellow-100 text-yellow-800" :
-                      "bg-gray-100 text-gray-800"
-                    }`}>
-                      {user.role === "ADMIN" ? "Administrador" :
-                       user.role === "RESEARCHER" ? "Investigador" :
-                       user.role === "POLICE" ? "Polícia" :
-                       "Cidadão"}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    {format(new Date(user.createdAt), "dd/MM/yyyy HH:mm", {
-                      locale: ptBR,
-                    })}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleOpenDialog(user)}
-                        className="gap-1"
-                      >
-                        <Edit2 size={16} />
-                        Editar
-                      </Button>
-
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            className="gap-1"
-                          >
-                            <Trash2 size={16} />
-                            Eliminar
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Confirmar eliminação
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Tem a certeza que deseja eliminar o utilizador{" "}
-                              <strong>{user.email}</strong>? Esta ação não pode
-                              ser desfeita.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <div className="flex justify-end gap-2">
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(user.id)}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            >
-                              Eliminar
-                            </AlertDialogAction>
-                          </div>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </TableCell>
+        <>
+          <div className="overflow-x-auto border rounded-lg">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[150px]">Nome</TableHead>
+                  <TableHead className="min-w-[200px]">Email</TableHead>
+                  <TableHead className="min-w-[120px]">Perfil</TableHead>
+                  <TableHead className="min-w-[180px]">Data de Criação</TableHead>
+                  <TableHead className="w-[100px] text-right">Ações</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {currentUsers.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell className="font-medium">
+                      {user.name || "Sem nome"}
+                    </TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
+                        user.role === "ADMIN" ? "bg-red-100 text-red-800" :
+                        user.role === "RESEARCHER" ? "bg-blue-100 text-blue-800" :
+                        user.role === "POLICE" ? "bg-yellow-100 text-yellow-800" :
+                        "bg-gray-100 text-gray-800"
+                      }`}>
+                        {user.role === "ADMIN" ? "Administrador" :
+                         user.role === "RESEARCHER" ? "Investigador" :
+                         user.role === "POLICE" ? "Polícia" :
+                         "Cidadão"}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {format(new Date(user.createdAt), "dd/MM/yyyy HH:mm", {
+                        locale: ptBR,
+                      })}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleOpenDialog(user)}
+                          className="gap-1"
+                        >
+                          <Edit2 size={16} />
+                          Editar
+                        </Button>
+
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              className="gap-1"
+                            >
+                              <Trash2 size={16} />
+                              Eliminar
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Confirmar eliminação
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Tem a certeza que deseja eliminar o utilizador{" "}
+                                <strong>{user.email}</strong>? Esta ação não pode
+                                ser desfeita.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <div className="flex justify-end gap-2">
+                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(user.id)}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Eliminar
+                              </AlertDialogAction>
+                            </div>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="border-t p-4 flex items-center justify-between">
+              <div className="text-xs text-muted-foreground">
+                Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, users.length)} de {users.length} utilizadores
+              </div>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="h-8 w-8 p-0"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                
+                <div className="flex items-center gap-1">
+                  {[...Array(totalPages)].map((_, i) => {
+                    const pageNumber = i + 1;
+                    if (
+                      pageNumber === 1 || 
+                      pageNumber === totalPages || 
+                      (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                    ) {
+                      return (
+                        <Button
+                          key={pageNumber}
+                          variant={currentPage === pageNumber ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => paginate(pageNumber)}
+                          className="h-8 w-8 p-0"
+                        >
+                          {pageNumber}
+                        </Button>
+                      );
+                    } else if (
+                      pageNumber === currentPage - 2 || 
+                      pageNumber === currentPage + 2
+                    ) {
+                      return <span key={pageNumber} className="text-muted-foreground">...</span>;
+                    }
+                    return null;
+                  })}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="h-8 w-8 p-0"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

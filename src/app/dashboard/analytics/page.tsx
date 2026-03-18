@@ -14,18 +14,31 @@ interface SubmissionStatus {
   ageGroup: string;
   surveyDate: string;
   status: 'PENDENTE' | 'VALIDADO' | 'REJEITADO';
+  researcherId: number;
+}
+
+interface User {
+  id: number;
+  email: string;
+  role: string;
 }
 
 export default function SubmissionStatusPage() {
   const [submissions, setSubmissions] = useState<SubmissionStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [user, setUser] = useState<User | null>(null);
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
   useEffect(() => {
+    // Obter utilizador autenticado
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
     fetchSubmissions();
   }, []);
 
@@ -34,10 +47,21 @@ export default function SubmissionStatusPage() {
       setLoading(true);
       setError('');
       
-      // Busca todos os lançamentos sem filtrar por ID de investigador
+      // Buscar todos os lançamentos
       const response = await fetch('/api/data');
       if (!response.ok) throw new Error('Erro ao carregar lançamentos');
-      const data = await response.json();
+      let data = await response.json();
+      
+      // Filtrar por utilizador autenticado se for RESEARCHER
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const currentUser = JSON.parse(storedUser);
+        if (currentUser.role === 'RESEARCHER') {
+          // Mostrar apenas os lançamentos do investigador autenticado
+          data = data.filter((submission: SubmissionStatus) => submission.researcherId === currentUser.id);
+        }
+      }
+      
       setSubmissions(data || []);
       setCurrentPage(1); // Reset to first page on fetch
     } catch (err) {

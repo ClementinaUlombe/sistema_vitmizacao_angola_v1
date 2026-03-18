@@ -31,14 +31,29 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      if (user && user.name) {
-        setUserName(user.name);
-      }
-      if (user && user.image) {
-        setUserImage(user.image);
-      }
-      if (user && user.role) {
-        setUserRole(user.role.toLowerCase() as any);
+      if (user && user.id) {
+        setUserName(user.name || "");
+        setUserRole(user.role?.toLowerCase() as any || "citizen");
+        
+        // Se a imagem estiver no localStorage, usa-a
+        if (user.image) {
+          setUserImage(user.image);
+        } else {
+          // Caso contrário, tenta ir buscar à API (Prisma)
+          fetch(`/api/auth/users?id=${user.id}`)
+            .then(res => res.json())
+            .then(data => {
+              // Procura o utilizador específico se a API retornar lista
+              const currentUser = Array.isArray(data) ? data.find((u: any) => u.id === user.id) : data;
+              if (currentUser && currentUser.image) {
+                setUserImage(currentUser.image);
+                // Atualiza o localStorage para a próxima vez
+                const updated = { ...user, image: currentUser.image };
+                localStorage.setItem("user", JSON.stringify(updated));
+              }
+            })
+            .catch(err => console.error("Erro ao recuperar imagem:", err));
+        }
       }
     }
   }, []);
@@ -62,7 +77,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "O Meu Perfil", href: "/dashboard/profile" },
     { name: "Lançamento de Inquéritos", href: "/dashboard/data-entry" },
     { name: "Status de Lançamento", href: "/dashboard/analytics" },
-    { name: "Gráficos", href: "/dashboard/graphs" },
+    { name: "Estatísticas Públicas", href: "/dashboard/graphs" },
     { name: "📚 Biblioteca Científica", href: "/dashboard/data-query" },
     { name: "Chatbot", href: "/dashboard/chatbot" },
   ];
@@ -71,7 +86,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Página Inicial", href: "/dashboard" },
     { name: "O Meu Perfil", href: "/dashboard/profile" },
     { name: "Gestão de Ocorrências", href: "/dashboard/occurrences" },
-    { name: "Gráficos de Criminalidade", href: "/dashboard/graphs" },
+    { name: "Estatísticas Públicas", href: "/dashboard/graphs" },
     { name: "Chatbot Auxiliar", href: "/dashboard/chatbot" },
   ];
 

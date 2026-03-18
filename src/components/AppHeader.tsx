@@ -7,11 +7,14 @@ import NotificationBell from "@/components/NotificationBell";
 import { useState, useEffect } from "react";
 
 export function AppHeader() {
+  const [userName, setUserName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserName(user.name || "");
       setIsLoggedIn(true);
     }
   }, []);
@@ -33,8 +36,8 @@ export function AppHeader() {
           <Link href="/quem-somos" className="hover:opacity-80 transition-opacity">Quem Somos</Link>
           {isLoggedIn ? (
             <Link href="/dashboard" passHref>
-              <Button variant="secondary" size="sm" className="ml-4 shadow-md bg-purple-light text-purple-deep hover:bg-white transition-all">
-                Ir para o Painel
+              <Button variant="secondary" size="sm" className="ml-4 shadow-md bg-white/10 text-white hover:bg-white/20 transition-all border border-white/20">
+                Olá, {userName} (Painel)
               </Button>
             </Link>
           ) : (
