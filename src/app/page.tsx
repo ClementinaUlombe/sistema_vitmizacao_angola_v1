@@ -30,7 +30,7 @@ const NewsCard = ({ news }: { news: NewsItem }) => {
     if (news.images && news.images.length > 0) {
       const interval = setInterval(() => {
         setCurrentImageIndex((prev) => (prev === news.images!.length - 1 ? 0 : prev + 1));
-      }, 30000); // 30 segundos
+      }, 40000); // 40 segundos
       return () => clearInterval(interval);
     }
   }, [news.images]);
@@ -287,31 +287,6 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
               <NewsCard key={news.id} news={news} />
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Seção Galeria de Fotos */}
-      <section id="galeria" className="bg-background py-20 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 mb-16">
-          <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4">
-            Galeria do Projeto
-          </h2>
-          <p className="text-muted-foreground text-lg">
-            Momentos da recolha de dados e interações com a comunidade.
-          </p>
-        </div>
-        <div className="mx-auto max-w-7xl px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            "/recolha.jpeg", "/recolha1.jpeg", "/recolha2.jpeg", "/recolha3.jpeg",
-            "/recolha4.jpeg", "/recolha2.jpeg", "/recolha1.jpeg", "/imagesmaos.jpeg"
-          ].map((img, i) => (
-            <div key={i} className="group relative h-64 rounded-2xl overflow-hidden cursor-pointer shadow-md">
-              <img src={img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Galeria" />
-              <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <span className="text-white font-bold">Ver Foto</span>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 

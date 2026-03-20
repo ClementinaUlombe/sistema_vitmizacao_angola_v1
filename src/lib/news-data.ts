@@ -14,56 +14,69 @@ export const newsData: NewsItem[] = [
     date: "15 Fev 2026",
     title: "Expansão da Recolha de Dados no Município da Samba",
     description: "Novas equipas de campo iniciaram hoje o inquérito em áreas anteriormente não cobertas para fortalecer a base de dados do projeto.",
-    fullText: `
-      A equipa de investigação do projeto "Segurança em Angola" que é o Grupo Estudos e Desenvolvimento Académico (GEDA) no Instituto Superior Politécnico 
-de Ciências e Tecnologia (INSUTEC) emerge como uma iniciativa estratégica para 
-fomentar a participação ativa dos estudantes em projetos de pesquisa e extensão, 
-contribuindo diretamente para o aprimoramento da experiência académica e o 
-alinhamento entre a formação teórica e as demandas sociais. 
-O GEDA será um espaço de integração e aprendizado, voltado para o estudo de temas 
-que afectam directamente a vida académica, como motivação, satisfação, métodos de 
-aprendizagem, desempenho estudantil e a ligação entre a formação universitária e a 
-realidade comunitária. Além disso, o grupo busca estimular a produção científica por 
-meio da elaboração e publicação de artigos Académicos e a promoção de eventos, como 
-palestras e debates, fortalecendo o compromisso dos estudantes com a disseminação do 
-conhecimento e a interação com a sociedade. 
-Missão: Fomentar o desenvolvimento Académico, científico e pessoal dos estudantes do 
-Curso de Ciências Criminais, promovendo uma cultura de pesquisa, inovação e 
-compromisso social. 
-Visão: Tornar-se uma referência no desenvolvimento de competências investigativas e 
-na produção de conhecimento aplicado à realidade académica e social. 
-Objetivos: 
-1. Promover estudos e pesquisas sobre temas relacionados ao desempenho Académico, 
-metodologias de aprendizagem e desafios enfrentados pelos estudantes. 
-2. Facilitar a elaboração e publicação de artigos científicos em revistas académicas. 
-3. Organizar e participar de eventos Académicos como palestras, painéis, jornadas 
-científicas e outros. 
-4. Estimular o trabalho em Equipa e o compromisso com valores éticos e profissionais. 
-5. Fortalecer a ligação entre a formação académica e a realidade social e comunitária. 
-Este relatório apresenta as estratégias elaboradas para a aplicação de inquérito sobre 
-Vitimização Criminal e percepção de segurança nos bairros Inorad, Pedalé, Saber Andar 
-e Huambo, tendo como eixo central o bairro Gamek á Direita. O objectivo central foi 
-mapear a experiência real da população com a criminalidade e avaliar os níveis de 
-sensação de segurança. O estudo visou compreender a segurança pública nesses bairros 
-sob a perspectiva dos seus residentes. Através de um inquérito por questionário 
-estruturado, buscou-se ir além dos registros policiais oficionais, captando crimes não 
-denunciados e medindo a sensação subjectiva de segurança, fornecendo assim um 
-diagnóstico mais abrangente.`,
-    image: "/nochao.jpg"
+    fullText: `A equipa de investigação do projeto "Segurança em Angola" que é o Grupo Estudos e Desenvolvimento Académico (GEDA) no Instituto Superior Politécnico de Ciências e Tecnologia (INSUTEC) emerge como uma iniciativa estratégica para fomentar a participação ativa dos estudantes em projetos de pesquisa e extensão, contribuindo diretamente para o aprimoramento da experiência académica e o alinhamento entre a formação teórica e as demandas sociais.
+
+O GEDA será um espaço de integração e aprendizado, voltado para o estudo de temas que afectam directamente a vida académica, como motivação, satisfação, métodos de aprendizagem, desempenho estudantil e a ligação entre a formação universitária e a realidade comunitária. Além disso, o grupo busca estimular a produção científica por meio da elaboração e publicação de artigos Académicos e a promoção de eventos, como palestras e debates, fortalecendo o compromisso dos estudantes com a disseminação do conhecimento e a interação com a sociedade.
+
+Missão: Fomentar o desenvolvimento Académico, científico e pessoal dos estudantes do Curso de Ciências Criminais, promovendo uma cultura de pesquisa, inovação e compromisso social.
+
+Visão: Tornar-se uma referência no desenvolvimento de competências investigativas e na produção de conhecimento aplicado à realidade académica e social.
+
+Objetivos:
+1. Promover estudos e pesquisas sobre temas relacionados ao desempenho Académico, metodologias de aprendizagem e desafios enfrentados pelos estudantes.
+2. Facilitar a elaboração e publicação de artigos científicos em revistas académicas.
+3. Organizar e participar de eventos Académicos como palestras, painéis, jornadas científicas e outros.
+4. Estimular o trabalho em Equipa e o compromisso com valores éticos e profissionais.
+5. Fortalecer a ligação entre a formação académica e a realidade social e comunitária.
+
+Este relatório apresenta as estratégias elaboradas para a aplicação de inquérito sobre Vitimização Criminal e percepção de segurança nos bairros Inorad, Pedalé, Saber Andar e Huambo, tendo como eixo central o bairro Gamek á Direita. O objectivo central foi mapear a experiência real da população com a criminalidade e avaliar os níveis de sensação de segurança.
+
+O estudo visou compreender a segurança pública nesses bairros sob a perspectiva dos seus residentes. Através de um inquérito por questionário estruturado, buscou-se ir além dos registros policiais oficionais, captando crimes não denunciados e medindo a sensação subjectiva de segurança, fornecendo assim um diagnóstico mais abrangente.`,
+    image: "/nochao.jpg",
+    images: [
+      "/recolha.jpeg",
+      "/recolha1.jpeg",
+      "/recolha2.jpeg",
+      "/recolha3.jpeg",
+      "/recolha4.jpeg",
+      "/imagesmaos.jpeg",
+      "/biblioteca.png",
+      "/biblioteca2.png",
+      "/WhatsApp Image 2026-03-19 at 8.55.52 PM (1).jpeg",
+      "/WhatsApp Image 2026-03-19 at 8.55.52 PM.jpeg",
+      "/WhatsApp Image 2026-03-19 at 8.55.51 PM (2).jpeg",
+      "/WhatsApp Image 2026-03-19 at 8.55.51 PM (1).jpeg",
+      "/WhatsApp Image 2026-03-19 at 8.55.51 PM.jpeg",
+      "/WhatsApp Image 2026-03-19 at 8.55.50 PM (3).jpeg",
+      "/WhatsApp Image 2026-03-19 at 8.55.50 PM (2).jpeg",
+      "/WhatsApp Image 2026-03-19 at 8.55.50 PM (1).jpeg",
+      "/WhatsApp Image 2026-03-19 at 8.55.50 PM.jpeg",
+      "/WhatsApp Image 2026-03-19 at 8.55.49 PM (1).jpeg",
+      "/WhatsApp Image 2026-03-19 at 8.55.49 PM.jpeg"
+    ]
   },
   {
     id: "1",
     date: "02 Fev 2026",
     title: "Lançamento da IA para Análise de Tendências Criminais",
     description: "O novo módulo de inteligência artificial já processa dados em tempo real para gerar previsões e apoiar a tomada de decisão.",
-    fullText: `
-      O projeto deu um salto tecnológico importante com o lançamento do seu novo módulo de Inteligência Artificial (IA). Esta ferramenta foi desenhada para processar os dados dos inquéritos de vitimização em tempo real, permitindo a identificação imediata de padrões e tendências criminais no Município da Samba e arredores.
+    fullText: `O projeto deu um salto tecnológico importante com o lançamento do seu novo módulo de Inteligência Artificial (IA). Esta ferramenta foi desenhada para processar os dados dos inquéritos de vitimização em tempo real, permitindo a identificação imediata de padrões e tendências criminais no Município da Samba e arredores.
 
-      A IA utiliza algoritmos avançados de machine learning para correlacionar variáveis como horário, tipo de crime e localização, gerando mapas de calor e previsões que podem auxiliar as autoridades locais na otimização de recursos.
+A IA utiliza algoritmos avançados de machine learning para correlacionar variáveis como horário, tipo de crime e localização, gerando mapas de calor e previsões que podem auxiliar as autoridades locais na otimização de recursos.
 
-      Além da análise técnica, a IA também alimenta o chatbot da nossa plataforma, tornando a informação acessível a todos os cidadãos de forma intuitiva. Este é um marco na modernização das ferramentas de segurança pública em Angola.
-    `,
-    image: "/maos.jpg"
+Um dos pilares centrais desta inovação é o nosso Chatbot Inteligente, uma interface conversacional avançada que democratiza o acesso à informação de segurança. O chatbot não apenas responde a perguntas frequentes, mas também é capaz de realizar consultas complexas na base de dados em tempo real. Os cidadãos podem agora interagir de forma natural para perguntar sobre estatísticas de segurança no seu bairro específico, receber conselhos de prevenção personalizados com base em tendências atuais e até mesmo ser guiados passo a passo no processo de reporte de incidentes.
+
+Além disso, o chatbot utiliza processamento de linguagem natural (NLP) para compreender o contexto das preocupações dos residentes, oferecendo uma ponte de comunicação direta entre a tecnologia de ponta e a necessidade humana de segurança. Esta ferramenta transforma dados estatísticos complexos em diálogos úteis e acessíveis, tornando a plataforma uma verdadeira assistente de segurança para a comunidade. Este é um marco fundamental na modernização das ferramentas de segurança pública em Angola, unindo ciência criminal e inteligência artificial para proteger vidas.`,
+    image: "/maos.jpg",
+    images: [
+      "/inteligencia-artificial-criminalistica-nova-era-resolucao-crimes.png",
+      "/a8a4b5_a9a2253bf0374d86b23e66e307dcdd1d~mv2.avif",
+      "/a8a4b5_c6c46fa8c53e482296184697f316c59e~mv2.avif",
+      "/a8a4b5_3ecd89405ef14b7a958fe10d09d9ebcd~mv2.avif",
+      "/forense_01.jpg",
+      "/inteligencia-artificial-no-direito-penal-1000x563-1.webp",
+      "/robo-tjpe.jpg"
+    ]
   },
   {
     id: "2",

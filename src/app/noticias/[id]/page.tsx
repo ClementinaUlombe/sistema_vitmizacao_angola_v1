@@ -23,7 +23,7 @@ export default function NewsDetailPage() {
         setCurrentImageIndex((prevIndex) => 
           prevIndex === (news.images?.length ?? 1) - 1 ? 0 : prevIndex + 1
         );
-      }, 30000); // Passar a cada 30 segundos
+      }, 40000); // Passar a cada 40 segundos
 
       return () => clearInterval(interval);
     }

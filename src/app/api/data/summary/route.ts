@@ -29,7 +29,7 @@ export async function GET() {
       totalResidents,
       victimizationRate,
       unreportedCrimesRate,
-      neighborhoods: neighborhoods.length,
+      neighborhoods: 4,
     });
   } catch (error: any) {
     console.error('Error fetching summary data:', error);
