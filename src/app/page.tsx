@@ -14,7 +14,7 @@ import ReportModal from "@/components/ReportModal";
 import DenunciaModal from "@/components/DenunciaModal";
 import ParallaxSection from "@/components/ParallaxSection";
 import { useState, useEffect } from "react";
-import { newsData } from "@/lib/news-data";
+import { newsData, NewsItem } from "@/lib/news-data";
 
 interface SummaryData {
   totalResidents: number;
@@ -22,6 +22,54 @@ interface SummaryData {
   unreportedCrimesRate: number;
   neighborhoods: number;
 }
+
+const NewsCard = ({ news }: { news: NewsItem }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    if (news.images && news.images.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev === news.images!.length - 1 ? 0 : prev + 1));
+      }, 30000); // 30 segundos
+      return () => clearInterval(interval);
+    }
+  }, [news.images]);
+
+  const displayImage = news.images && news.images.length > 0 
+    ? news.images[currentImageIndex] 
+    : news.image;
+
+  return (
+    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-500 group flex flex-col bg-card border-primary/5 rounded-3xl shadow-lg border-2 hover:border-primary/20">
+      <div className="h-64 overflow-hidden relative bg-slate-900">
+        <img 
+          key={displayImage}
+          src={displayImage} 
+          alt={news.title} 
+          className="w-full h-full object-contain animate-fade-in transition-all duration-700" 
+        />
+        <div className="absolute top-6 left-6 bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-2xl backdrop-blur-md">
+          {news.date}
+        </div>
+      </div>
+      <CardHeader className="flex-grow p-8">
+        <CardTitle className="text-2xl font-bold leading-tight group-hover:text-primary transition-colors mb-4">
+          {news.title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="px-8 pb-8 pt-0">
+        <p className="text-muted-foreground text-lg mb-8 leading-relaxed line-clamp-3">
+          {news.description}
+        </p>
+        <Link href={`/noticias/${news.id}`}>
+          <Button variant="outline" className="w-full rounded-2xl font-bold text-primary border-primary/20 hover:bg-primary hover:text-white transition-all py-6">
+            Ler Notícia Completa
+          </Button>
+        </Link>
+      </CardContent>
+    </Card>
+  );
+};
 
 const heroHands = "/hero-hands.jpg";
 const heroBooks = "/hero-books.jpg";
@@ -236,33 +284,7 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
             {newsData.map((news) => (
-              <Card key={news.id} className="overflow-hidden hover:shadow-2xl transition-all duration-500 group flex flex-col bg-card border-primary/5 rounded-3xl shadow-lg border-2 hover:border-primary/20">
-                <div className="h-64 overflow-hidden relative">
-                  <img 
-                    src={news.image} 
-                    alt={news.title} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
-                  />
-                  <div className="absolute top-6 left-6 bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-2xl backdrop-blur-md">
-                    {news.date}
-                  </div>
-                </div>
-                <CardHeader className="flex-grow p-8">
-                  <CardTitle className="text-2xl font-bold leading-tight group-hover:text-primary transition-colors mb-4">
-                    {news.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="px-8 pb-8 pt-0">
-                  <p className="text-muted-foreground text-lg mb-8 leading-relaxed line-clamp-3">
-                    {news.description}
-                  </p>
-                  <Link href={`/noticias/${news.id}`}>
-                    <Button variant="outline" className="w-full rounded-2xl font-bold text-primary border-primary/20 hover:bg-primary hover:text-white transition-all py-6">
-                      Ler Notícia Completa
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
+              <NewsCard key={news.id} news={news} />
             ))}
           </div>
         </div>
