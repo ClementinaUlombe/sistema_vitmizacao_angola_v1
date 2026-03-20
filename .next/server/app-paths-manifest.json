@@ -1,8 +1,7 @@
 {
   "/page": "app/page.js",
-  "/sobre/page": "app/sobre/page.js",
-  "/analise-dados/page": "app/analise-dados/page.js",
+  "/metodologia/page": "app/metodologia/page.js",
   "/quem-somos/page": "app/quem-somos/page.js",
-  "/api/data/summary/route": "app/api/data/summary/route.js",
-  "/metodologia/page": "app/metodologia/page.js"
+  "/analise-dados/page": "app/analise-dados/page.js",
+  "/sobre/page": "app/sobre/page.js"
 }
