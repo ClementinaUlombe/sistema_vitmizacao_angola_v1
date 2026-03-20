@@ -100,9 +100,33 @@ export default function NewsDetailPage() {
                 <div className="w-10 h-1 bg-primary rounded-full" />
                 <h3 className="text-2xl font-black uppercase tracking-tight">Registro em Vídeo</h3>
               </div>
-              <div className="relative aspect-video w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-primary/10 bg-black flex items-center justify-center">
+              <div className="relative aspect-video w-full rounded-[2.5rem] overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border-8 border-white/5 flex items-center justify-center bg-slate-950 group">
+                {/* Fundo Premium com Impacto Visual */}
+                <div className="absolute inset-0 z-0">
+                  {/* Gradiente de Base Vibrante */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary via-purple-600 to-secondary opacity-20" />
+                  
+                  {/* Brilhos Dinâmicos */}
+                  <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/20 rounded-full blur-[100px] animate-pulse" />
+                  <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-secondary/20 rounded-full blur-[100px] animate-pulse delay-1000" />
+                  
+                  {/* Imagem de Fundo com Mix-Blend */}
+                  <img 
+                    src="/tecno.webp" 
+                    className="w-full h-full object-cover blur-xl opacity-20 mix-blend-overlay scale-110" 
+                    alt="" 
+                  />
+                  
+                  {/* Overlay de Vidro (Glassmorphism) */}
+                  <div className="absolute inset-0 backdrop-blur-[2px] bg-white/5" />
+                </div>
+
+                {/* Cantos Decorativos Estilo "Câmera/Forense" */}
+                <div className="absolute top-8 left-8 w-16 h-16 border-t-4 border-l-4 border-white/20 rounded-tl-2xl z-10 group-hover:border-primary/50 transition-colors duration-500" />
+                <div className="absolute bottom-8 right-8 w-16 h-16 border-b-4 border-r-4 border-white/20 rounded-br-2xl z-10 group-hover:border-secondary/50 transition-colors duration-500" />
+
                 <video 
-                  className="max-w-full max-h-full"
+                  className="relative z-10 max-w-full max-h-[90%] rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.6)] ring-1 ring-white/10 transition-transform duration-700 group-hover:scale-[1.02]"
                   autoPlay 
                   loop 
                   controls
@@ -112,6 +136,12 @@ export default function NewsDetailPage() {
                   <source src="/WhatsApp Video 2026-03-19 at 8.30.16 PM.mp4" type="video/mp4" />
                   Seu navegador não suporta a reprodução de vídeos.
                 </video>
+                
+                {/* Badge de "Registro Oficial" */}
+                <div className="absolute top-8 right-8 z-20 hidden sm:flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
+                  <span className="text-[10px] font-black text-white uppercase tracking-widest">GEDA Media Production</span>
+                </div>
               </div>
               <p className="text-center text-muted-foreground italic text-sm">
                 Assista ao registro completo da sessão com áudio original.
