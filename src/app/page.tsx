@@ -46,7 +46,7 @@ const NewsCard = ({ news }: { news: NewsItem }) => {
           key={displayImage}
           src={displayImage} 
           alt={news.title} 
-          className="w-full h-full object-contain animate-fade-in transition-all duration-700" 
+          className="w-full h-full object-cover animate-fade-in transition-all duration-700" 
         />
         <div className="absolute top-6 left-6 bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-2xl backdrop-blur-md">
           {news.date}

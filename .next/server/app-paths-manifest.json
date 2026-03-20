@@ -1,9 +1,7 @@
 {
-  "/analise-dados/page": "app/analise-dados/page.js",
-  "/metodologia/page": "app/metodologia/page.js",
   "/page": "app/page.js",
-  "/api/data/summary/route": "app/api/data/summary/route.js",
+  "/quem-somos/page": "app/quem-somos/page.js",
   "/noticias/[id]/page": "app/noticias/[id]/page.js",
   "/sobre/page": "app/sobre/page.js",
-  "/quem-somos/page": "app/quem-somos/page.js"
+  "/analise-dados/page": "app/analise-dados/page.js"
 }
