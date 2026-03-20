@@ -69,19 +69,17 @@ const Page = () => {
   }, []);
 
   const heroImages = [
-    "/apontar.gif",
-    "/imagesmaos.jpeg",
-    "/livro.jpeg",
-    "/maocabeca.jpg", // Placeholder for "two people hugging"
+    "/tecno.webp",
+    "/mao na boca.jpg",
+    "/tecnmao.jpg",
     "/maos.jpg",
-    "/nochao.jpg",
-    "/telefone.webp",
   ];
 
   const destaqueImages = [
-    "/nochao.jpg",
+    "/tecno.webp",
+    "/mao na boca.jpg",
+    "/tecnmao.jpg",
     "/maos.jpg",
-    "/livro.jpeg",
   ];
 
   return (
@@ -167,7 +165,7 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
       <section id="sobre-estudo" className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4 text-center">
-            Conhecimento e Tecnologia pela Segurança de Angola A Celina vai me mandar o artiigo científico
+            Conhecimento e Tecnologia pela Segurança de Angola
           </h2>
           <p className="text-center text-muted-foreground mb-12 text-lg">
             Uma iniciativa pioneira para transformar dados em ação
