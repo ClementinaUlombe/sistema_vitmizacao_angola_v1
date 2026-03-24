@@ -23,7 +23,7 @@ export default function NewsDetailPage() {
         setCurrentImageIndex((prevIndex) => 
           prevIndex === (news.images?.length ?? 1) - 1 ? 0 : prevIndex + 1
         );
-      }, 40000); // Passar a cada 40 segundos
+      }, 20000); // Passar a cada 20 segundos
 
       return () => clearInterval(interval);
     }
@@ -140,7 +140,7 @@ export default function NewsDetailPage() {
                 {/* Badge de "Registro Oficial" */}
                 <div className="absolute top-8 right-8 z-20 hidden sm:flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
-                  <span className="text-[10px] font-black text-white uppercase tracking-widest">GEDA Media Production</span>
+                  <span className="text-[10px] font-black text-white uppercase tracking-widest"> Produced by the image and marketing dpt. of GEDA.</span>
                 </div>
               </div>
               <p className="text-center text-muted-foreground italic text-sm">

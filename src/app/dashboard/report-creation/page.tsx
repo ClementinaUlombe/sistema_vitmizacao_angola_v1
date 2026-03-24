@@ -210,7 +210,7 @@ export default function ReportCreationPage() {
                 <FileText className="h-5 w-5 text-red-600" /> 1. SUMÁRIO EXECUTIVO E INDICADORES GERAIS
               </h3>
               <p className="text-[13px] leading-[1.8] text-slate-700 mb-8 text-justify">
-                Este relatório consolida dados críticos sobre a segurança pública no Município de Samba. Os indicadores apresentados derivam tanto de inquéritos directos realizados por investigadores quanto de relatos espontâneos de cidadãos através da plataforma. A análise conjunta destes fluxos permite uma visão holística da criminalidade e da percepção de insegurança local.
+                Consolida dados críticos sobre a segurança pública no Município de Samba. Os indicadores apresentados derivam tanto de inquéritos directos realizados por investigadores quanto de relatos espontâneos de cidadãos através da plataforma. A análise conjunta destes fluxos permite uma visão holística da criminalidade e da percepção de insegurança local.
               </p>
               
               <div className="grid grid-cols-3 gap-6 mb-10">

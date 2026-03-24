@@ -11,7 +11,7 @@ export interface NewsItem {
 export const newsData: NewsItem[] = [
   {
     id: "0",
-    date: "15 Fev 2026",
+    date: "15 Ago 2025",
     title: "Expansão da Recolha de Dados no Município da Samba",
     description: "Novas equipas de campo iniciaram hoje o inquérito em áreas anteriormente não cobertas para fortalecer a base de dados do projeto.",
     fullText: `A equipa de investigação do projeto "Segurança em Angola" que é o Grupo Estudos e Desenvolvimento Académico (GEDA) no Instituto Superior Politécnico de Ciências e Tecnologia (INSUTEC) emerge como uma iniciativa estratégica para fomentar a participação ativa dos estudantes em projetos de pesquisa e extensão, contribuindo diretamente para o aprimoramento da experiência académica e o alinhamento entre a formação teórica e as demandas sociais.
@@ -29,7 +29,7 @@ Objetivos:
 4. Estimular o trabalho em Equipa e o compromisso com valores éticos e profissionais.
 5. Fortalecer a ligação entre a formação académica e a realidade social e comunitária.
 
-Este relatório apresenta as estratégias elaboradas para a aplicação de inquérito sobre Vitimização Criminal e percepção de segurança nos bairros Inorad, Pedalé, Saber Andar e Huambo, tendo como eixo central o bairro Gamek á Direita. O objectivo central foi mapear a experiência real da população com a criminalidade e avaliar os níveis de sensação de segurança.
+Apresenta as estratégias elaboradas para a aplicação de inquérito sobre Vitimização Criminal e percepção de segurança nos bairros Inorad, Pedalé, Saber Andar e Huambo, tendo como eixo central o Município da Samba . O objectivo central foi mapear a experiência real da população com a criminalidade e avaliar os níveis de sensação de segurança.
 
 O estudo visou compreender a segurança pública nesses bairros sob a perspectiva dos seus residentes. Através de um inquérito por questionário estruturado, buscou-se ir além dos registros policiais oficionais, captando crimes não denunciados e medindo a sensação subjectiva de segurança, fornecendo assim um diagnóstico mais abrangente.`,
     image: "/nochao.jpg",
@@ -80,7 +80,7 @@ Além disso, o chatbot utiliza processamento de linguagem natural (NLP) para com
   },
   {
     id: "2",
-    date: "20 Jan 2026",
+    date: "15 Fev 2026",
     title: "Workshop de Prevenção Comunitária: Relato de Sucesso",
     description: "Reunimos líderes comunitários para discutir estratégias de segurança baseadas em dados e fortalecer a cooperação entre vizinhos.",
     fullText: `
@@ -103,9 +103,7 @@ O evento encerrou às 17h00, com palavras de agradecimento aos participantes e r
 
 De acordo com os organizadores, os objectivos propostos foram plenamente alcançados. A palestra conseguiu sensibilizar os cerca de 250 estudantes presentes sobre a importância da autoprotecção, do diálogo aberto em casa e na escola, e da denúncia como forma de quebrar o ciclo de silêncio que muitas vezes envolve o abuso sexual.
 
-Conclusão
-A actividade foi realizada com êxito, cumprindo as metas estabelecidas pelo Departamento da Acção Social (GEDA). O sucesso da iniciativa reforça a necessidade de continuidade de acções educativas desta natureza junto da comunidade estudantil, contribuindo para a construção de uma cultura de protecção e respeito pelos direitos da criança no ambiente escolar e na sociedade em geral.
- `,
+`,
     image: "/livro.jpeg",
     images: [
       "/WhatsApp Image 2026-03-19 at 8.55.52 PM (1).jpeg",

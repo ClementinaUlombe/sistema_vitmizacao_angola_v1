@@ -30,7 +30,7 @@ const NewsCard = ({ news }: { news: NewsItem }) => {
     if (news.images && news.images.length > 0) {
       const interval = setInterval(() => {
         setCurrentImageIndex((prev) => (prev === news.images!.length - 1 ? 0 : prev + 1));
-      }, 40000); // 40 segundos
+      }, 20000); // 20 segundos
       return () => clearInterval(interval);
     }
   }, [news.images]);
