@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/Logo";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -131,9 +132,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Sidebar */}
       <aside className="w-64 bg-gradient-primary text-primary-foreground p-6 shadow-lg flex flex-col">
         <Link href="/" className="flex items-center gap-3 mb-8 group cursor-pointer">
-          <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center shadow-md group-hover:bg-white/30 transition-all">
-            <span className="text-white font-bold text-xl">VC</span>
-          </div>
+          <Logo size={40} variant="light" />
           <span className="font-semibold text-white text-lg">Vitimização Criminal</span>
         </Link>
 

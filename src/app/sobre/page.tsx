@@ -598,7 +598,7 @@ Conclui-se que a integração entre tecnologias digitais e estudos criminológic
               </CardContent>
 
               <div className="px-6 py-3 bg-slate-50 border-t flex items-center justify-between text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                <span>Safe Angola • Estudo 2025</span>
+                <span>vitimização Angola • Estudo 2025</span>
                 <span className="hidden md:block">Faculdade de Engenharia e Ciências Criminais</span>
               </div>
             </Card>

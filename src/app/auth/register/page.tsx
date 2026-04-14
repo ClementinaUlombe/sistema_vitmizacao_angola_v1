@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SuccessModal from "@/components/SuccessModal"; 
+import { Logo } from "@/components/Logo";
 import {
   Select,
   SelectContent,
@@ -101,7 +102,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <Card className="w-full max-w-lg shadow-2xl border-t-4 border-primary bg-card/95 backdrop-blur-sm">
+    <Card className="w-full max-w-lg shadow-2xl border-t-4 border-primary bg-card/95 backdrop-blur-sm overflow-hidden">
+      <div className="flex justify-center pt-8">
+        <Logo size={80} variant="color" />
+      </div>
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-3xl font-bold text-primary">Criar Nova Conta</CardTitle>
         <CardDescription className="text-base">

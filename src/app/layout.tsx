@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Providers } from "@/components/Providers";
 import { ThemeProvider } from "next-themes";
-import { ThemeToggle } from "@/components/ThemeToggle"; // Import ThemeToggle
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,6 +42,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
+            <LoadingScreen />
             {children}
             <Toaster />
             <Sonner />

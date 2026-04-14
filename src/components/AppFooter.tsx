@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Logo } from "./Logo";
 
 export function AppFooter() {
   return (
@@ -8,9 +9,7 @@ export function AppFooter() {
       <div className="mx-auto max-w-7xl px-6 py-14 grid gap-10 md:grid-cols-4">
         <div className="space-y-3">
                   <Link href="/" className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center">
-                      <span className="text-white font-bold text-xl">VC</span>
-                    </div>
+                    <Logo size={40} variant="light" />
                     <span className="font-semibold">Vitimização Criminal</span>
                   </Link>          <p className="text-sm text-white/80">
             Análise de vitimização e perceção de segurança no Município da Samba.

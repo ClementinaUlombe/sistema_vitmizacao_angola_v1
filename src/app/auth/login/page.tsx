@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Logo } from "@/components/Logo";
 import {
   Select,
   SelectContent,
@@ -61,7 +62,10 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-full max-w-md shadow-2xl border-t-4 border-primary bg-card/95 backdrop-blur-sm">
+    <Card className="w-full max-w-md shadow-2xl border-t-4 border-primary bg-card/95 backdrop-blur-sm overflow-hidden">
+      <div className="flex justify-center pt-8">
+        <Logo size={80} variant="color" />
+      </div>
       <CardHeader>
         <CardTitle className="text-3xl font-bold text-center text-primary">Acesso ao Sistema</CardTitle>
         <CardDescription className="text-center text-base">
