@@ -54,32 +54,35 @@ const GraficoCard = ({ item }: { item: any }) => {
 };
 
 export default function AnaliseDadosPage() {
-  const graficosFixos = [
-    { titulo: "Distribuição por Bairro", imagem: "/BAIRRO.png", descricao: "Densidade por zona do Município.", analise: "O Bairro Gamek lidera em representatividade na amostra atual." },
+  const todosGraficos = [
+    { titulo: "Distribuição por Bairro", imagem: "/BAIRRO.png", descricao: "Densidade por zona do Município.", analise: "O Munícipio da Samba lidera em representatividade na amostra atual." },
     { titulo: "Faixa Etária", imagem: "/IDADE.png", descricao: "Idade dos inquiridos.", analise: "A análise geracional revela padrões distintos de medo do crime." },
     { titulo: "Nível de Escolaridade", imagem: "/ESCOLARIDADE.png", descricao: "Perfil académico.", analise: "Dados mostram a diversidade intelectual da comunidade estudada." },
     { titulo: "Distribuição por Género", imagem: "/GENERO.png", descricao: "Masculino vs Feminino.", analise: "Diferenças marcantes na percepção de segurança noturna." },
     { titulo: "Ocupação Profissional", imagem: "/OCUPAÇÃO.png", descricao: "Atividade principal.", analise: "Trabalhadores e estudantes são os grupos mais ativos na pesquisa." },
     { titulo: "Situação de Residência", imagem: "/RESIDENCIA.png", descricao: "Estabilidade habitacional.", analise: "A permanência longa no bairro fortalece os laços de vizinhança." },
-    { titulo: "Experiência de Vitimização", imagem: "/GEDA.png", descricao: "Crimes ocorridos.", analise: "Este indicador revela a frequência real de incidentes na zona." }
+    { titulo: "Ocorrências nos Últimos Meses", imagem: "/ULTIMOSMESES.png", descricao: "Frequência mensal de incidentes.", analise: "A variação temporal indica picos de criminalidade em períodos específicos." },
+    { titulo: "Tipo de Crime", imagem: "/TIPODECRIME.png", descricao: "Natureza das infrações reportadas.", analise: "A classificação dos delitos ajuda a direcionar estratégias de prevenção." },
+    { titulo: "Taxa de Denúncia", imagem: "/TAXADENUNCIA.png", descricao: "Percentual de casos levados às autoridades.", analise: "A sub-notificação continua a ser um desafio para a estatística criminal." },
+    { titulo: "Sugestões de Medidas", imagem: "/sugestoes de medidas.png", descricao: "Recomendações da comunidade para segurança.", analise: "A participação popular é fundamental para políticas públicas eficazes." },
+    { titulo: "Sensação de Segurança (Noite)", imagem: "/SENSACÃODESEGURANCA A NOITE.png", descricao: "Percepção de risco no período nocturno.", analise: "A iluminação pública influencia diretamente no sentimento de segurança." },
+    { titulo: "Sensação de Segurança Geral", imagem: "/SENSAÇÃODASEGURANCA.png", descricao: "Avaliação subjetiva da tranquilidade pública.", analise: "O clima de segurança geral reflete a qualidade de vida no município." },
+    { titulo: "Relação entre Vizinhos", imagem: "/relacao entre vizinhos.png", descricao: "Interação e coesão social no bairro.", analise: "Fortes laços comunitários atuam como uma barreira natural contra o crime." },
+    { titulo: "Presença Policial", imagem: "/presenca policial.png", descricao: "Visibilidade e patrulhamento na zona.", analise: "A frequência das patrulhas é correlacionada com a redução da percepção de medo." },
+    { titulo: "Motivo da Denúncia", imagem: "/MOTIVODENDENUCIA.png", descricao: "Fatores que impulsionam o reporte criminal.", analise: "A busca por justiça e recuperação de bens são os principais motores." },
+    { titulo: "Identificação do Estudo", imagem: "/IDENTIFICACAODAEMPRESA.png", descricao: "Dados institucionais da pesquisa.", analise: "Informações sobre a metodologia e origem dos dados apresentados." },
+    { titulo: "Horário das Ocorrências", imagem: "/horáriodia.png", descricao: "Momentos de maior incidência criminal.", analise: "Identificar horários críticos permite otimizar o policiamento preventivo." },
+    { titulo: "Frequência de Crimes", imagem: "/frequenciarecebida.png", descricao: "Recorrência de vitimização na amostra.", analise: "A análise da recorrência ajuda a identificar vítimas em potencial." },
+    { titulo: "Eficácia da Polícia", imagem: "/eficacia da policia.png", descricao: "Desempenho percebido das forças de ordem.", analise: "A avaliação da eficiência policial varia de acordo com o tempo de resposta." },
+    { titulo: "Confiança no Tratamento", imagem: "/confiaca no tratamento policial.png", descricao: "Expectativa de justiça no atendimento.", analise: "O tratamento humanizado nas esquadras aumenta a taxa de denúncias." },
+    { titulo: "Comparativo Noite e Dia", imagem: "/COMPARATIVO NOITE E DIA.png", descricao: "Diferenças perceptivas por período.", analise: "Contrastes significativos entre a percepção diurna e nocturna." },
+    { titulo: "Comparação Internacional", imagem: "/COMPARAÇÃOINTERNACIONAL.png", descricao: "Enquadramento global dos indicadores.", analise: "Como o Município da Samba se posiciona em relação a padrões globais." },
+    { titulo: "Anos Anteriores", imagem: "/COMPARACAO ANOS ANTERIORES.png", descricao: "Evolução temporal da segurança.", analise: "Tendências históricas que indicam melhoria ou agravamento da situação." },
+    { titulo: "Interação Policial", imagem: "/como foi a interacao com a policia.png", descricao: "Experiência direta com as autoridades.", analise: "O feedback sobre a interação policial é vital para o treino institucional." },
+    { titulo: "Categoria de Delitos", imagem: "/categorai.png", descricao: "Agrupamento das ocorrências por gravidade.", analise: "Diferenciação necessária entre crimes contra a propriedade e contra as pessoas." },
+    { titulo: "Avaliação do Bairro", imagem: "/avaliacao no bairro.png", descricao: "Classificação da segurança local.", analise: "A percepção local é o melhor termómetro da eficácia das medidas de segurança." },
+    { titulo: "Avaliação de Gravidade", imagem: "/avaliacao de gravidade.png", descricao: "Peso percebido de cada incidente.", analise: "Impacto psicológico e material dos crimes na vida das vítimas." }
   ];
-
-  // Gerar mais 15 espaços (Placeholders) para totalizar os 22 prometidos
-  const titulosExtra = [
-    "Tipo de Crime", "Horário das Ocorrências", "Denúncias Efetuadas", "Motivos da Não Denúncia",
-    "Confiança na Polícia", "Iluminação Pública", "Patrulhamento Policial", "Medidas de Segurança",
-    "Opinião sobre Penas", "Medo de Andar Sozinho", "Roubos de Telemóvel", "Furtos em Residências",
-    "Agressões Físicas", "Apoio da Vizinhança", "Mudança de Comportamento"
-  ];
-
-  const graficosExtras = titulosExtra.map((titulo, i) => ({
-    titulo: titulo,
-    imagem: `/grafico-extra-${i+1}.png`,
-    descricao: "Análise estatística complementar.",
-    analise: "Aguardando análise detalhada da especialista para este indicador específico."
-  }));
-
-  const todosGraficos = [...graficosFixos, ...graficosExtras];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -89,7 +92,7 @@ export default function AnaliseDadosPage() {
           <div className="text-center mb-16 space-y-4">
             <h1 className="text-4xl sm:text-6xl font-bold text-foreground">Análise Detalhada de Gráficos</h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Apresentação científica dos 22 indicadores de vitimização. Explore cada gráfico para uma compreensão profunda da segurança no Município da Samba.
+              Apresentação científica dos 28 indicadores de vitimização. Explore cada gráfico para uma compreensão profunda da segurança no Município da Samba.
             </p>
           </div>
 
