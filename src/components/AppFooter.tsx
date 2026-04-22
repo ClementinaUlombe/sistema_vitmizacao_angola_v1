@@ -21,7 +21,8 @@ export function AppFooter() {
             <li><Link href="/sobre" className="hover:text-white transition-colors">Sobre o Estudo</Link></li>
             <li><Link href="/quem-somos" className="hover:text-white transition-colors">Quem Somos</Link></li>
             <li><Link href="/metodologia" className="hover:text-white transition-colors">Metodologia</Link></li>
-            <li><Link href="/analise-dados" className="hover:text-white transition-colors">Análise de Dados</Link></li>
+            <li><Link href="/analise-dados" className="hover:text-white transition-colors">Análise de Gráficos</Link></li>
+            <li><Link href="/analise-tabelas" className="hover:text-white transition-colors">Análise das Tabelas</Link></li>
           </ul>
         </div>
         <div>

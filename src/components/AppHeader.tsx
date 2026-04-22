@@ -7,6 +7,14 @@ import NotificationBell from "@/components/NotificationBell";
 import { useState, useEffect } from "react";
 import { Logo } from "./Logo";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
+
 export function AppHeader() {
   const [userName, setUserName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,7 +39,21 @@ export function AppHeader() {
           <Link href="/" className="hover:opacity-80 transition-opacity">Início</Link>
           <Link href="/sobre" className="hover:opacity-80 transition-opacity">Sobre o Estudo</Link>
           <Link href="/metodologia" className="hover:opacity-80 transition-opacity">Metodologia</Link>
-          <Link href="/analise-dados" className="hover:opacity-80 transition-opacity">Análise de Dados</Link>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1 hover:opacity-80 transition-opacity outline-none bg-transparent border-none text-white font-inherit cursor-pointer">
+              Análise de Dados <ChevronDown className="h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="bg-white text-primary border-none shadow-xl">
+              <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted focus:bg-muted">
+                <Link href="/analise-dados" className="w-full">Análise de Gráficos</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted focus:bg-muted">
+                <Link href="/analise-tabelas" className="w-full">Análise das Tabelas</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Link href="/quem-somos" className="hover:opacity-80 transition-opacity">Quem Somos</Link>
           {isLoggedIn ? (
             <Link href="/dashboard" passHref>
