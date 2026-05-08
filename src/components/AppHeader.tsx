@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Presentation } from "lucide-react";
 
 export function AppHeader() {
   const [userName, setUserName] = useState("");
@@ -68,6 +68,11 @@ export function AppHeader() {
               </Button>
             </Link>
           )}
+          <Link href="/conclusao" className="ml-4">
+            <Button variant="ghost" size="icon" className="bg-white/10 text-white hover:bg-white/20 transition-all border border-white/20 rounded-full h-9 w-9" title="Ver Conclusão do TCC">
+              <Presentation className="h-4 w-4" />
+            </Button>
+          </Link>
           <ThemeToggle />
         </nav>
       </div>

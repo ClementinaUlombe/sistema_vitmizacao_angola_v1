@@ -1,7 +1,15 @@
 {
-  "/page": "app/page.js",
-  "/analise-tabelas/page": "app/analise-tabelas/page.js",
-  "/sobre/page": "app/sobre/page.js",
-  "/analise-dados/page": "app/analise-dados/page.js",
-  "/dashboard/users/page": "app/dashboard/users/page.js"
+  "/api/data/summary/route": "app/api/data/summary/route.js",
+  "/conclusao/page": "app/conclusao/page.js",
+  "/conclusao/obrigada/page": "app/conclusao/obrigada/page.js",
+  "/api/notifications/route": "app/api/notifications/route.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/auth/users/route": "app/api/auth/users/route.js",
+  "/api/reports/route": "app/api/reports/route.js",
+  "/api/data/residents-by-age-group/route": "app/api/data/residents-by-age-group/route.js",
+  "/auth/login/page": "app/auth/login/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/occurrences/page": "app/dashboard/occurrences/page.js",
+  "/dashboard/profile/page": "app/dashboard/profile/page.js",
+  "/dashboard/graphs/page": "app/dashboard/graphs/page.js"
 }

@@ -30,7 +30,7 @@ export function AppFooter() {
           <ul className="text-sm text-white/80 space-y-2">
             <li><Link href="/auth/login" className="hover:text-white transition-colors">Importação Excel</Link></li>
             <li><Link href="/auth/login" className="hover:text-white transition-colors">Dashboard de Gráficos</Link></li>
-            <li><Link href="/auth/login" className="hover:text-white transition-colors">Chatbot Inteligente</Link></li>
+            <li><Link href="https://indice.insutec.ao/" className="hover:text-white transition-colors">Chatbot Inteligente</Link></li>
           </ul>
         </div>
         <div>

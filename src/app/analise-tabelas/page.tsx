@@ -61,121 +61,121 @@ const TabelaSecao = ({ item }: { item: any }) => {
 export default function AnaliseTabelasPage() {
   const tabelas20 = [
     { 
-      titulo: "Distribuição por Faixa Etária", 
+      titulo: "1. Distribuição por Faixa Etária", 
       imagem: "/distribuicaofaixaetaria.png", 
       descricao: "Perfil etário dos cidadãos inquiridos no estudo.", 
       analise: "A pirâmide etária da amostra indica uma base jovem, o que exige políticas de segurança focadas na juventude e na prevenção primária."
     },
     { 
-      titulo: "Distribuição por Género", 
+      titulo: "2. Distribuição por Género", 
       imagem: "/tabelagenero.png", 
       descricao: "Composição da amostra por género biológico.", 
       analise: "A representação equilibrada entre os géneros permite uma visão holística das preocupações de segurança que afectam tanto homens como mulheres."
     },
     { 
-      titulo: "Distribuição por Bairro", 
+      titulo: "3. Distribuição por Bairro", 
       imagem: "/tabelabairro.png", 
       descricao: "Origem geográfica dos respondentes dentro do município.", 
       analise: "A dispersão geográfica dos dados cobre as principais zonas críticas, permitindo uma análise espacial da criminalidade em Samba."
     },
     { 
-      titulo: "Nível de Escolaridade", 
-      imagem: "/tabelaescolaridade.png", 
-      descricao: "Perfil instrucional dos inquiridos.", 
-      analise: "Observa-se que o nível de escolaridade influencia directamente a percepção crítica sobre a eficácia das autoridades e o acesso à justiça."
-    },
-    { 
-      titulo: "Ocupação Profissional", 
+      titulo: "4. Ocupação Profissional", 
       imagem: "/tabelaocupacao.png", 
       descricao: "Situação laboral e ocupacional da amostra.", 
       analise: "Trabalhadores e estudantes constituem os grupos com maior mobilidade urbana, sendo consequentemente os mais expostos a riscos de rua."
     },
     { 
-      titulo: "Situação de Residência", 
+      titulo: "5. Situação de Residência", 
       imagem: "/tabelaresidencia.png", 
       descricao: "Relação de moradia dos participantes.", 
       analise: "A estabilidade residencial é um factor chave para o fortalecimento da vigilância informal e da coesão comunitária."
     },
     { 
-      titulo: "Ocorrências nos Últimos 12 Meses", 
+      titulo: "6. Nível de Escolaridade", 
+      imagem: "/tabelaescolaridade.png", 
+      descricao: "Perfil instrucional dos inquiridos.", 
+      analise: "Observa-se que o nível de escolaridade influencia directamente a percepção crítica sobre a eficácia das autoridades e o acesso à justiça."
+    },
+    { 
+      titulo: "7. Ocorrências nos Últimos 12 Meses", 
       imagem: "/tabela 12mese.png", 
       descricao: "Histórico de crimes sofridos no último ano.", 
       analise: "Este indicador anual é fundamental para medir a prevalência criminal e a eficácia das políticas de segurança implementadas."
     },
     { 
-      titulo: "Perfil das Vítimas", 
+      titulo: "8. Perfil das Vítimas", 
       imagem: "/tabelavitimas.png", 
       descricao: "Dados demográficos específicos das vítimas identificadas.", 
       analise: "A caracterização detalhada das vítimas permite o desenho de estratégias de protecção focadas nos grupos mais vulneráveis."
     },
     { 
-      titulo: "Índice de Revitimização", 
+      titulo: "9. Índice de Revitimização", 
       imagem: "/tabelarevitimizacao.png", 
       descricao: "Frequência com que uma pessoa é vítima repetidamente.", 
       analise: "Elevados índices de revitimização sugerem a necessidade de intervenções policiais mais incisivas em locais e alvos específicos."
     },
     { 
-      titulo: "Interação com Autoridades", 
+      titulo: "10. Interação com Autoridades", 
       imagem: "/tabelaautoridades.png", 
       descricao: "Avaliação da resposta e atendimento das forças de segurança.", 
       analise: "A qualidade do atendimento nas esquadras é o principal factor determinante para a confiança institucional do cidadão."
     },
     { 
-      titulo: "Decisão de Denunciar", 
+      titulo: "11. Decisão de Denunciar", 
       imagem: "/tabeladenunciar.png", 
       descricao: "Factores que impulsionam ou inibem a denúncia oficial.", 
       analise: "A sub-notificação criminal está fortemente ligada ao cepticismo quanto à resolutividade dos casos pelas autoridades."
     },
     { 
-      titulo: "Detalhes da Ocorrência", 
+      titulo: "12. Detalhes da Ocorrência", 
       imagem: "/tabelaocorrencia.png", 
       descricao: "Circunstâncias, locais e períodos dos incidentes.", 
       analise: "A concentração de crimes na via pública demonstra a necessidade de reforço no patrulhamento ostensivo e iluminação."
     },
     { 
-      titulo: "Pessoas Envolvidas", 
+      titulo: "13. Pessoas Envolvidas", 
       imagem: "/tabrlaenvolicidas.png", 
       descricao: "Perfil dos agressores ou suspeitos identificados.", 
       analise: "Os dados indicam a necessidade de programas de reintegração social focados em jovens em situação de risco."
     },
     { 
-      titulo: "Categorias de Delito", 
+      titulo: "14. Categorias de Delito", 
       imagem: "/tabelasorifads.png", 
       descricao: "Distribuição por gravidade e tipologia criminal.", 
       analise: "O predomínio de furtos e roubos aponta para uma criminalidade com motivações essencialmente económicas."
     },
     { 
-      titulo: "Coesão e Associações", 
+      titulo: "15. Coesão e Associações", 
       imagem: "/tabelaassociacoes.png", 
       descricao: "Participação em grupos e redes de apoio comunitário.", 
       analise: "Bairros com maior participação em associações tendem a apresentar maior resiliência contra a criminalidade comum."
     },
     { 
-      titulo: "Análise Circular das Horas", 
+      titulo: "16. Análise Circular das Horas", 
       imagem: "/tabelacircular.png", 
       descricao: "Ciclo temporal da incidência criminal nas 24 horas.", 
       analise: "A identificação de horários críticos permite a optimização dos recursos policiais nos períodos de maior risco."
     },
     { 
-      titulo: "Insegurança Nocturna", 
+      titulo: "17. Insegurança Nocturna", 
       imagem: "/tabelanoite.png", 
       descricao: "Percepção de perigo especificamente no período da noite.", 
       analise: "O sentimento de insegurança nocturna é um factor limitador da liberdade de movimento e do desenvolvimento económico local."
     },
     { 
-      titulo: "Segurança Geral", 
+      titulo: "18. Segurança Geral", 
       imagem: "/tabelasegurnaca.png", 
       descricao: "Sentimento global de tranquilidade pública no município.", 
       analise: "A avaliação global da segurança reflecte o impacto directo das políticas públicas na vida quotidiana do cidadão."
     },
     { 
-      titulo: "Factores de Insegurança", 
+      titulo: "19. Factores de Insegurança", 
       imagem: "/tabelainseguranca.png", 
       descricao: "Principais causas apontadas para o sentimento de medo.", 
       analise: "A falta de iluminação e o policiamento insuficiente emergem como os principais factores que alimentam o medo do crime."
     },
     { 
-      titulo: "Medidas de Protecção Adoptadas", 
+      titulo: "20. Medidas de Protecção Adoptadas", 
       imagem: "/tabrlaadoptadas.png", 
       descricao: "Estratégias de auto-protecção utilizadas pelos moradores.", 
       analise: "O investimento privado em segurança demonstra a transferência da responsabilidade de protecção do Estado para o indivíduo."

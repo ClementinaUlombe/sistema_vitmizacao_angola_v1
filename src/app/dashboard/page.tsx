@@ -59,26 +59,26 @@ export default function DashboardPage() {
     { title: "Upload Excel", icon: Database, href: "/dashboard/excel-upload", color: "text-blue-500", bg: "bg-blue-50" },
     { title: "Ver Gráficos", icon: BarChart3, href: "/dashboard/graphs", color: "text-purple-500", bg: "bg-purple-50" },
     { title: "Ocorrências", icon: ShieldAlert, href: "/dashboard/occurrences", color: "text-red-500", bg: "bg-red-50" },
-    { title: "Chatbot IA", icon: FileText, href: "/dashboard/chatbot", color: "text-green-500", bg: "bg-green-50" },
+    { title: "Chatbot IA", icon: FileText, href: "https://indice.insutec.ao/", color: "text-green-500", bg: "bg-green-50" },
   ];
 
   const researcherActions = [
     { title: "Lançamento", icon: Plus, href: "/dashboard/data-entry", color: "text-blue-500", bg: "bg-blue-50" },
     { title: "Ver Gráficos", icon: BarChart3, href: "/dashboard/graphs", color: "text-purple-500", bg: "bg-purple-50" },
     { title: "Estatísticas", icon: ShieldAlert, href: "/dashboard/analytics", color: "text-red-500", bg: "bg-red-50" },
-    { title: "Chatbot IA", icon: FileText, href: "/dashboard/chatbot", color: "text-green-500", bg: "bg-green-50" },
+    { title: "Chatbot IA", icon: FileText, href: "https://indice.insutec.ao/", color: "text-green-500", bg: "bg-green-50" },
   ];
 
   const policeActions = [
     { title: "Ocorrências", icon: ShieldAlert, href: "/dashboard/occurrences", color: "text-red-500", bg: "bg-red-50" },
     { title: "Ver Gráficos", icon: BarChart3, href: "/dashboard/graphs", color: "text-purple-500", bg: "bg-purple-50" },
-    { title: "Chatbot IA", icon: FileText, href: "/dashboard/chatbot", color: "text-green-500", bg: "bg-green-50" },
+    { title: "Chatbot IA", icon: FileText, href: "https://indice.insutec.ao/", color: "text-green-500", bg: "bg-green-50" },
   ];
 
   const citizenActions = [
     { title: "Enviar Relato", icon: Plus, href: "/dashboard/occurrences", color: "text-blue-500", bg: "bg-blue-50" },
     { title: "Estatísticas", icon: BarChart3, href: "/dashboard/graphs", color: "text-purple-500", bg: "bg-purple-50" },
-    { title: "Chatbot Crime", icon: FileText, href: "/dashboard/chatbot", color: "text-green-500", bg: "bg-green-50" },
+    { title: "Chatbot Crime", icon: FileText, href: "https://indice.insutec.ao/", color: "text-green-500", bg: "bg-green-50" },
   ];
 
   const getQuickActions = () => {

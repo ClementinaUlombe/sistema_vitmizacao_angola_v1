@@ -22,6 +22,7 @@ import {
   BookOpen,
   AlertCircle,
   Share2,
+  Presentation,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -85,7 +86,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Gerir Base de Dados", href: "/dashboard/database-management", icon: Database },
     { name: "Backup", href: "/dashboard/backup", icon: Download },
     { name: "Upload Excel", href: "/dashboard/excel-upload", icon: Upload },
-    { name: "Chatbot", href: "/dashboard/chatbot", icon: MessageSquare },
+    { name: "Chatbot", href: "https://indice.insutec.ao/", icon: MessageSquare },
     { name: "Estatísticas Públicas", href: "/dashboard/graphs", icon: BarChart3 },
   ];
 
@@ -96,7 +97,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Status de Lançamento", href: "/dashboard/analytics", icon: BarChart3 },
     { name: "Estatísticas Públicas", href: "/dashboard/graphs", icon: BarChart3 },
     { name: "Biblioteca Científica", href: "/dashboard/data-query", icon: BookOpen },
-    { name: "Chatbot", href: "/dashboard/chatbot", icon: MessageSquare },
+    { name: "Chatbot", href: "https://indice.insutec.ao/", icon: MessageSquare },
   ];
 
   const policeMenuItems = [
@@ -104,7 +105,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "O Meu Perfil", href: "/dashboard/profile", icon: User },
     { name: "Gestão de Ocorrências", href: "/dashboard/occurrences", icon: AlertCircle },
     { name: "Estatísticas Públicas", href: "/dashboard/graphs", icon: BarChart3 },
-    { name: "Chatbot Auxiliar", href: "/dashboard/chatbot", icon: MessageSquare },
+    { name: "Chatbot Auxiliar", href: "https://indice.insutec.ao/", icon: MessageSquare },
   ];
 
   const citizenMenuItems = [
@@ -112,7 +113,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "O Meu Perfil", href: "/dashboard/profile", icon: User },
     { name: "Enviar Relato", href: "/dashboard/occurrences", icon: Share2 },
     { name: "Estatísticas Públicas", href: "/dashboard/graphs", icon: BarChart3 },
-    { name: "Chatbot Crime", href: "/dashboard/chatbot", icon: MessageSquare },
+    { name: "Chatbot Crime", href: "https://indice.insutec.ao/", icon: MessageSquare },
   ];
 
   const getMenuItems = () => {
@@ -172,6 +173,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <Link href="/conclusao">
+              <Button variant="ghost" size="icon" className="bg-orange-50 text-orange-600 hover:bg-orange-100 transition-all rounded-full h-9 w-9" title="Ver Conclusão do TCC">
+                <Presentation className="h-4 w-4" />
+              </Button>
+            </Link>
             <ThemeToggle />
             <NotificationBell />
             <Button 

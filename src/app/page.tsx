@@ -625,17 +625,19 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-accent/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <CardHeader>
-                  <div className="text-4xl mb-2">🤖</div>
-                  <CardTitle className="text-accent">Chatbot Inteligente</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-foreground/80">
-                    IA conversacional para consultar dados, gerar relatórios e obter insights sobre segurança
-                  </p>
-                </CardContent>
-              </Card>
+              <Link href="https://indice.insutec.ao/" className="block">
+                <Card className="bg-card border-accent/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+                  <CardHeader>
+                    <div className="text-4xl mb-2">🤖</div>
+                    <CardTitle className="text-accent">Chatbot Inteligente</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-foreground/80">
+                      IA conversacional para consultar dados, gerar relatórios e obter insights sobre segurança
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
             </div>
           </div>
         </div>
