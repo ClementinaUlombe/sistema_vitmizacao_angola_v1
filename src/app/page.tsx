@@ -7,12 +7,9 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import HeroSlideshow from "@/components/HeroSlideshow";
 import NumberCounter from "@/components/NumberCounter";
-import ExcelUpload from "@/components/ExcelUpload";
-import ChatbotInterface from "@/components/ChatbotInterface";
-import GraphDisplay from "@/components/GraphDisplay";
-import ReportModal from "@/components/ReportModal";
 import DenunciaModal from "@/components/DenunciaModal";
 import ParallaxSection from "@/components/ParallaxSection";
+import SuccessModal from "@/components/SuccessModal";
 import { useState, useEffect } from "react";
 import { newsData, NewsItem } from "@/lib/news-data";
 
@@ -71,15 +68,15 @@ const NewsCard = ({ news }: { news: NewsItem }) => {
   );
 };
 
-const heroHands = "/hero-hands.jpg";
-const heroBooks = "/hero-books.jpg";
-const heroTech = "/hero-tech.jpg";
-const parallaxBg = "/parallax-bg.jpg";
-
 const Page = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
+  
+  // Success Modal State
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successTitle, setSuccessTitle] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -95,7 +92,7 @@ const Page = () => {
           setSummaryData(data);
         } else {
           console.error("Failed to fetch summary data:", response.statusText);
-          setSummaryData({ // Fallback to 0s if API fails
+          setSummaryData({
             totalResidents: 0,
             victimizationRate: 0,
             unreportedCrimesRate: 0,
@@ -104,7 +101,7 @@ const Page = () => {
         }
       } catch (error) {
         console.error("Error fetching summary data:", error);
-        setSummaryData({ // Fallback to 0s if API fails
+        setSummaryData({
           totalResidents: 0,
           victimizationRate: 0,
           unreportedCrimesRate: 0,
@@ -140,17 +137,20 @@ const Page = () => {
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção de Segurança            </h1>
+              Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção de Segurança
+            </h1>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" className="text-base shadow-lg hover-scale">
                 Sobre o Estudo
               </Button>
-              <ReportModal>
-                <Button size="lg" className="text-base bg-blue-500 text-white hover:bg-blue-600 shadow-lg hover-scale">
-                  Reporte de Crimes
-                </Button>
-              </ReportModal>
+              <Button 
+                size="lg" 
+                className="text-base bg-blue-500 text-white hover:bg-blue-600 shadow-lg hover-scale"
+                onClick={() => setIsModalOpen(true)}
+              >
+                Reporte de Crimes
+              </Button>
               {isLoggedIn ? (
                 <Link href="/dashboard" passHref>
                   <Button size="lg" className="text-base bg-purple-light text-purple-deep hover:bg-purple-deep hover:text-white shadow-lg hover-scale">
@@ -247,12 +247,10 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
             Destaques
           </h2>
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Imagens (Lado Esquerdo) */}
             <div className="relative h-[450px] rounded-2xl overflow-hidden shadow-2xl group border-4 border-primary/10">
                <HeroSlideshow images={destaqueImages} intervalMs={3500} />
                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
             </div>
-            {/* Texto (Lado Direito) */}
             <div className="space-y-6">
               <p className="text-xl text-foreground/80 leading-relaxed font-medium">
                 Inovação e Compromisso com a Segurança de Angola
@@ -290,7 +288,7 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
         </div>
       </section>
 
-      {/* Seção Conselhos de Prevenção (Premium Refined) */}
+      {/* Seção Conselhos de Prevenção */}
       <section className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="bg-gradient-hero rounded-[3rem] p-10 sm:p-20 text-white relative overflow-hidden shadow-2xl">
@@ -339,12 +337,7 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
         </div>
       </section>
 
-
-
-      {/* Parceiros Institucionais */}
-  
-
-      {/* Dados da Investigação */}
+      {/* Resultados da Investigação */}
       <section id="dados" className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4 text-center">
@@ -541,27 +534,12 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
               </CardContent>
             </Card>
           </div>
-
-          {/* Metodologia */}
-        
         </div>
       </section>
 
       {/* Seção O Que Fazemos */}
       <section className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4 text-center">
-          </h2>
-          <p className="text-center text-muted-foreground mb-12 text-lg max-w-3xl mx-auto">
-          </p>
-
-          <div className="mb-12 max-w-4xl mx-auto">
-            <p className="text-lg text-foreground/85 mb-4 leading-relaxed">
-            </p>
-            <p className="text-lg text-foreground/85 leading-relaxed">
-            </p>
-          </div>
-
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-12">
             {[
               {
@@ -597,7 +575,6 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
             ))}
           </div>
 
-          {/* Funcionalidades do Sistema */}
           <div className="mt-16">
             <h3 className="text-2xl font-bold text-primary mb-8 text-center">Funcionalidades do Sistema</h3>
             <div className="grid gap-6 md:grid-cols-3">
@@ -643,15 +620,7 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
         </div>
       </section>
 
-      {/* O que Fazemos - Seção Parallax com Imagem */}
       <ParallaxSection />
-
-      {/* Seção de Ferramentas */}
-      <section className="bg-gradient-light py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Components moved to dashboard */}
-        </div>
-      </section>
 
       {/* Campanha #OlhosAbertos */}
       <section className="bg-gradient-primary py-16 sm:py-24 text-white">
@@ -668,7 +637,6 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
         </div>
       </section>
 
-          {/* Seção FAQ */}
       <section className="bg-gradient-light py-20 sm:py-32">
         <div className="mx-auto max-w-4xl px-6">
           <h2 className="text-3xl sm:text-5xl font-bold text-center mb-16">Perguntas Frequentes</h2>
@@ -690,7 +658,7 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
           </div>
         </div>
       </section>
-      {/* Parceiros Institucionais */}
+
       <section className="bg-background py-24 border-t border-border/10">
         <div className="mx-auto max-w-7xl px-6 text-center">
           <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-16">Possíveis Parceiros e Apoio</p>
@@ -717,8 +685,23 @@ Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção
           </div>
         </div>
       </section>
+
       <AppFooter />
-      <DenunciaModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <DenunciaModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSuccess={(title, message) => {
+          setSuccessTitle(title);
+          setSuccessMessage(message);
+          setShowSuccess(true);
+        }}
+      />
+      <SuccessModal
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title={successTitle}
+        message={successMessage}
+      />
     </div>
   );
 };

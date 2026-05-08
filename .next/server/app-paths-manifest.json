@@ -1,15 +1,12 @@
 {
-  "/api/data/summary/route": "app/api/data/summary/route.js",
-  "/conclusao/page": "app/conclusao/page.js",
-  "/conclusao/obrigada/page": "app/conclusao/obrigada/page.js",
   "/api/notifications/route": "app/api/notifications/route.js",
   "/api/auth/login/route": "app/api/auth/login/route.js",
-  "/api/auth/users/route": "app/api/auth/users/route.js",
-  "/api/reports/route": "app/api/reports/route.js",
-  "/api/data/residents-by-age-group/route": "app/api/data/residents-by-age-group/route.js",
+  "/api/data/summary/route": "app/api/data/summary/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/data/route": "app/api/data/route.js",
   "/auth/login/page": "app/auth/login/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/dashboard/occurrences/page": "app/dashboard/occurrences/page.js",
-  "/dashboard/profile/page": "app/dashboard/profile/page.js",
-  "/dashboard/graphs/page": "app/dashboard/graphs/page.js"
+  "/dashboard/data-entry/page": "app/dashboard/data-entry/page.js",
+  "/dashboard/backup/page": "app/dashboard/backup/page.js",
+  "/dashboard/report-creation/page": "app/dashboard/report-creation/page.js",
+  "/dashboard/page": "app/dashboard/page.js"
 }

@@ -309,6 +309,11 @@ export default function OccurrencesPage() {
           setIsModalOpen(false);
           fetchReports();
         }}
+        onSuccess={(title, message) => {
+          setSuccessTitle(title);
+          setSuccessMessage(message);
+          setShowSuccess(true);
+        }}
       />
 
       <ReportModal 

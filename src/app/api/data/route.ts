@@ -156,6 +156,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const {
       residentNumber,
+      name,
       ageGroup,
       gender,
       occupation,
@@ -172,30 +173,51 @@ export async function POST(request: Request) {
       researcherId,
     } = body;
 
+    // Validação de campos obrigatórios conforme o schema.prisma
+    if (!residentNumber || !ageGroup || !gender || !neighborhood) {
+      return NextResponse.json(
+        { message: "Campos obrigatórios em falta: Número, Bairro, Género ou Faixa Etária." },
+        { status: 400 }
+      );
+    }
+
+    // Verificar se o número de inquérito já existe para evitar erro 500 de constraint única
+    const existing = await prisma.resident.findUnique({
+      where: { residentNumber }
+    });
+    
+    if (existing) {
+      return NextResponse.json(
+        { message: "Já existe um inquérito registado com o número #" + residentNumber },
+        { status: 400 }
+      );
+    }
+
     const resident = await prisma.resident.create({
       data: {
         residentNumber,
+        name,
         ageGroup,
         gender,
         occupation,
         residenceTime,
         neighborhood,
         educationLevel,
-        researcherId: researcherId ? parseInt(researcherId) : null,
+        researcherId: researcherId ? parseInt(researcherId.toString()) : null,
         status: "PENDENTE",
         victimizations: {
           create: {
-            wasVictim,
-            crimeGeneral,
-            reportedCrime,
-            crimeFrequency,
+            wasVictim: wasVictim === true || wasVictim === 'true',
+            crimeGeneral: crimeGeneral || null,
+            reportedCrime: reportedCrime === true || reportedCrime === 'true',
+            crimeFrequency: crimeFrequency || "Nunca",
           },
         },
         securityPerceptions: {
           create: {
-            daySecurity,
-            nightSecurity,
-            localPoliceTrustLevel,
+            daySecurity: daySecurity || "Seguro",
+            nightSecurity: nightSecurity || "Inseguro",
+            localPoliceTrustLevel: localPoliceTrustLevel || "Média",
           },
         },
       },
@@ -211,10 +233,7 @@ export async function POST(request: Request) {
     });
 
     // Buscar nome do residente para a notificação
-    let residentName = resident.residentNumber;  // Fallback: usar número do residente
-    if (resident.name) {
-      residentName = resident.name;  // Se tiver nome, usa o nome
-    }
+    const displayResidentName = name || residentNumber;
 
     for (const admin of adminUsers) {
       await prisma.notification.create({
@@ -222,7 +241,7 @@ export async function POST(request: Request) {
           userId: admin.id,
           type: "RESEARCHER_SUBMISSION",
           title: "Novo Lançamento de Inquérito",
-          message: `${residentName} foi inquirido e foi enviado um novo lançamento: #${resident.residentNumber}`,
+          message: `${displayResidentName} foi inquirido e foi enviado um novo lançamento: #${resident.residentNumber}`,
           link: "/dashboard/data-entry?admin=true"
         }
       });
@@ -232,7 +251,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error("Error creating resident:", error);
     return NextResponse.json(
-      { message: "Erro ao salvar lançamento: " + error.message },
+      { message: "Erro ao salvar lançamento: " + (error.message || "Erro interno") },
       { status: 500 }
     );
   }

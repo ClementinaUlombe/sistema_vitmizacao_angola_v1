@@ -21,12 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import SuccessModal from "@/components/SuccessModal";
 
 interface ReportModalProps {
   children?: React.ReactNode;
   isOpen?: boolean;
   onClose?: () => void;
+  onSuccess?: (title: string, message: string) => void;
   readOnly?: boolean;
   report?: any;
 }
@@ -56,7 +56,7 @@ interface FormData {
   };
 }
 
-const ReportModal: React.FC<ReportModalProps> = ({ children, isOpen: externalOpen, onClose, readOnly = false, report }) => {
+const ReportModal: React.FC<ReportModalProps> = ({ children, isOpen: externalOpen, onClose, onSuccess, readOnly = false, report }) => {
   const [internalOpen, setInternalOpen] = useState(false);
   const isOpen = externalOpen !== undefined ? externalOpen : internalOpen;
   
@@ -128,7 +128,6 @@ const ReportModal: React.FC<ReportModalProps> = ({ children, isOpen: externalOpe
   }, [isOpen, readOnly, report]);
 
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -231,7 +230,10 @@ const ReportModal: React.FC<ReportModalProps> = ({ children, isOpen: externalOpe
       });
 
       handleOpenChange(false);
-      setShowSuccessModal(true);
+      
+      if (onSuccess) {
+        onSuccess("Relato Enviado com Sucesso!", "A sua ocorrência foi registada e encaminhada para a Polícia do Município de Samba para análise.");
+      }
     } catch (error) {
       console.error("Error:", error);
       setStatus("error");
@@ -241,106 +243,97 @@ const ReportModal: React.FC<ReportModalProps> = ({ children, isOpen: externalOpe
   };
 
   return (
-    <>
-      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-        {children && <DialogTrigger asChild>{children}</DialogTrigger>}
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Reporte de Crime</DialogTitle>
-            <DialogDescription>
-              Preencha o formulário oficial de denúncia. Seus dados serão tratados pela polícia com total sigilo.
-            </DialogDescription>
-          </DialogHeader>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Reporte de Crime</DialogTitle>
+          <DialogDescription>
+            Preencha o formulário oficial de denúncia. Seus dados serão tratados pela polícia com total sigilo.
+          </DialogDescription>
+        </DialogHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
-              <h3 className="font-semibold text-lg border-b pb-2">🔹 Dados da Pessoa</h3>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg border-b pb-2">🔹 Dados da Pessoa</h3>
+            <div className="space-y-2">
+              <Label htmlFor="name">Nome (Opcional)</Label>
+              <Input id="name" value={formData.name} onChange={handleChange} placeholder="Seu nome completo" disabled={readOnly} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Nome (Opcional)</Label>
-                <Input id="name" value={formData.name} onChange={handleChange} placeholder="Seu nome completo" disabled={readOnly} />
+                <Label htmlFor="age">Idade</Label>
+                <Input id="age" type="number" value={formData.age} onChange={handleChange} placeholder="Ex: 25" disabled={readOnly} />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="age">Idade</Label>
-                  <Input id="age" type="number" value={formData.age} onChange={handleChange} placeholder="Ex: 25" disabled={readOnly} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="gender">Género</Label>
-                  <Select value={formData.gender} onValueChange={(v) => handleSelectChange("gender", v)} disabled={readOnly}>
-                    <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="masculino">Masculino</SelectItem>
-                      <SelectItem value="feminino">Feminino</SelectItem>
-                      <SelectItem value="outro">Outro</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="occupation">Ocupação</Label>
-                  <Input id="occupation" value={formData.occupation} onChange={handleChange} placeholder="Ex: Engenheiro" disabled={readOnly} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="neighborhood">Bairro</Label>
-                  <Input id="neighborhood" value={formData.neighborhood} onChange={handleChange} placeholder="Ex: Samba" disabled={readOnly} />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="gender">Género</Label>
+                <Select value={formData.gender} onValueChange={(v) => handleSelectChange("gender", v)} disabled={readOnly}>
+                  <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="masculino">Masculino</SelectItem>
+                    <SelectItem value="feminino">Feminino</SelectItem>
+                    <SelectItem value="outro">Outro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="occupation">Ocupação</Label>
+                <Input id="occupation" value={formData.occupation} onChange={handleChange} placeholder="Ex: Engenheiro" disabled={readOnly} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="neighborhood">Bairro</Label>
+                <Input id="neighborhood" value={formData.neighborhood} onChange={handleChange} placeholder="Ex: Samba" disabled={readOnly} />
               </div>
             </div>
+          </div>
 
-            <div className="space-y-4">
-              <h3 className="font-semibold text-lg border-b pb-2">🔹 Dados da Ocorrência</h3>
-              <div className="space-y-2">
-                <Label>Tipo de crime (marcação múltipla)</Label>
-                <div className="grid grid-cols-2 gap-3 pl-2">
-                  {[
-                    { id: "theft", label: "Furto/Roubo" },
-                    { id: "aggression", label: "Agressão Física" },
-                    { id: "domesticViolence", label: "Violência doméstica" },
-                    { id: "rape", label: "Abuso Sexual" },
-                    { id: "fraud", label: "Burla" },
-                  ].map((crime) => (
-                    <div key={crime.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={crime.id}
-                        checked={formData.crimeTypes[crime.id as keyof typeof formData.crimeTypes] as boolean}
-                        onCheckedChange={() => handleCrimeTypeChange(crime.id as keyof typeof formData.crimeTypes)}
-                        disabled={readOnly}
-                      />
-                      <label htmlFor={crime.id} className={`text-sm cursor-pointer ${readOnly ? 'opacity-70' : ''}`}>{crime.label}</label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="subject">Assunto</Label>
-                <Input id="subject" value={formData.subject} onChange={handleChange} required placeholder="Resumo do incidente" disabled={readOnly} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="message">Detalhes da Ocorrência</Label>
-                <Textarea id="message" value={formData.message} onChange={handleChange} required placeholder="Descreva o que aconteceu..." className="min-h-[100px]" disabled={readOnly} />
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg border-b pb-2">🔹 Dados da Ocorrência</h3>
+            <div className="space-y-2">
+              <Label>Tipo de crime (marcação múltipla)</Label>
+              <div className="grid grid-cols-2 gap-3 pl-2">
+                {[
+                  { id: "theft", label: "Furto/Roubo" },
+                  { id: "aggression", label: "Agressão Física" },
+                  { id: "domesticViolence", label: "Violência doméstica" },
+                  { id: "rape", label: "Abuso Sexual" },
+                  { id: "fraud", label: "Burla" },
+                ].map((crime) => (
+                  <div key={crime.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={crime.id}
+                      checked={formData.crimeTypes[crime.id as keyof typeof formData.crimeTypes] as boolean}
+                      onCheckedChange={() => handleCrimeTypeChange(crime.id as keyof typeof formData.crimeTypes)}
+                      disabled={readOnly}
+                    />
+                    <label htmlFor={crime.id} className={`text-sm cursor-pointer ${readOnly ? 'opacity-70' : ''}`}>{crime.label}</label>
+                  </div>
+                ))}
               </div>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="subject">Assunto</Label>
+              <Input id="subject" value={formData.subject} onChange={handleChange} required placeholder="Resumo do incidente" disabled={readOnly} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="message">Detalhes da Ocorrência</Label>
+              <Textarea id="message" value={formData.message} onChange={handleChange} required placeholder="Descreva o que aconteceu..." className="min-h-[100px]" disabled={readOnly} />
+            </div>
+          </div>
 
-            {!readOnly && (
-              <Button type="submit" disabled={status === "loading"} className="w-full">
-                {status === "loading" ? "Enviando..." : "Enviar Reporte Oficial"}
-              </Button>
-            )}
-            {readOnly && (
-              <Button type="button" onClick={() => handleOpenChange(false)} className="w-full">
-                Fechar Visualização
-              </Button>
-            )}
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      <SuccessModal
-        isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        title="Reporte Enviado!"
-        message="A sua denúncia foi registada e encaminhada para a Polícia do Município de Samba."
-      />
-    </>
+          {!readOnly && (
+            <Button type="submit" disabled={status === "loading"} className="w-full">
+              {status === "loading" ? "Enviando..." : "Enviar Reporte Oficial"}
+            </Button>
+          )}
+          {readOnly && (
+            <Button type="button" onClick={() => handleOpenChange(false)} className="w-full">
+              Fechar Visualização
+            </Button>
+          )}
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 
