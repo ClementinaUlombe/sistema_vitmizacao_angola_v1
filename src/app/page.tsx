@@ -137,7 +137,7 @@ const Page = () => {
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-              Plataforma Digital com base o Inquérito de Vitimização Criminal e Percepção de Segurança
+              SambaSegura: Inteligência Criminal e Proteção Comunitária
             </h1>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

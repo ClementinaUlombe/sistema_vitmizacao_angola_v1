@@ -7,6 +7,42 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
     const researcherId = searchParams.get("researcherId");
+    const getNextNumber = searchParams.get("nextNumber") === "true";
+
+    // Retorna o próximo número de inquérito disponível
+    if (getNextNumber) {
+      const currentYear = new Date().getFullYear();
+      const yearSuffix = `/${currentYear}`;
+      
+      const residents = await prisma.resident.findMany({
+        where: {
+          residentNumber: {
+            endsWith: yearSuffix
+          }
+        },
+        select: {
+          residentNumber: true
+        }
+      });
+
+      let nextSequence = 1;
+      if (residents.length > 0) {
+        const sequences = residents
+          .map(r => {
+            const parts = r.residentNumber.split('/');
+            const seq = parseInt(parts[0]);
+            return isNaN(seq) ? 0 : seq;
+          })
+          .filter(seq => seq > 0);
+        
+        if (sequences.length > 0) {
+          nextSequence = Math.max(...sequences) + 1;
+        }
+      }
+
+      const formattedNumber = `${nextSequence.toString().padStart(3, '0')}${yearSuffix}`;
+      return NextResponse.json({ nextNumber: formattedNumber });
+    }
 
     // Se tiver ?id=X, retorna um residente específico
     if (id) {
@@ -155,7 +191,6 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const {
-      residentNumber,
       name,
       ageGroup,
       gender,
@@ -174,24 +209,44 @@ export async function POST(request: Request) {
     } = body;
 
     // Validação de campos obrigatórios conforme o schema.prisma
-    if (!residentNumber || !ageGroup || !gender || !neighborhood) {
+    if (!ageGroup || !gender || !neighborhood) {
       return NextResponse.json(
-        { message: "Campos obrigatórios em falta: Número, Bairro, Género ou Faixa Etária." },
+        { message: "Campos obrigatórios em falta: Bairro, Género ou Faixa Etária." },
         { status: 400 }
       );
     }
 
-    // Verificar se o número de inquérito já existe para evitar erro 500 de constraint única
-    const existing = await prisma.resident.findUnique({
-      where: { residentNumber }
-    });
+    // Geração Automática do Número de Inquérito Sequencial
+    const currentYear = new Date().getFullYear();
+    const yearSuffix = `/${currentYear}`;
     
-    if (existing) {
-      return NextResponse.json(
-        { message: "Já existe um inquérito registado com o número #" + residentNumber },
-        { status: 400 }
-      );
+    const latestResidents = await prisma.resident.findMany({
+      where: {
+        residentNumber: {
+          endsWith: yearSuffix
+        }
+      },
+      select: {
+        residentNumber: true
+      }
+    });
+
+    let nextSequence = 1;
+    if (latestResidents.length > 0) {
+      const sequences = latestResidents
+        .map(r => {
+          const parts = r.residentNumber.split('/');
+          const seq = parseInt(parts[0]);
+          return isNaN(seq) ? 0 : seq;
+        })
+        .filter(seq => seq > 0);
+      
+      if (sequences.length > 0) {
+        nextSequence = Math.max(...sequences) + 1;
+      }
     }
+
+    const residentNumber = `${nextSequence.toString().padStart(3, '0')}${yearSuffix}`;
 
     const resident = await prisma.resident.create({
       data: {

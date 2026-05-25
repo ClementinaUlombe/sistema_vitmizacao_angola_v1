@@ -8,7 +8,7 @@ export default function ObrigadaPage() {
     <div className="min-h-screen flex flex-col bg-white items-center justify-center p-8 animate-fade-in relative">
       <div className="text-center">
         <h1 className="text-7xl md:text-8xl font-black text-black tracking-tighter leading-none animate-pulse">
-          MUITO OBRIGADA PELA ATENÇÃO!
+MUITO OBRIGADAS !
         </h1>
       </div>
 

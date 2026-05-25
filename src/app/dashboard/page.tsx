@@ -134,61 +134,6 @@ export default function DashboardPage() {
       {/* Stats Grid - Apenas para Admin/Investigador/Polícia */}
       {userRole !== "CITIZEN" ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <Card className="border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium text-muted-foreground uppercase">Residentes Inquiridos</CardTitle>
-              <Users className="h-5 w-5 text-blue-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">
-                {loading ? "..." : <NumberCounter targetValue={summaryData?.totalResidents || 0} />}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1 flex items-center">
-                <span className="text-green-500 font-medium flex items-center mr-1">
-                  Total consolidado <ArrowUpRight className="h-3 w-3 ml-0.5" />
-                </span>
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-l-4 border-l-purple-500 shadow-sm hover:shadow-md transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium text-muted-foreground uppercase">Taxa de Vitimização</CardTitle>
-              <ShieldAlert className="h-5 w-5 text-purple-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">
-                {loading ? "..." : <NumberCounter targetValue={summaryData?.victimizationRate || 0} decimals={1} suffix="%" />}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">Percentagem de residentes atingidos</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-l-4 border-l-red-500 shadow-sm hover:shadow-md transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium text-muted-foreground uppercase">Não Denunciados</CardTitle>
-              <MessageSquareOff className="h-5 w-5 text-red-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">
-                {loading ? "..." : <NumberCounter targetValue={summaryData?.unreportedCrimesRate || 0} decimals={1} suffix="%" />}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">Crimes sem registo oficial</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-l-4 border-l-amber-500 shadow-sm hover:shadow-md transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium text-muted-foreground uppercase">Bairros Analisados</CardTitle>
-              <MapPin className="h-5 w-5 text-amber-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">
-                {loading ? "..." : <NumberCounter targetValue={summaryData?.neighborhoods || 0} />}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">Áreas de cobertura do estudo</p>
-            </CardContent>
-          </Card>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2">

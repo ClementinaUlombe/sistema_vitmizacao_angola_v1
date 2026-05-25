@@ -86,7 +86,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Gerir Base de Dados", href: "/dashboard/database-management", icon: Database },
     { name: "Backup", href: "/dashboard/backup", icon: Download },
     { name: "Upload Excel", href: "/dashboard/excel-upload", icon: Upload },
-    { name: "Chatbot", href: "https://indice.insutec.ao/", icon: MessageSquare },
+    { name: "Micro Serviço", href: "https://indice.insutec.ao/", icon: MessageSquare },
     { name: "Estatísticas Públicas", href: "/dashboard/graphs", icon: BarChart3 },
   ];
 
@@ -97,7 +97,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Status de Lançamento", href: "/dashboard/analytics", icon: BarChart3 },
     { name: "Estatísticas Públicas", href: "/dashboard/graphs", icon: BarChart3 },
     { name: "Biblioteca Científica", href: "/dashboard/data-query", icon: BookOpen },
-    { name: "Chatbot", href: "https://indice.insutec.ao/", icon: MessageSquare },
+    { name: "Micro Serviço", href: "https://indice.insutec.ao/", icon: MessageSquare },
   ];
 
   const policeMenuItems = [
@@ -105,7 +105,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "O Meu Perfil", href: "/dashboard/profile", icon: User },
     { name: "Gestão de Ocorrências", href: "/dashboard/occurrences", icon: AlertCircle },
     { name: "Estatísticas Públicas", href: "/dashboard/graphs", icon: BarChart3 },
-    { name: "Chatbot Auxiliar", href: "https://indice.insutec.ao/", icon: MessageSquare },
+    { name: "Micro Serviço Auxiliar", href: "https://indice.insutec.ao/", icon: MessageSquare },
   ];
 
   const citizenMenuItems = [

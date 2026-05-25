@@ -550,6 +550,7 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [nextNumber, setNextNumber] = useState("");
 
   // Pagination for Recent Submissions
   const [currentHistoryPage, setCurrentHistoryPage] = useState(1);
@@ -557,7 +558,21 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
 
   useEffect(() => {
     fetchRecentUploads();
+    fetchNextNumber();
   }, []);
+
+  const fetchNextNumber = async () => {
+    try {
+      const response = await fetch("/api/data?nextNumber=true");
+      if (response.ok) {
+        const data = await response.json();
+        setNextNumber(data.nextNumber);
+        setFormData(prev => ({ ...prev, residentNumber: data.nextNumber }));
+      }
+    } catch (error) {
+      console.error("Erro ao procurar próximo número:", error);
+    }
+  };
 
   const fetchRecentUploads = async () => {
     try {
@@ -620,6 +635,7 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
       setStep(1);
       setFormData({
         residentNumber: "",
+        name: "",
         ageGroup: "",
         gender: "",
         occupation: "",
@@ -636,6 +652,7 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
         researcherId: userId,
       });
       fetchRecentUploads();
+      fetchNextNumber();
     } catch (error: any) {
       toast({
         title: "Erro",
@@ -688,8 +705,13 @@ const ResearcherDataEntryForm = ({ userId }: { userId: number }) => {
                 <Input placeholder="Ex: João Silva" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
               </div>
               <div className="space-y-2">
-                <Label>Número do Inquérito</Label>
-                <Input placeholder="Ex: 001/2026" value={formData.residentNumber} onChange={(e) => setFormData({...formData, residentNumber: e.target.value})} />
+                <Label>Número do Inquérito (Automático)</Label>
+                <Input 
+                  placeholder="Gerando número..." 
+                  value={formData.residentNumber} 
+                  readOnly 
+                  className="bg-muted font-bold text-blue-600"
+                />
               </div>
               <div className="space-y-2">
                 <Label>Bairro</Label>
