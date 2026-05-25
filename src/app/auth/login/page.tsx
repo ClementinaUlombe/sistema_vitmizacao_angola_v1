@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import {
   Select,
@@ -17,11 +17,15 @@ import {
 } from "@/components/ui/select";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const defaultRole = searchParams?.get("role") || "RESEARCHER";
+  const redirect = searchParams?.get("redirect") || "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("RESEARCHER");
+  const [role, setRole] = useState(defaultRole);
   const [error, setError] = useState("");
   const router = useRouter();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +42,7 @@ export default function LoginPage() {
 
       if (response.ok) {
         const user = data.user;
-        
+          
         // Validação extra opcional: Verificar se o role selecionado coincide com o da BD
         if (user.role.toUpperCase() !== role.toUpperCase()) {
           const roleNames: Record<string, string> = {
@@ -52,7 +56,8 @@ export default function LoginPage() {
         }
 
         localStorage.setItem("user", JSON.stringify(user));
-        router.push("/dashboard"); 
+        // Redirecionar para a rota solicitada (se existir) ou para o dashboard
+        router.push(redirect || "/dashboard"); 
       } else {
         setError(data.message || "Falha no login. Verifique suas credenciais.");
       }

@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { 
+  sendEmail, 
+  getReportSubmissionEmailHTML, 
+  getReportResponseEmailHTML 
+} from "@/lib/email";
 
 export async function GET(request: Request) {
   try {
@@ -28,21 +33,40 @@ export async function POST(request: Request) {
       },
     });
 
-    // Notify POLICE
-    const policeUsers = await prisma.user.findMany({
-      where: { role: "POLICE" }
+    // Notify POLICE and ADMINS
+    const relevantStaff = await prisma.user.findMany({
+      where: { 
+        role: { in: ["POLICE", "ADMIN"] } 
+      }
     });
 
-    for (const police of policeUsers) {
+    const citizenName = body.name || "Um cidadão";
+
+    for (const staff of relevantStaff) {
+      // Internal Notification
       await prisma.notification.create({
         data: {
-          userId: police.id,
+          userId: staff.id,
           type: "CITIZEN_REPORT",
           title: "Novo Relato de Crime",
-          message: `Um cidadão enviou um novo relato: ${report.subject}`,
+          message: `${citizenName} enviou um novo relato: ${report.subject}`,
           link: "/dashboard/occurrences"
         }
       });
+
+      // Email Notification
+      if (staff.email) {
+        await sendEmail({
+          to: staff.email,
+          subject: `ALERTA: Novo Relato de Crime - ${report.subject}`,
+          html: getReportSubmissionEmailHTML(
+            staff.name || "Autoridade",
+            citizenName,
+            report.subject,
+            report.message
+          )
+        });
+      }
     }
 
     return NextResponse.json(report, { status: 201 });
@@ -65,17 +89,38 @@ export async function PUT(request: Request) {
       },
     });
 
-    // Notify CITIZEN if status changed to Validado
-    if (status === "Validado" && updated.userId && oldReport?.status !== "Validado") {
-      await prisma.notification.create({
-        data: {
-          userId: updated.userId,
-          type: "POLICE_VALIDATION",
-          title: "Relato Validado",
-          message: `O seu relato "${updated.subject}" foi validado pela polícia.`,
-          link: "/dashboard/occurrences"
-        }
+    // Notify CITIZEN if status changed
+    if (status && updated.userId && oldReport?.status !== status) {
+      const citizen = await prisma.user.findUnique({
+        where: { id: updated.userId },
+        select: { name: true, email: true }
       });
+
+      if (citizen) {
+        // Internal Notification
+        await prisma.notification.create({
+          data: {
+            userId: updated.userId,
+            type: "POLICE_VALIDATION",
+            title: "Atualização do seu Relato",
+            message: `O seu relato "${updated.subject}" foi atualizado para: ${status}.`,
+            link: "/dashboard/occurrences"
+          }
+        });
+
+        // Email Notification
+        if (citizen.email) {
+          await sendEmail({
+            to: citizen.email,
+            subject: `Atualização do seu Relato - ${updated.subject}`,
+            html: getReportResponseEmailHTML(
+              citizen.name || "Cidadão",
+              updated.subject,
+              status
+            )
+          });
+        }
+      }
     }
 
     return NextResponse.json(updated);

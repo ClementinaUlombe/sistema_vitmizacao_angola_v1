@@ -180,7 +180,7 @@ const UsersPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number, email?: string) => {
     try {
       const response = await fetch("/api/auth/register", {
         method: "DELETE",
@@ -195,6 +195,10 @@ const UsersPage: React.FC = () => {
       }
 
       await fetchUsers();
+
+      setSuccessTitle("Utilizador Eliminado!");
+      setSuccessMessage(email ? `O utilizador ${email} foi eliminado com sucesso.` : "O utilizador foi eliminado com sucesso.");
+      setShowSuccess(true);
     } catch (err: any) {
       setError(err.message);
     }
@@ -414,7 +418,7 @@ const UsersPage: React.FC = () => {
                             <div className="flex justify-end gap-2">
                               <AlertDialogCancel>Cancelar</AlertDialogCancel>
                               <AlertDialogAction
-                                onClick={() => handleDelete(user.id)}
+                              onClick={() => handleDelete(user.id, user.email)}
                                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               >
                                 Eliminar

@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { 
+  sendEmail, 
+  getInquirySubmissionEmailHTML, 
+  getInquiryValidationEmailHTML 
+} from '@/lib/email';
 
 // Endpoint: /api/data (GET all residents)
 export async function GET(request: Request) {
@@ -123,17 +128,39 @@ export async function PUT(request: Request) {
       },
     });
 
-    // Notify RESEARCHER if status changed to VALIDADO
-    if (status === "VALIDADO" && updatedResident.researcherId && oldResident?.status !== "VALIDADO") {
-      await prisma.notification.create({
-        data: {
-          userId: updatedResident.researcherId,
-          type: "ADMIN_VALIDATION",
-          title: "Inquérito Validado",
-          message: `O seu lançamento #${updatedResident.residentNumber} foi validado pelo administrador.`,
-          link: "/dashboard/data-entry"
-        }
+    // Notify RESEARCHER if status changed to VALIDADO or REJEITADO
+    if ((status === "VALIDADO" || status === "REJEITADO") && updatedResident.researcherId && oldResident?.status !== status) {
+      // Buscar informações do investigador
+      const researcher = await prisma.user.findUnique({
+        where: { id: updatedResident.researcherId },
+        select: { name: true, email: true }
       });
+
+      if (researcher) {
+        // Notificação Interna
+        await prisma.notification.create({
+          data: {
+            userId: updatedResident.researcherId,
+            type: "ADMIN_VALIDATION",
+            title: status === "VALIDADO" ? "Inquérito Validado" : "Inquérito Rejeitado",
+            message: `O seu lançamento #${updatedResident.residentNumber} foi ${status.toLowerCase()} pelo administrador.`,
+            link: "/dashboard/data-entry"
+          }
+        });
+
+        // Notificação por E-mail
+        if (researcher.email) {
+          await sendEmail({
+            to: researcher.email,
+            subject: `Atualização de Inquérito - #${updatedResident.residentNumber}`,
+            html: getInquiryValidationEmailHTML(
+              researcher.name || "Investigador",
+              updatedResident.residentNumber,
+              status
+            )
+          });
+        }
+      }
     }
 
     return NextResponse.json(updatedResident);
@@ -287,10 +314,18 @@ export async function POST(request: Request) {
       where: { role: "ADMIN" }
     });
 
+    // Buscar nome do investigador para o e-mail
+    const researcher = researcherId ? await prisma.user.findUnique({
+      where: { id: parseInt(researcherId.toString()) },
+      select: { name: true }
+    }) : null;
+    const researcherName = researcher?.name || "Investigador";
+
     // Buscar nome do residente para a notificação
     const displayResidentName = name || residentNumber;
 
     for (const admin of adminUsers) {
+      // Notificação interna
       await prisma.notification.create({
         data: {
           userId: admin.id,
@@ -300,6 +335,20 @@ export async function POST(request: Request) {
           link: "/dashboard/data-entry?admin=true"
         }
       });
+
+      // Notificação por E-mail
+      if (admin.email) {
+        await sendEmail({
+          to: admin.email,
+          subject: `Novo Inquérito Submetido - #${resident.residentNumber}`,
+          html: getInquirySubmissionEmailHTML(
+            admin.name || "Administrador",
+            researcherName,
+            name || "Residente",
+            resident.residentNumber
+          )
+        });
+      }
     }
 
     return NextResponse.json(resident, { status: 201 });

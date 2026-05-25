@@ -112,3 +112,130 @@ export function getPasswordResetEmailHTML(name: string, token: string) {
     </div>
   `;
 }
+
+export function getReportSubmissionEmailHTML(recipientName: string, citizenName: string, subject: string, message: string) {
+  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/occurrences`;
+  
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #dc2626; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0;">Novo Relato de Crime</h1>
+      </div>
+      <div style="padding: 30px; line-height: 1.6; color: #333;">
+        <p>Olá, <strong>${recipientName}</strong>,</p>
+        <p>Um novo relato de crime foi submetido por <strong>${citizenName}</strong>.</p>
+        <div style="background-color: #fef2f2; border-left: 4px solid #dc2626; padding: 15px; margin: 20px 0;">
+          <p style="margin: 5px 0;"><strong>Assunto:</strong> ${subject}</p>
+          <p style="margin: 10px 0; font-style: italic;">"${message.substring(0, 150)}${message.length > 150 ? "..." : ""}"</p>
+        </div>
+        <p>Por favor, aceda ao sistema para analisar a situação e tomar as medidas necessárias.</p>
+        <p style="margin-top: 30px; text-align: center;">
+          <a href="${dashboardUrl}" style="background-color: #1e3a8a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+            Analisar Ocorrência
+          </a>
+        </p>
+      </div>
+      <div style="background-color: #f9fafb; padding: 15px; text-align: center; font-size: 0.8em; color: #999; border-top: 1px solid #e0e0e0;">
+        &copy; 2026 SambaSegura - Emergência e Segurança.
+      </div>
+    </div>
+  `;
+}
+
+export function getReportResponseEmailHTML(citizenName: string, subject: string, status: string) {
+  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/occurrences`;
+  const isValidated = status === "Validado";
+  const statusLabel = isValidated ? "Validado / Em Processamento" : status;
+  const statusColor = isValidated ? "#059669" : "#1e3a8a";
+  
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0;">Atualização do seu Relato</h1>
+      </div>
+      <div style="padding: 30px; line-height: 1.6; color: #333;">
+        <p>Olá, <strong>${citizenName}</strong>,</p>
+        <p>O seu relato de crime intitulado "<strong>${subject}</strong>" recebeu uma atualização das autoridades.</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <div style="display: inline-block; padding: 10px 20px; border-radius: 5px; background-color: ${statusColor}; color: white; font-weight: bold;">
+            Status: ${statusLabel}
+          </div>
+        </div>
+        <p>Agradecemos a sua colaboração para uma Samba mais segura. Pode acompanhar o progresso detalhado no seu painel.</p>
+        <p style="margin-top: 30px; text-align: center;">
+          <a href="${dashboardUrl}" style="background-color: #f3f4f6; color: #1e3a8a; border: 1px solid #1e3a8a; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+            Ver Meu Relato
+          </a>
+        </p>
+      </div>
+      <div style="background-color: #f9fafb; padding: 15px; text-align: center; font-size: 0.8em; color: #999; border-top: 1px solid #e0e0e0;">
+        &copy; 2026 SambaSegura - Polícia e Cidadania.
+      </div>
+    </div>
+  `;
+}
+
+export function getInquirySubmissionEmailHTML(adminName: string, researcherName: string, residentName: string, residentNumber: string) {
+  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/data-entry?admin=true`;
+  
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0;">Novo Inquérito Submetido</h1>
+      </div>
+      <div style="padding: 30px; line-height: 1.6; color: #333;">
+        <p>Olá, <strong>${adminName}</strong>,</p>
+        <p>Um novo lançamento de inquérito foi submetido pelo investigador <strong>${researcherName}</strong>.</p>
+        <div style="background-color: #f3f4f6; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <p style="margin: 5px 0;"><strong>Nº Inquérito:</strong> ${residentNumber}</p>
+          <p style="margin: 5px 0;"><strong>Residente:</strong> ${residentName}</p>
+        </div>
+        <p>Por favor, aceda ao painel de administração para validar os dados.</p>
+        <p style="margin-top: 30px; text-align: center;">
+          <a href="${dashboardUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+            Verificar Lançamento
+          </a>
+        </p>
+      </div>
+      <div style="background-color: #f9fafb; padding: 15px; text-align: center; font-size: 0.8em; color: #999; border-top: 1px solid #e0e0e0;">
+        &copy; 2026 SambaSegura - Inteligência Criminal.
+      </div>
+    </div>
+  `;
+}
+
+export function getInquiryValidationEmailHTML(researcherName: string, residentNumber: string, status: string) {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  // Link to login with redirect so the investigator can authenticate and then see their submissions
+  const loginWithRedirect = `${appUrl}/auth/login?redirect=${encodeURIComponent('/dashboard/data-entry')}&role=RESEARCHER`;
+  const isValidated = status === "VALIDADO";
+  const statusLabel = isValidated ? "Validado" : "Rejeitado";
+  const statusColor = isValidated ? "#10b981" : "#ef4444";
+  const statusIcon = isValidated ? "✅" : "❌";
+  
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #1e3a8a; color: white; padding: 20px; text-align: center;">
+        <h1 style="margin: 0;">Atualização de Inquérito</h1>
+      </div>
+      <div style="padding: 30px; line-height: 1.6; color: #333;">
+        <p>Olá, <strong>${researcherName}</strong>,</p>
+        <p>O seu lançamento de inquérito <strong>#${residentNumber}</strong> foi processado.</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <div style="display: inline-block; padding: 10px 20px; border-radius: 50px; background-color: ${statusColor}15; border: 2px solid ${statusColor}; color: ${statusColor}; font-weight: bold; font-size: 1.2em;">
+            ${statusIcon} ${statusLabel}
+          </div>
+        </div>
+        <p>O administrador concluiu a revisão do seu envio. Pode consultar os detalhes no seu histórico de lançamentos.</p>
+        <p style="margin-top: 30px; text-align: center;">
+          <a href="${loginWithRedirect}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+            Ver Meus Lançamentos
+          </a>
+        </p>
+      </div>
+      <div style="background-color: #f9fafb; padding: 15px; text-align: center; font-size: 0.8em; color: #999; border-top: 1px solid #e0e0e0;">
+        &copy; 2026 SambaSegura - Luanda, Angola.
+      </div>
+    </div>
+  `;
+}
