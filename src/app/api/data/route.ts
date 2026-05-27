@@ -133,7 +133,7 @@ export async function PUT(request: Request) {
       // Buscar informações do investigador
       const researcher = await prisma.user.findUnique({
         where: { id: updatedResident.researcherId },
-        select: { name: true, email: true }
+        select: { name: true, email: true, role: true }
       });
 
       if (researcher) {
@@ -156,7 +156,8 @@ export async function PUT(request: Request) {
             html: getInquiryValidationEmailHTML(
               researcher.name || "Investigador",
               updatedResident.residentNumber,
-              status
+              status,
+              researcher.role
             )
           });
         }
@@ -345,7 +346,8 @@ export async function POST(request: Request) {
             admin.name || "Administrador",
             researcherName,
             name || "Residente",
-            resident.residentNumber
+            resident.residentNumber,
+            admin.role
           )
         });
       }

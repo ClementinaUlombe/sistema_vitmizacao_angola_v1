@@ -1,9 +1,6 @@
 {
   "/page": "app/page.js",
-  "/api/notifications/route": "app/api/notifications/route.js",
   "/api/data/summary/route": "app/api/data/summary/route.js",
-  "/dashboard/users/page": "app/dashboard/users/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/dashboard/data-entry/page": "app/dashboard/data-entry/page.js",
-  "/auth/login/page": "app/auth/login/page.js"
+  "/api/notifications/route": "app/api/notifications/route.js",
+  "/dashboard/page": "app/dashboard/page.js"
 }

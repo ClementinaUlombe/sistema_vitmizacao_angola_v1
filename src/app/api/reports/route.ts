@@ -63,7 +63,8 @@ export async function POST(request: Request) {
             staff.name || "Autoridade",
             citizenName,
             report.subject,
-            report.message
+            report.message,
+            staff.role
           )
         });
       }
@@ -93,7 +94,7 @@ export async function PUT(request: Request) {
     if (status && updated.userId && oldReport?.status !== status) {
       const citizen = await prisma.user.findUnique({
         where: { id: updated.userId },
-        select: { name: true, email: true }
+        select: { name: true, email: true, role: true }
       });
 
       if (citizen) {
@@ -116,7 +117,8 @@ export async function PUT(request: Request) {
             html: getReportResponseEmailHTML(
               citizen.name || "Cidadão",
               updated.subject,
-              status
+              status,
+              citizen.role
             )
           });
         }

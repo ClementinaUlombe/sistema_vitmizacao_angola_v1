@@ -12,7 +12,7 @@ export async function GET(request: Request) {
         include: {
           victimizations: true,
           securityPerceptions: true,
-          user: {
+          researcher: {
             select: {
               id: true,
               name: true,
@@ -72,7 +72,7 @@ export async function PUT(request: Request) {
       include: {
         victimizations: true,
         securityPerceptions: true,
-        user: {
+        researcher: {
           select: {
             id: true,
             name: true,
@@ -148,7 +148,7 @@ export async function POST(request: Request) {
       daySecurity,
       nightSecurity,
       localPoliceTrustLevel,
-      userId,
+      researcherId,
     } = body;
 
     const resident = await prisma.resident.create({
@@ -159,7 +159,7 @@ export async function POST(request: Request) {
         occupation,
         neighborhood,
         educationLevel,
-        userId: userId ? parseInt(userId) : undefined,
+        researcherId: researcherId ? parseInt(researcherId) : undefined,
         victimizations: {
           create: {
             wasVictim,
@@ -179,7 +179,7 @@ export async function POST(request: Request) {
       include: {
         victimizations: true,
         securityPerceptions: true,
-        user: {
+        researcher: {
           select: {
             id: true,
             name: true,
