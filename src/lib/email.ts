@@ -46,7 +46,8 @@ export async function sendEmail({ to, subject, html }: SendEmailOptions) {
 }
 
 export function getWelcomeEmailHTML(name: string, role: string) {
-  const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/auth/login`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const loginUrl = `${appUrl}/auth/login?role=${role.toUpperCase()}`;
   
   const roleNames: Record<string, string> = {
     ADMIN: "Administrador",
@@ -113,8 +114,9 @@ export function getPasswordResetEmailHTML(name: string, token: string) {
   `;
 }
 
-export function getReportSubmissionEmailHTML(recipientName: string, citizenName: string, subject: string, message: string) {
-  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/occurrences`;
+export function getReportSubmissionEmailHTML(recipientName: string, citizenName: string, subject: string, message: string, role: string = "POLICE") {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const loginWithRedirect = `${appUrl}/auth/login?redirect=${encodeURIComponent('/dashboard/occurrences')}&role=${role.toUpperCase()}`;
   
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
@@ -130,7 +132,7 @@ export function getReportSubmissionEmailHTML(recipientName: string, citizenName:
         </div>
         <p>Por favor, aceda ao sistema para analisar a situação e tomar as medidas necessárias.</p>
         <p style="margin-top: 30px; text-align: center;">
-          <a href="${dashboardUrl}" style="background-color: #1e3a8a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+          <a href="${loginWithRedirect}" style="background-color: #1e3a8a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
             Analisar Ocorrência
           </a>
         </p>
@@ -142,8 +144,9 @@ export function getReportSubmissionEmailHTML(recipientName: string, citizenName:
   `;
 }
 
-export function getReportResponseEmailHTML(citizenName: string, subject: string, status: string) {
-  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/occurrences`;
+export function getReportResponseEmailHTML(citizenName: string, subject: string, status: string, role: string = "CITIZEN") {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const loginWithRedirect = `${appUrl}/auth/login?redirect=${encodeURIComponent('/dashboard/occurrences')}&role=${role.toUpperCase()}`;
   const isValidated = status === "Validado";
   const statusLabel = isValidated ? "Validado / Em Processamento" : status;
   const statusColor = isValidated ? "#059669" : "#1e3a8a";
@@ -163,7 +166,7 @@ export function getReportResponseEmailHTML(citizenName: string, subject: string,
         </div>
         <p>Agradecemos a sua colaboração para uma Samba mais segura. Pode acompanhar o progresso detalhado no seu painel.</p>
         <p style="margin-top: 30px; text-align: center;">
-          <a href="${dashboardUrl}" style="background-color: #f3f4f6; color: #1e3a8a; border: 1px solid #1e3a8a; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+          <a href="${loginWithRedirect}" style="background-color: #f3f4f6; color: #1e3a8a; border: 1px solid #1e3a8a; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
             Ver Meu Relato
           </a>
         </p>
@@ -175,8 +178,9 @@ export function getReportResponseEmailHTML(citizenName: string, subject: string,
   `;
 }
 
-export function getInquirySubmissionEmailHTML(adminName: string, researcherName: string, residentName: string, residentNumber: string) {
-  const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/data-entry?admin=true`;
+export function getInquirySubmissionEmailHTML(adminName: string, researcherName: string, residentName: string, residentNumber: string, role: string = "ADMIN") {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const loginWithRedirect = `${appUrl}/auth/login?redirect=${encodeURIComponent('/dashboard/data-entry?admin=true')}&role=${role.toUpperCase()}`;
   
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
@@ -192,7 +196,7 @@ export function getInquirySubmissionEmailHTML(adminName: string, researcherName:
         </div>
         <p>Por favor, aceda ao painel de administração para validar os dados.</p>
         <p style="margin-top: 30px; text-align: center;">
-          <a href="${dashboardUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+          <a href="${loginWithRedirect}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
             Verificar Lançamento
           </a>
         </p>
@@ -204,10 +208,10 @@ export function getInquirySubmissionEmailHTML(adminName: string, researcherName:
   `;
 }
 
-export function getInquiryValidationEmailHTML(researcherName: string, residentNumber: string, status: string) {
+export function getInquiryValidationEmailHTML(researcherName: string, residentNumber: string, status: string, role: string = "RESEARCHER") {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   // Link to login with redirect so the investigator can authenticate and then see their submissions
-  const loginWithRedirect = `${appUrl}/auth/login?redirect=${encodeURIComponent('/dashboard/data-entry')}&role=RESEARCHER`;
+  const loginWithRedirect = `${appUrl}/auth/login?redirect=${encodeURIComponent('/dashboard/data-entry')}&role=${role.toUpperCase()}`;
   const isValidated = status === "VALIDADO";
   const statusLabel = isValidated ? "Validado" : "Rejeitado";
   const statusColor = isValidated ? "#10b981" : "#ef4444";

@@ -67,7 +67,6 @@ const translations: { [key: string]: string } = {
     'other-crime': 'Outros Crimes',
     'other_crime': 'Outros Crimes',
     'others': 'Outros',
-    'other': 'Outros',
     'victim': 'Vítima',
     'non-victim': 'Não Vítima',
     'victims': 'Vítimas',
@@ -77,14 +76,6 @@ const translations: { [key: string]: string } = {
     'crimegeneral': 'Crime em Geral',
     'crime-general': 'Crime em Geral',
     'crime_general': 'Crime em Geral',
-    'vandalism': 'Vandalismo',
-    'kidnapping': 'Sequestro',
-    'homicide': 'Homicídio',
-    'fraud': 'Fraude',
-    'burglary': 'Arrombamento',
-    'robbery': 'Roubo',
-    'theft': 'Furto',
-    'assault': 'Assalto',
     'victimization': 'Vitimização',
     'reported': 'Denunciado',
     'not-reported': 'Não Denunciado',
@@ -153,7 +144,7 @@ interface VictimizationByEducationLevelData {
 }
 
 
-type GraphType = 'residentsByAge' | 'victimizationByCrimeType' | 'securityPerceptionByGender' | 'victimizationByAgeAndGender' | 'occupationVictim' | 'victimizationByEducationLevel';
+type GraphType = 'residentsByAge' | 'victimizationByCrimeType' | 'securityPerceptionByGender' | 'victimizationByAgeAndGender' | 'occupationVictim' | 'victimizationByEducationLevel' | 'crimesByNeighborhood' | 'reasonsForNotReporting' | 'policeTrust';
 
 const COLORS = [
   '#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE', 
@@ -175,13 +166,24 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-const GraphDisplay: React.FC = () => {
-  const [selectedGraph, setSelectedGraph] = useState<GraphType>('residentsByAge');
+interface GraphDisplayProps {
+  forceSelectedGraph?: GraphType;
+  hideSelector?: boolean;
+}
+
+const GraphDisplay: React.FC<GraphDisplayProps> = ({ forceSelectedGraph, hideSelector = false }) => {
+  const [selectedGraph, setSelectedGraph] = useState<GraphType>(forceSelectedGraph || 'residentsByAge');
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    if (forceSelectedGraph) {
+      setSelectedGraph(forceSelectedGraph);
+    }
+  }, [forceSelectedGraph]);
 
   useEffect(() => {
     setSearchTerm("");
@@ -208,6 +210,15 @@ const GraphDisplay: React.FC = () => {
             break;
         case 'victimizationByEducationLevel':
             endpoint = '/api/data/victimization-by-education-level';
+            break;
+        case 'crimesByNeighborhood':
+            endpoint = '/api/data/crimes-by-neighborhood';
+            break;
+        case 'reasonsForNotReporting':
+            endpoint = '/api/data/reasons-for-not-reporting';
+            break;
+        case 'policeTrust':
+            endpoint = '/api/data/police-trust';
             break;
         default:
           setError('Tipo de gráfico inválido.');
@@ -338,6 +349,49 @@ const GraphDisplay: React.FC = () => {
                 <Bar dataKey="nonVictims" stackId="a" fill="#82ca9d" name="Não Vítimas" />
             </BarChart>
         ),
+        crimesByNeighborhood: (() => {
+            const crimeTypes = Array.from(new Set(data.flatMap(Object.keys))).filter(key => key !== 'neighborhood');
+            return (
+                <BarChart data={data}
+                          margin={{
+                              top: 20,
+                              right: 30,
+                              left: 20,
+                              bottom: 5,
+                          }}>
+                    <XAxis dataKey="neighborhood" tick={{ fontSize: 12 }} angle={-45} textAnchor="end" height={100} />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    {crimeTypes.map((crime, index) => <Bar key={crime} dataKey={crime} stackId="a" fill={COLORS[index % COLORS.length]} name={translate(crime)} />)}
+                </BarChart>
+            );
+        })(),
+        reasonsForNotReporting: (
+            <BarChart 
+                data={data.map(item => ({...item, name: translate(item.name)})) as ReasonsForNotReportingData[]}
+                layout="vertical"
+                margin={{ top: 20, right: 30, left: 100, bottom: 5 }}
+            >
+                <XAxis type="number" />
+                <YAxis dataKey="name" type="category" width={150} tick={{ fontSize: 10 }} />
+                <Tooltip />
+                <Bar dataKey="count" fill="#8884d8">
+                    {data.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+                </Bar>
+            </BarChart>
+        ),
+        policeTrust: (
+            <BarChart data={data.map(item => ({...item, trustLevel: translate(item.trustLevel)})) as PoliceTrustData[]}
+                      margin={{
+                          top: 20,
+                          right: 30,
+                          left: 20,
+                          bottom: 5,
+                      }}>
+                <XAxis dataKey="trustLevel" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Bar dataKey="count" fill="#82ca9d" />
+            </BarChart>
+        ),
     };
 
     const chart = chartComponents[selectedGraph];
@@ -361,26 +415,30 @@ const GraphDisplay: React.FC = () => {
 
   return (
     <Card className="w-full max-w-6xl mx-auto">
-      <CardHeader>
-        <CardTitle>Visualização de Dados</CardTitle>
-      </CardHeader>
+      {!hideSelector && (
+        <CardHeader>
+          <CardTitle>Visualização de Dados</CardTitle>
+        </CardHeader>
+      )}
       <CardContent>
-        <div className="mb-4">
-          <Label htmlFor="graph-select">Selecionar Gráfico:</Label>
-          <Select value={selectedGraph} onValueChange={(value: GraphType) => setSelectedGraph(value)}>
-            <SelectTrigger id="graph-select" className="w-[320px]">
-              <SelectValue placeholder="Selecione um gráfico" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="residentsByAge">Residentes por Faixa Etária</SelectItem>
-              <SelectItem value="victimizationByCrimeType">Vitimização por Tipo de Crime</SelectItem>
-              <SelectItem value="securityPerceptionByGender">Percepção de Segurança por Gênero</SelectItem>
-              <SelectItem value="victimizationByAgeAndGender">Vitimização por Faixa Etária e Gênero</SelectItem>
-              <SelectItem value="occupationVictim">Ocupação vs. Vítima de Crime</SelectItem>
-              <SelectItem value="victimizationByEducationLevel">Vitimização por Nível de Escolaridade</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {!hideSelector && (
+          <div className="mb-4">
+            <Label htmlFor="graph-select">Selecionar Gráfico:</Label>
+            <Select value={selectedGraph} onValueChange={(value: GraphType) => setSelectedGraph(value)}>
+              <SelectTrigger id="graph-select" className="w-[320px]">
+                <SelectValue placeholder="Selecione um gráfico" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="residentsByAge">Residentes por Faixa Etária</SelectItem>
+                <SelectItem value="victimizationByCrimeType">Vitimização por Tipo de Crime</SelectItem>
+                <SelectItem value="securityPerceptionByGender">Percepção de Segurança por Gênero</SelectItem>
+                <SelectItem value="victimizationByAgeAndGender">Vitimização por Faixa Etária e Gênero</SelectItem>
+                <SelectItem value="occupationVictim">Ocupação vs. Vítima de Crime</SelectItem>
+                <SelectItem value="victimizationByEducationLevel">Vitimização por Nível de Escolaridade</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         {renderGraph()}
       </CardContent>
     </Card>

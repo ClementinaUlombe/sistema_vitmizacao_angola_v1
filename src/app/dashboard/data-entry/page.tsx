@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,8 @@ import {
   Search,
   AlertTriangle
 } from "lucide-react";
-export default function DataEntryPage() {
+
+function DataEntryContent() {
   const searchParams = useSearchParams();
   const isAdminView = searchParams.get("admin") === "true";
   const [user, setUser] = useState<any>(null);
@@ -50,6 +51,14 @@ export default function DataEntryPage() {
 
   // Mostrar formulário normal para researcher
   return <ResearcherDataEntryForm userId={user.id} />;
+}
+
+export default function DataEntryPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-[60vh]">Carregando...</div>}>
+      <DataEntryContent />
+    </Suspense>
+  );
 }
 
 interface Resident {

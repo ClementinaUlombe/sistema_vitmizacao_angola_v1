@@ -154,7 +154,7 @@ export default function RegisterPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="password" name="Senha" className="text-sm font-semibold">Senha</Label>
+              <Label htmlFor="password" className="text-sm font-semibold">Senha</Label>
               <Input
                 id="password"
                 type="password"
@@ -203,7 +203,7 @@ export default function RegisterPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirm-password" name="Confirmar Senha" className="text-sm font-semibold">Confirmar Senha</Label>
+              <Label htmlFor="confirm-password" className="text-sm font-semibold">Confirmar Senha</Label>
               <Input
                 id="confirm-password"
                 type="password"

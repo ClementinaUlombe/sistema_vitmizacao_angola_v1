@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import {
@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function LoginPage() {
+function LoginContent() {
   const searchParams = useSearchParams();
   const defaultRole = searchParams?.get("role") || "RESEARCHER";
   const redirect = searchParams?.get("redirect") || "/dashboard";
@@ -107,8 +107,8 @@ export default function LoginPage() {
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password" name="Senha" className="text-sm font-semibold">Senha</Label>
-              <Link href="/auth/forgot-password" size="sm" className="text-xs text-primary hover:underline font-medium">
+              <Label htmlFor="password" className="text-sm font-semibold">Senha</Label>
+              <Link href="/auth/forgot-password" className="text-xs text-primary hover:underline font-medium">
                 Esqueceu a senha?
               </Link>
             </div>
@@ -146,5 +146,13 @@ export default function LoginPage() {
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Carregando...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
