@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST='{"app\\\\dashboard\\\\report-creation\\\\page.tsx -> html2pdf.js":{"id":41690,"files":["static/chunks/b645e135.894a149a801efd9a.js","static/chunks/ad2866b8.df424f64adfa702a.js","static/chunks/257.990da16794a31292.js"]}}';
+self.__REACT_LOADABLE_MANIFEST="{}"
